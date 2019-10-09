@@ -1,30 +1,31 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+// ie polyfill
+import '@babel/polyfill'
+
 import Vue from 'vue'
-
-// element-ui引入
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-
-import App from './App'
+import App from './App.vue'
 import router from './router'
+import store from './store/'
+import { VueAxios } from './utils/request'
 
-import store from './store'
+// mock
+import './mock'
 
-import './assets/icons' // icon
-
-// axios引入并挂载在vue原型上
-import axios from 'axios'
-Vue.prototype.axios = axios
+import bootstrap from './core/bootstrap'
+import './core/lazy_use'
+import './permission' // permission control
+import './utils/filter' // global filter
+import 'ant-design-vue/dist/antd.less'
+import i18n from './locales'
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI);
+// mount axios Vue.$http and this.$http
+Vue.use(VueAxios)
 
 new Vue({
-  el: '#app',
   router,
   store,
-  components: { App },
-  template: '<App/>'
-})
+  i18n,
+  created: bootstrap,
+  render: h => h(App)
+}).$mount('#app')

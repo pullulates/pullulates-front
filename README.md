@@ -1,30 +1,67 @@
-# pullulates-vue
+<h1 align="center">RuoYi Ant</h1>
 
-> pullulates-vue
+文档：http://doc.rycloud.zmrit.com
 
-## Build Setup
+- 预览: http://ruoyi.ant.zmrit.com
+- 独有的字典用法
+- 独有的自定义默认排序
+- 监控类外链不宜对外暴露，可以设置白名单，故不在演示系统展示，可以参看 [ruoyi-ant redi监控](http://redis.ant.zmrit.com/)
 
-``` bash
-# install dependencies
-npm install
 
-# serve with hot reload at localhost:8080
-npm run dev
 
-# build for production with minification
-npm run build
+本项目fork自ant design vue pro，有兴趣直接[传送](https://pro.loacg.com/)
+----
 
-# build for production and view the bundle analyzer report
-npm run build --report
 
-# run unit tests
-npm run unit
 
-# run e2e tests
-npm run e2e
+运行项目需要启动后端ruoyi-cloud，[传送门](https://github.com/zhangmrit/ruoyi-cloud)
 
-# run all tests
-npm test
+源码地址:
+- [Github](https://github.com/zhangmrit/ruoyi-ant)
+- [Gitee](https://gitee.com/zhangmrit/ruoyi-ant)
+
+
+Overview
+----
+
+![工作台-多标签模式](https://static-2.loacg.com/open/static/github/20190224163345.jpg)
+
+![工作台+设置菜单](https://static-2.loacg.com/open/static/github/20181126112124.png)
+
+![个人设置](https://static-2.loacg.com/open/static/github/20180916-134251.png)
+
+
+项目下载和运行
+----
+
+- 拉取项目代码
+```bash
+git clone https://github.com/zhangmrit/ruoyi-ant.git
+cd ruoyi-ant
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+- 安装依赖
+```
+yarn install
+```
+
+- 开发模式运行
+```
+yarn run serve
+```
+
+- 编译项目
+```
+yarn run build
+```
+
+- Lints and fixes files
+```
+yarn run lint
+```
+
+##  请作者喝杯咖啡或者建设演示服务器
+
+###### 微信 or 支付宝
+<img src="https://gitee.com/zhangmrit/img/raw/master/contribute/wechat.png"/>
+<img src="https://gitee.com/zhangmrit/img/raw/master/contribute/alipay.png"/>

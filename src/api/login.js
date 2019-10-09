@@ -1,41 +1,70 @@
-import request from '@/utils/request'
-import { LOGIN_URL } from '../const/url'
+import api from './index'
+import { axios, pureAxios } from '@/utils/request'
 
-// 登录方法
-export function login(username, password, code, uuid) {
-  const data = {
-    username,
-    password,
-    code,
-    uuid
-  }
-  return request({
-    url: LOGIN_URL.LOGIN,
+/**
+ * login func
+ * parameter: {
+ *     username: '',
+ *     password: '',
+ *     remember_me: true,
+ *     captcha: '12345'
+ * }
+ * @param parameter
+ * @returns {*}
+ */
+export function login (parameter) {
+  return axios({
+    url: '/auth/login',
     method: 'post',
-    params: data
+    data: parameter
   })
 }
 
-// 获取用户详细信息
-export function getInfo() {
-  return request({
-    url: '/getInfo',
-    method: 'get'
+export function getSmsCaptcha (parameter) {
+  return axios({
+    url: api.SendSms,
+    method: 'post',
+    data: parameter
   })
 }
 
-// 退出方法
-export function logout() {
-  return request({
-    url: '/logout',
-    method: 'post'
+export function getInfo () {
+  return axios({
+    url: '/system/user/info',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
   })
 }
 
-// 获取验证码
-export function getCodeImg() {
-  return request({
-    url: '/captchaImage',
-    method: 'get'
+export function logout (token) {
+  return axios({
+    url: '/auth/logout',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'token': token
+    }
+  })
+}
+
+export function imgcode () {
+  return pureAxios({
+    url: '/code',
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+/**
+ * get user 2step code open?
+ * @param parameter {*}
+ */
+export function get2step (parameter) {
+  return axios({
+    url: api.twoStepCode,
+    method: 'post',
+    data: parameter
   })
 }
