@@ -9,7 +9,7 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['login', 'register', 'registerResult'] // no redirect whitelist
+const whiteList = ['login', 'register', 'registerResult', 'dashboard'] // no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
@@ -51,6 +51,8 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
+    console.info('token is undefined or null')
+    console.info(to.name)
     if (whiteList.includes(to.name)) {
       // 在免登录白名单，直接进入
       next()

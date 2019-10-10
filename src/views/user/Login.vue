@@ -135,6 +135,7 @@ import { timeFix } from '@/utils/util'
 import md5 from 'md5'
 // eslint-disable-next-line no-unused-vars
 import { getSmsCaptcha, get2step, imgcode } from '@/api/login'
+import backcode from '../../const/backcode'
 
 export default {
   components: {
@@ -276,7 +277,7 @@ export default {
       })
     },
     loginSuccess (res) {
-      if (res.code === 0) {
+      if (res.code === backcode.success) {
         this.$router.push({ name: 'dashboard' }, () => {
           this.$notification.success({
             message: '欢迎',
