@@ -1,12 +1,13 @@
 <template>
   <page-view :avatar="avatar" :title="false">
     <div slot="headerContent">
-      <div class="title">{{ timeFix }}，{{ user.userName }}<span class="welcome-text">，{{ welcome }}</span></div>
+      <!-- <div class="title">{{ timeFix }}，{{ user.userName }}<span class="welcome-text">，{{ welcome }}</span></div> -->
+      <!-- <div class="title">您好<span class="welcome-text">，欢迎回来</span></div>  -->
       <div>前端工程师 | 蚂蚁金服 - 某某某事业群 - VUE平台</div>
     </div>
     <div slot="extra">
       <a-row class="more-info">
-        <a-col :span="8">
+        <!-- <a-col :span="8">
           <head-info :title="$t('dashboard.workplace.project')" content="56" :center="false" :bordered="false"/>
         </a-col>
         <a-col :span="8">
@@ -14,7 +15,7 @@
         </a-col>
         <a-col :span="8">
           <head-info :title="$t('dashboard.workplace.views')" content="2,223" :center="false" />
-        </a-col>
+        </a-col> -->
       </a-row>
     </div>
 
@@ -75,38 +76,38 @@
 </template>
 
 <script>
-import { timeFix } from '@/utils/util'
-import { mapState } from 'vuex'
-import { PageView } from '@/layouts'
-import HeadInfo from '@/components/tools/HeadInfo'
-import DetailList from '@/components/tools/DetailList'
-import { getRoleList, getServiceList } from '@/api/manage'
-import { Radar } from '@/components'
-import { Timeline } from 'ant-design-vue'
-const TimelineItem = Timeline.Item
-const DetailListItem = DetailList.Item
+// import { timeFix } from '@/utils/util'
+// import { mapState } from 'vuex'
+// import { PageView } from '@/layouts'
+// import HeadInfo from '@/components/tools/HeadInfo'
+// import DetailList from '@/components/tools/DetailList'
+// import { getRoleList, getServiceList } from '@/api/manage'
+// import { Radar } from '@/components'
+// import { Timeline } from 'ant-design-vue'
+// const TimelineItem = Timeline.Item
+// const DetailListItem = DetailList.Item
 const DataSet = require('@antv/data-set')
 
 export default {
   name: 'Workplace',
   components: {
-    PageView,
-    HeadInfo,
-    DetailListItem,
-    TimelineItem,
-    Radar
+    // PageView,
+    // HeadInfo,
+    // DetailListItem,
+    // TimelineItem,
+    // Radar
   },
   data () {
     return {
-      timeFix: timeFix(),
-      avatar: '',
-      user: {},
+      // timeFix: timeFix(),
+      // avatar: '',
+      // user: {},
 
-      projects: [],
-      loading: true,
-      radarLoading: true,
-      activities: [],
-      teams: [],
+      // projects: [],
+      // loading: true,
+      // radarLoading: true,
+      // activities: [],
+      // teams: [],
 
       // data
       axis1Opts: {
@@ -192,29 +193,29 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      nickname: (state) => state.user.nickname,
-      welcome: (state) => state.user.welcome
-    }),
-    userInfo () {
-      return this.$store.getters.userInfo
-    }
+    // ...mapState({
+    //   nickname: (state) => state.user.nickname,
+    //   welcome: (state) => state.user.welcome
+    // }),
+    // userInfo () {
+    //   return this.$store.getters.userInfo
+    // }
   },
   created () {
-    this.user = this.userInfo
-    this.avatar = this.userInfo.avatar
+    // this.user = this.userInfo
+    // this.avatar = this.userInfo.avatar
 
-    getRoleList().then(res => {
-      // console.log('workplace -> call getRoleList()', res)
-    })
+    // getRoleList().then(res => {
+    //   // console.log('workplace -> call getRoleList()', res)
+    // })
 
-    getServiceList().then(res => {
-      // console.log('workplace -> call getServiceList()', res)
-    })
+    // getServiceList().then(res => {
+    //   // console.log('workplace -> call getServiceList()', res)
+    // })
   },
   mounted () {
-    this.getTeams()
-    this.initRadar()
+    // this.getTeams()
+    // this.initRadar()
   },
   methods: {
     getTeams () {
