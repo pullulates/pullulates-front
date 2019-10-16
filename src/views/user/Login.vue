@@ -187,7 +187,6 @@ export default {
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          console.log('login form', values)
           const loginParams = { ...values }
           delete loginParams.username
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
@@ -249,26 +248,12 @@ export default {
       })
     },
     loginSuccess (res) {
-      console.log(res)
-      // check res.homePage define, set $router.push name res.homePage
-      // Why not enter onComplete
-      /*
-      this.$router.push({ name: 'analysis' }, () => {
-        console.log('onComplete')
+      this.$router.push({ name: 'dashboard' }, () => {
         this.$notification.success({
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`
         })
       })
-      */
-      this.$router.push({ path: '/' })
-      // 延迟 1 秒显示欢迎信息
-      setTimeout(() => {
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      }, 1000)
       this.isLoginError = false
     },
     requestFailed (err) {
