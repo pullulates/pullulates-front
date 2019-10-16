@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { Icon } from 'ant-design-vue'
+import Icon from 'ant-design-vue/es/icon'
 
 export default {
   name: 'NumberInfo',

@@ -152,7 +152,6 @@ export default {
     }
   },
   methods: {
-
     handlePasswordLevel (rule, value, callback) {
       let level = 0
 

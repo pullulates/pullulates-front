@@ -70,7 +70,6 @@ import SideMenu from '@/components/Menu/SideMenu'
 import GlobalHeader from '@/components/GlobalHeader'
 import GlobalFooter from '@/components/GlobalFooter'
 import SettingDrawer from '@/components/SettingDrawer'
-import { updateTheme } from '@/components/SettingDrawer/settingConfig'
 
 export default {
   name: 'BasicLayout',
@@ -114,7 +113,6 @@ export default {
     this.collapsed = !this.sidebarOpened
   },
   mounted () {
-    updateTheme(this.primaryColor)
     const userAgent = navigator.userAgent
     if (userAgent.indexOf('Edge') > -1) {
       this.$nextTick(() => {
@@ -142,9 +140,6 @@ export default {
       return left
     },
     menuSelect () {
-      if (!this.isDesktop()) {
-        this.collapsed = false
-      }
     },
     drawerClose () {
       this.collapsed = false

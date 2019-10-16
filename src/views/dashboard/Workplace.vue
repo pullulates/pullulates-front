@@ -1,19 +1,19 @@
 <template>
   <page-view :avatar="avatar" :title="false">
     <div slot="headerContent">
-      <div class="title">{{ timeFix }}，{{ user.userName }}<span class="welcome-text">，{{ welcome }}</span></div>
+      <div class="title">{{ timeFix }}，{{ user.name }}<span class="welcome-text">，{{ welcome }}</span></div>
       <div>前端工程师 | 蚂蚁金服 - 某某某事业群 - VUE平台</div>
     </div>
     <div slot="extra">
       <a-row class="more-info">
         <a-col :span="8">
-          <head-info :title="$t('dashboard.workplace.project')" content="56" :center="false" :bordered="false"/>
+          <head-info title="项目" content="56" :center="false" :bordered="false"/>
         </a-col>
         <a-col :span="8">
-          <head-info :title="$t('dashboard.workplace.teamRank')" content="8/24" :center="false" :bordered="false"/>
+          <head-info title="团队排名" content="8/24" :center="false" :bordered="false"/>
         </a-col>
         <a-col :span="8">
-          <head-info :title="$t('dashboard.workplace.views')" content="2,223" :center="false" />
+          <head-info title="项目数" content="2,223" :center="false" />
         </a-col>
       </a-row>
     </div>
@@ -210,7 +210,7 @@ export default {
     getProjects () {
       this.$http.get('/list/search/projects')
         .then(res => {
-          this.projects = res.result && res.result.rows
+          this.projects = res.result && res.result.data
           this.loading = false
         })
     },

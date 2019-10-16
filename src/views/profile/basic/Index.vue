@@ -98,7 +98,7 @@ export default {
       loadGoodsData: () => {
         return new Promise(resolve => {
           resolve({
-            rows: [
+            data: [
               {
                 id: '1234561',
                 name: '矿泉水 550ml',
@@ -133,9 +133,9 @@ export default {
               }
             ],
             pageSize: 10,
-            pageNum: 1,
+            pageNo: 1,
             totalPage: 1,
-            total: 10
+            totalCount: 10
           })
         }).then(res => {
           return res
@@ -173,7 +173,7 @@ export default {
       loadScheduleData: () => {
         return new Promise(resolve => {
           resolve({
-            rows: [
+            data: [
               {
                 key: '1',
                 time: '2017-10-01 14:10',
@@ -216,9 +216,9 @@ export default {
               }
             ],
             pageSize: 10,
-            pageNum: 1,
+            pageNo: 1,
             totalPage: 1,
-            total: 10
+            totalCount: 10
           })
         }).then(res => {
           return res

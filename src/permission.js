@@ -3,29 +3,33 @@ import router from './router'
 import store from './store'
 
 import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css' // progress bar style
-import { notification } from 'ant-design-vue'
+import '@/components/NProgress/nprogress.less' // progress bar custom style
+import notification from 'ant-design-vue/es/notification'
+import { setDocumentTitle, domTitle } from '@/utils/domUtil'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['login', 'register', 'registerResult', 'dashboard'] // no redirect whitelist
+const whiteList = ['login', 'register', 'registerResult'] // no redirect whitelist
+const defaultRoutePath = '/dashboard/workplace'
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-
+  to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${to.meta.title} - ${domTitle}`))
   if (Vue.ls.get(ACCESS_TOKEN)) {
     /* has token */
     if (to.path === '/user/login') {
-      next({ path: '/dashboard/workplace' })
+      next({ path: defaultRoutePath })
       NProgress.done()
     } else {
       if (store.getters.roles.length === 0) {
-        store.dispatch('GetInfo')
-          .then(() => {
-            // 调用 vuex 的 从后端获取用户的路由菜单，动态添加可访问路由表
-            store.dispatch('GenerateRoutes').then(() => {
-              // 把已获取到的路由菜单加入到路由表中
+        store
+          .dispatch('GetInfo')
+          .then(res => {
+            const roles = res.result && res.result.role
+            store.dispatch('GenerateRoutes', { roles }).then(() => {
+              // 根据roles权限生成可访问的路由表
+              // 动态添加可访问路由表
               router.addRoutes(store.getters.addRouters)
               const redirect = decodeURIComponent(from.query.redirect || to.path)
               if (to.path === redirect) {
@@ -51,8 +55,6 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    console.info('token is undefined or null')
-    console.info(to.name)
     if (whiteList.includes(to.name)) {
       // 在免登录白名单，直接进入
       next()

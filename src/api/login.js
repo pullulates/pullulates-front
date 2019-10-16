@@ -1,6 +1,5 @@
 import api from './index'
-import { USER_SERVICE_URL } from '../config/service.url.config'
-import { axios, pureAxios } from '@/utils/request'
+import { axios } from '@/utils/request'
 
 /**
  * login func
@@ -15,7 +14,7 @@ import { axios, pureAxios } from '@/utils/request'
  */
 export function login (parameter) {
   return axios({
-    url: USER_SERVICE_URL.LOGIN,
+    url: '/auth/login',
     method: 'post',
     data: parameter
   })
@@ -31,7 +30,7 @@ export function getSmsCaptcha (parameter) {
 
 export function getInfo () {
   return axios({
-    url: '/system/user/info',
+    url: '/user/info',
     method: 'get',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
@@ -39,22 +38,20 @@ export function getInfo () {
   })
 }
 
-export function logout (token) {
+export function getCurrentUserNav (token) {
+  return axios({
+    url: '/user/nav',
+    method: 'get'
+  })
+}
+
+export function logout () {
   return axios({
     url: '/auth/logout',
     method: 'post',
     headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      'token': token
+      'Content-Type': 'application/json;charset=UTF-8'
     }
-  })
-}
-
-export function imgcode () {
-  return pureAxios({
-    url: '/code',
-    method: 'get',
-    responseType: 'blob'
   })
 }
 

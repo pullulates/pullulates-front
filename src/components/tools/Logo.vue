@@ -18,7 +18,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'RUOYI ANT',
+      default: 'Ant Design Pro',
       required: false
     },
     showTitle: {

@@ -1,13 +1,12 @@
 <template>
   <div class="user-wrapper">
     <div class="content-box">
-      <a href="http://doc.rycloud.zmrit.com/#/quick-start" target="_blank">
+      <a href="https://pro.loacg.com/docs/getting-started" target="_blank">
         <span class="action">
           <a-icon type="question-circle-o"></a-icon>
         </span>
       </a>
       <notice-icon class="action"/>
-      <lang-select />
       <a-dropdown>
         <span class="action ant-dropdown-link user-dropdown-menu">
           <a-avatar class="avatar" size="small" :src="avatar"/>
@@ -39,24 +38,22 @@
           </a-menu-item>
         </a-menu>
       </a-dropdown>
-
     </div>
   </div>
 </template>
 
 <script>
 import NoticeIcon from '@/components/NoticeIcon'
-import LangSelect from '@/components/tools/LangSelect'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'UserMenu',
   components: {
-    LangSelect,
     NoticeIcon
   },
   computed: {
     ...mapGetters(['nickname', 'avatar'])
+
   },
   methods: {
     ...mapActions(['Logout']),

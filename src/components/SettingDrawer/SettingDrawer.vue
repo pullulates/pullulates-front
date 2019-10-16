@@ -172,7 +172,7 @@
 <script>
 import { DetailList } from '@/components'
 import SettingItem from './SettingItem'
-// import config from '@/config/defaultSettings'
+import config from '@/config/defaultSettings'
 import { updateTheme, updateColorWeak, colorList } from './settingConfig'
 import { mixin, mixinDevice } from '@/utils/mixin'
 
@@ -193,14 +193,10 @@ export default {
 
   },
   mounted () {
-    const vm = this
-    setTimeout(() => {
-      vm.visible = false
-    }, 16)
-    // updateTheme(this.primaryColor)
-    // if (this.colorWeak !== config.colorWeak) {
-    //   updateColorWeak(this.colorWeak)
-    // }
+    updateTheme(this.primaryColor)
+    if (this.colorWeak !== config.colorWeak) {
+      updateColorWeak(this.colorWeak)
+    }
   },
   methods: {
     showDrawer () {

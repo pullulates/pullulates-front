@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { Avatar, Tooltip } from 'ant-design-vue'
+import Avatar from 'ant-design-vue/es/avatar'
+import Tooltip from 'ant-design-vue/es/tooltip'
 
 export default {
   name: 'AvatarItem',

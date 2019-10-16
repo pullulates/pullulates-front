@@ -64,7 +64,7 @@
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="$refs.createModal.add()">新建</a-button>
       <a-button type="dashed" @click="tableOption">{{ optionAlertShow && '关闭' || '开启' }} alert</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
           <!-- lock | unlock -->
@@ -84,6 +84,7 @@
       :data="loadData"
       :alert="options.alert"
       :rowSelection="options.rowSelection"
+      showPagination="auto"
     >
       <span slot="serial" slot-scope="text, record, index">
         {{ index + 1 }}
@@ -95,9 +96,10 @@
         <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
       </span>
 
-      <span slot="action" slot-scope="text, record">
+      <span slot="action" slot-scope="text, record, index">
         <template>
-          <a @click="handleEdit(record)">配置</a>
+          <router-link :to="{ name: 'TableListWrapper', query: { id: index } }" v-if="index < 2">新页面</router-link>
+          <a v-else @click="handleEdit(record)">配置</a>
           <a-divider type="vertical" />
           <a @click="handleSub(record)">订阅报警</a>
         </template>
@@ -193,7 +195,6 @@ export default {
         console.log('loadData.parameter', parameter)
         return getServiceList(Object.assign(parameter, this.queryParam))
           .then(res => {
-            console.log('res', res)
             return res.result
           })
       },

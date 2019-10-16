@@ -108,6 +108,7 @@ export default {
 
 <style lang="less">
 @import '../index.less';
+
 .header-animat{
   position: relative;
   z-index: @ant-global-header-zindex;

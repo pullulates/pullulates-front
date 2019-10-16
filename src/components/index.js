@@ -1,31 +1,62 @@
 // chart
-export { default as Bar } from '@/components/Charts/Bar'
-export { default as ChartCard } from '@/components/Charts/ChartCard'
-export { default as Liquid } from '@/components/Charts/Liquid'
-export { default as MiniArea } from '@/components/Charts/MiniArea'
-export { default as MiniSmoothArea } from '@/components/Charts/MiniSmoothArea'
-export { default as MiniBar } from '@/components/Charts/MiniBar'
-export { default as MiniProgress } from '@/components/Charts/MiniProgress'
-export { default as Radar } from '@/components/Charts/Radar'
-export { default as RankList } from '@/components/Charts/RankList'
-export { default as TransferBar } from '@/components/Charts/TransferBar'
-export { default as TagCloud } from '@/components/Charts/TagCloud'
+import Bar from '@/components/Charts/Bar'
+import ChartCard from '@/components/Charts/ChartCard'
+import Liquid from '@/components/Charts/Liquid'
+import MiniArea from '@/components/Charts/MiniArea'
+import MiniSmoothArea from '@/components/Charts/MiniSmoothArea'
+import MiniBar from '@/components/Charts/MiniBar'
+import MiniProgress from '@/components/Charts/MiniProgress'
+import Radar from '@/components/Charts/Radar'
+import RankList from '@/components/Charts/RankList'
+import TransferBar from '@/components/Charts/TransferBar'
+import TagCloud from '@/components/Charts/TagCloud'
 
 // pro components
-export { default as AvatarList } from '@/components/AvatarList'
-export { default as CountDown } from '@/components/CountDown'
-export { default as Ellipsis } from '@/components/Ellipsis'
-export { default as FooterToolbar } from '@/components/FooterToolbar'
-export { default as NumberInfo } from '@/components/NumberInfo'
-// 兼容写法，请勿继续使用
-export { default as DescriptionList, default as DetailList } from '@/components/DescriptionList'
-export { default as STree } from '@/components/Tree/Tree'
-export { default as Trend } from '@/components/Trend'
-export { default as STable } from '@/components/Table'
-export { default as MultiTab } from '@/components/MultiTab'
-export { default as Result } from '@/components/Result'
-export { default as IconSelector } from '@/components/IconSelector'
-export { default as TagSelect } from '@/components/TagSelect'
-export { default as ExceptionPage } from '@/components/Exception'
-export { default as StandardFormRow } from '@/components/StandardFormRow'
-export { default as ArticleListContent } from '@/components/ArticleListContent'
+import AvatarList from '@/components/AvatarList'
+import CountDown from '@/components/CountDown'
+import Ellipsis from '@/components/Ellipsis'
+import FooterToolbar from '@/components/FooterToolbar'
+import NumberInfo from '@/components/NumberInfo'
+import DescriptionList from '@/components/DescriptionList'
+import Tree from '@/components/Tree/Tree'
+import Trend from '@/components/Trend'
+import STable from '@/components/Table'
+import MultiTab from '@/components/MultiTab'
+import Result from '@/components/Result'
+import IconSelector from '@/components/IconSelector'
+import TagSelect from '@/components/TagSelect'
+import ExceptionPage from '@/components/Exception'
+import StandardFormRow from '@/components/StandardFormRow'
+import ArticleListContent from '@/components/ArticleListContent'
+
+export {
+  AvatarList,
+  Bar,
+  ChartCard,
+  Liquid,
+  MiniArea,
+  MiniSmoothArea,
+  MiniBar,
+  MiniProgress,
+  Radar,
+  TagCloud,
+  RankList,
+  TransferBar,
+  Trend,
+  CountDown,
+  Ellipsis,
+  FooterToolbar,
+  NumberInfo,
+  DescriptionList,
+  // 兼容写法，请勿继续使用
+  DescriptionList as DetailList,
+  Tree,
+  STable,
+  MultiTab,
+  Result,
+  ExceptionPage,
+  IconSelector,
+  TagSelect,
+  StandardFormRow,
+  ArticleListContent
+}

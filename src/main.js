@@ -11,14 +11,9 @@ import { VueAxios } from './utils/request'
 import './mock'
 
 import bootstrap from './core/bootstrap'
-import './core/lazy_use'
+import './core/use'
 import './permission' // permission control
 import './utils/filter' // global filter
-import 'ant-design-vue/dist/antd.less'
-import i18n from './locales'
-
-// 返回码
-import backcode from './const/backcode'
 
 Vue.config.productionTip = false
 
@@ -28,8 +23,6 @@ Vue.use(VueAxios)
 new Vue({
   router,
   store,
-  i18n,
-  backcode,
   created: bootstrap,
   render: h => h(App)
 }).$mount('#app')

@@ -13,7 +13,7 @@
         @change="handleTabClick"
       >
         <a-tab-pane key="tab1" tab="账号密码登录">
-          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" :message="errorMsg" />
+          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" message="账户或密码错误（admin/ant.design )" />
           <a-form-item>
             <a-input
               size="large"
@@ -21,7 +21,7 @@
               placeholder="账户: admin"
               v-decorator="[
                 'username',
-                {initialValue:'admin',rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
+                {rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
               ]"
             >
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -33,27 +33,15 @@
               size="large"
               type="password"
               autocomplete="false"
-              placeholder="密码: admin123"
+              placeholder="密码: admin or ant.design"
               v-decorator="[
                 'password',
-                { initialValue:'admin123',rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
+                {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
               ]"
             >
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
-          <a-row :gutter="16">
-            <a-col class="gutter-row" :span="16">
-              <a-form-item>
-                <a-input size="large" type="text" placeholder="验证码" v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
-                  <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
-                </a-input>
-              </a-form-item>
-            </a-col>
-            <a-col class="gutter-row" :span="8">
-              <img class="getCaptcha" :src="codesrc" @click="getImgCode">
-            </a-col>
-          </a-row>
         </a-tab-pane>
         <a-tab-pane key="tab2" tab="手机号登录">
           <a-form-item>
@@ -128,14 +116,11 @@
 </template>
 
 <script>
+import md5 from 'md5'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-// eslint-disable-next-line no-unused-vars
-import md5 from 'md5'
-// eslint-disable-next-line no-unused-vars
-import { getSmsCaptcha, get2step, imgcode } from '@/api/login'
-import backcode from '../../const/backcode'
+import { getSmsCaptcha, get2step } from '@/api/login'
 
 export default {
   components: {
@@ -143,14 +128,11 @@ export default {
   },
   data () {
     return {
-      codesrc: null,
-      randomStr: null,
       customActiveKey: 'tab1',
       loginBtn: false,
       // login type: 0 email, 1 username, 2 telephone
       loginType: 0,
       isLoginError: false,
-      errorMsg: '',
       requiredTwoStepCaptcha: false,
       stepCaptchaVisible: false,
       form: this.$form.createForm(this),
@@ -164,15 +146,14 @@ export default {
     }
   },
   created () {
-    // get2step({ })
-    //   .then(res => {
-    //     this.requiredTwoStepCaptcha = res.result.stepCode
-    //   })
-    //   .catch(() => {
-    //     this.requiredTwoStepCaptcha = false
-    //   })
+    get2step({ })
+      .then(res => {
+        this.requiredTwoStepCaptcha = res.result.stepCode
+      })
+      .catch(() => {
+        this.requiredTwoStepCaptcha = false
+      })
     // this.requiredTwoStepCaptcha = true
-    // this.getImgCode()
   },
   methods: {
     ...mapActions(['Login', 'Logout']),
@@ -202,7 +183,7 @@ export default {
 
       state.loginBtn = true
 
-      const validateFieldsKey = customActiveKey === 'tab1' ? ['username', 'password', 'captcha'] : ['mobile', 'captcha']
+      const validateFieldsKey = customActiveKey === 'tab1' ? ['username', 'password'] : ['mobile', 'captcha']
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
@@ -210,8 +191,7 @@ export default {
           const loginParams = { ...values }
           delete loginParams.username
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          // loginParams.password = md5(values.password)
-          loginParams.randomStr = this.randomStr
+          loginParams.password = md5(values.password)
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))
@@ -268,34 +248,34 @@ export default {
         this.stepCaptchaVisible = false
       })
     },
-    async getImgCode () {
-      await imgcode().then(res => {
-        const raw = res.data
-        const { randomstr } = res.headers
-        this.randomStr = randomstr
-        this.codesrc = URL.createObjectURL(raw)
-      })
-    },
     loginSuccess (res) {
-      if (res.code === backcode.success) {
-        this.$router.push({ name: 'dashboard' }, () => {
-          this.$notification.success({
-            message: '欢迎',
-            description: `${timeFix()}，欢迎回来`
-          })
+      console.log(res)
+      // check res.homePage define, set $router.push name res.homePage
+      // Why not enter onComplete
+      /*
+      this.$router.push({ name: 'analysis' }, () => {
+        console.log('onComplete')
+        this.$notification.success({
+          message: '欢迎',
+          description: `${timeFix()}，欢迎回来`
         })
-        this.isLoginError = false
-      } else {
-        this.requestFailed(res)
-      }
+      })
+      */
+      this.$router.push({ path: '/' })
+      // 延迟 1 秒显示欢迎信息
+      setTimeout(() => {
+        this.$notification.success({
+          message: '欢迎',
+          description: `${timeFix()}，欢迎回来`
+        })
+      }, 1000)
+      this.isLoginError = false
     },
     requestFailed (err) {
       this.isLoginError = true
-      // this.getImgCode()
-      this.errorMsg = ((err.response || {}).data || {}).msg || err.msg || '请求出现错误，请稍后再试'
       this.$notification['error']({
         message: '错误',
-        description: this.errorMsg,
+        description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
         duration: 4
       })
     }

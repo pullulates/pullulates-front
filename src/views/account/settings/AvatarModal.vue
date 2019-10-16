@@ -31,7 +31,7 @@
     <br>
     <a-row>
       <a-col :lg="2" :md="2">
-        <a-upload name="file" :headers="headers" :beforeUpload="beforeUpload" :showUploadList="false">
+        <a-upload name="file" :beforeUpload="beforeUpload" :showUploadList="false">
           <a-button icon="upload">选择图片</a-button>
         </a-upload>
       </a-col>
@@ -130,7 +130,7 @@ export default {
           formData.append('file', data, this.fileName)
           this.$http.post('https://www.mocky.io/v2/5cc8019d300000980a055e76', formData, { contentType: false, processData: false, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
             .then((response) => {
-              console.log(response)
+              console.log('upload response:', response)
               // var res = response.data
               // if (response.status === 'done') {
               //   _this.imgFile = ''

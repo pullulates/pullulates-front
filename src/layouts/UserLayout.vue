@@ -5,11 +5,11 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">PULLULATES VUE</span>
+            <span class="title">Ant Design</span>
           </a>
         </div>
         <div class="desc">
-          设计源于<a target="_blank" href="https://vue.ant.design/docs/vue/introduce-cn/">Ant Design</a>，模板源于<a target="_blank" href="http://ruoyi.ant.zmrit.com/user/login">RUOYI ANT</a>
+          Ant Design 是西湖区最具影响力的 Web 设计规范
         </div>
       </div>
 
@@ -22,7 +22,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2019 pullulates
+          Copyright &copy; 2018 白鹭学园技术组出品
         </div>
       </div>
     </div>

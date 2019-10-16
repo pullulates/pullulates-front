@@ -98,7 +98,6 @@ export default {
   },
   methods: {
     setavatar (url) {
-      console.log(url)
       this.option.img = url
     }
   }

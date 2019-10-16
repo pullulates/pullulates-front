@@ -1,13 +1,7 @@
+const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
+
 const plugins = []
-// if your use import on Demand, Use this code,but can't use the cdn together
-// plugins.push(
-//   [ 'import', {
-//     'libraryName': 'ant-design-vue',
-//     'libraryDirectory': 'es',
-//     'style': true // `style: true` 会加载 less 文件
-//   } ]
-// )
-if (['production', 'prod'].includes(process.env.NODE_ENV)) {
+if (IS_PROD) {
   plugins.push('transform-remove-console')
 }
 
@@ -21,5 +15,14 @@ module.exports = {
       }
     ]
   ],
-  plugins: plugins
+  plugins
+  // if your use import on Demand, Use this code
+  // ,
+  // plugins: [
+  //   [ 'import', {
+  //     'libraryName': 'ant-design-vue',
+  //     'libraryDirectory': 'es',
+  //     'style': true // `style: true` 会加载 less 文件
+  //   } ]
+  // ]
 }

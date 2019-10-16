@@ -1,4 +1,4 @@
-import { Table as T } from 'ant-design-vue'
+import T from 'ant-design-vue/es/table/Table'
 import get from 'lodash.get'
 
 export default {
@@ -12,7 +12,6 @@ export default {
       localLoading: false,
       localDataSource: [],
       localPagination: Object.assign({}, this.pagination)
-
     }
   },
   props: Object.assign({}, T.props, {
@@ -75,18 +74,6 @@ export default {
     pageURI: {
       type: Boolean,
       default: false
-    },
-    rangPicker: {
-      type: Array,
-      default: null
-    },
-    defaultSort: {
-      type: String,
-      default: null
-    },
-    defaultOrder: {
-      type: String,
-      default: 'desc'
     }
   }),
   watch: {
@@ -123,6 +110,7 @@ export default {
       pageSize: this.pageSize,
       showSizeChanger: this.showSizeChanger
     }) || false
+    console.log('this.localPagination', this.localPagination)
     this.needTotalList = this.initTotalList(this.columns)
     this.loadData()
   },
@@ -146,56 +134,52 @@ export default {
      */
     loadData (pagination, filters, sorter) {
       this.localLoading = true
-      // console.log('rangPicker', this.rangPicker)
       const parameter = Object.assign({
-        pageNum: (pagination && pagination.current) ||
+        pageNo: (pagination && pagination.current) ||
           this.showPagination && this.localPagination.current || this.pageNum,
         pageSize: (pagination && pagination.pageSize) ||
           this.showPagination && this.localPagination.pageSize || this.pageSize
       },
-      (this.rangPicker && this.rangPicker.length === 2 && {
-        beginTime: this.rangPicker[0].format('YYYY-MM-DD'),
-        endTime: this.rangPicker[1].format('YYYY-MM-DD')
-      }) || {},
       (sorter && sorter.field && {
         sortField: sorter.field
-      }) || (this.defaultSort && this.defaultSort.length > 0 && { sortField: this.defaultSort }) || {},
+      }) || {},
       (sorter && sorter.order && {
-        sortOrder: sorter.order.replace('end', '')
-      }) || (this.defaultSort && this.defaultSort.length > 0 && { sortOrder: this.defaultOrder }) || {},
-      {
+        sortOrder: sorter.order
+      }) || {}, {
         ...filters
       }
       )
+      console.log('parameter', parameter)
       const result = this.data(parameter)
       // 对接自己的通用数据接口需要修改下方代码中的 r.pageNo, r.totalCount, r.data
       // eslint-disable-next-line
       if ((typeof result === 'object' || typeof result === 'function') && typeof result.then === 'function') {
         result.then(r => {
           this.localPagination = this.showPagination && Object.assign({}, this.localPagination, {
-            current: r.pageNum, // 返回结果中的当前分页数
-            total: r.total, // 返回结果中的总记录数
+            current: r.pageNo, // 返回结果中的当前分页数
+            total: r.totalCount, // 返回结果中的总记录数
             showSizeChanger: this.showSizeChanger,
             pageSize: (pagination && pagination.pageSize) ||
               this.localPagination.pageSize
           }) || false
           // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
-          if (r.rows.length === 0 && this.showPagination && this.localPagination.current > 1) {
+          if (r.data.length === 0 && this.showPagination && this.localPagination.current > 1) {
             this.localPagination.current--
             this.loadData()
             return
           }
-          // console.log('localPagination', this.localPagination)
+
           // 这里用于判断接口是否有返回 r.totalCount 且 this.showPagination = true 且 pageNo 和 pageSize 存在 且 totalCount 小于等于 pageNo * pageSize 的大小
           // 当情况满足时，表示数据不满足分页大小，关闭 table 分页功能
           try {
-            if ((['auto', true].includes(this.showPagination) && r.total <= (r.pageNum * this.localPagination.pageSize))) {
+            if ((['auto', true].includes(this.showPagination) && r.totalCount <= (r.pageNo * this.localPagination.pageSize))) {
               this.localPagination.hideOnSinglePage = true
             }
           } catch (e) {
             this.localPagination = false
           }
-          this.localDataSource = r.rows // 返回结果中的数组数据
+          console.log('loadData -> this.localPagination', this.localPagination)
+          this.localDataSource = r.data // 返回结果中的数组数据
           this.localLoading = false
         })
       }
