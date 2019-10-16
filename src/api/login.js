@@ -1,22 +1,13 @@
 import api from './index'
+import PULLULATES_USER_URL from './url/pullulates.user.url'
 import { axios } from '@/utils/request'
+import Qs from 'qs'
 
-/**
- * login func
- * parameter: {
- *     username: '',
- *     password: '',
- *     remember_me: true,
- *     captcha: '12345'
- * }
- * @param parameter
- * @returns {*}
- */
 export function login (parameter) {
   return axios({
-    url: '/auth/login',
+    url: PULLULATES_USER_URL.Login,
     method: 'post',
-    data: parameter
+    data: Qs.stringify(parameter)
   })
 }
 
