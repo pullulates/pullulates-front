@@ -21,7 +21,7 @@ export function getSmsCaptcha (parameter) {
 
 export function getInfo () {
   return axios({
-    url: '/user/info',
+    url: PULLULATES_USER_URL.User_Info,
     method: 'get',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
