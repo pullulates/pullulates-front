@@ -17,14 +17,14 @@ const err = (error) => {
     const token = Vue.ls.get(ACCESS_TOKEN)
     if (error.response.status === 403) {
       notification.error({
-        message: 'Forbidden',
+        message: '提示',
         description: data.message
       })
     }
-    if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
+    if (error.response.status === 401) {
       notification.error({
-        message: 'Unauthorized',
-        description: 'Authorization verification failed'
+        message: '提示',
+        description: '认证失败咯，请先去登录一下啦~'
       })
       if (token) {
         store.dispatch('Logout').then(() => {
@@ -34,6 +34,18 @@ const err = (error) => {
         })
       }
     }
+    if (error.response.status === 404) {
+      notification.error({
+        message: '提示',
+        description: '您访问的资源丢失了，请检查访问地址或联系帅气的管理员'
+      })
+    }
+    if (error.response.data.code === 500 && !(error.response.status === 401 || error.response.status === 403 || error.response.status === 404)) {
+      notification.error({
+        message: '提示',
+        description: error.response.data.msg
+      })
+    }
   }
   return Promise.reject(error)
 }
@@ -41,7 +53,6 @@ const err = (error) => {
 // request interceptor
 service.interceptors.request.use(config => {
   const token = Vue.ls.get(ACCESS_TOKEN)
-  console.log('发送请求，token is ', token)
   if (token) {
     config.headers['PULLULATES-TOKEN'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
   }
@@ -50,6 +61,12 @@ service.interceptors.request.use(config => {
 
 // response interceptor
 service.interceptors.response.use((response) => {
+  if (response.data.code === 500) {
+    notification.error({
+      message: '提示',
+      description: response.data.msg
+    })
+  }
   return response.data
 }, err)
 
