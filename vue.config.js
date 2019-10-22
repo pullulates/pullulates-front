@@ -103,6 +103,14 @@ const vueConfig = {
         pathRewrite: {
           '^/pullulates_user_api': ''
         }
+      },
+      '/pullulates_service_api': {
+        target: 'http://localhost:7600/service',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/pullulates_service_api': ''
+        }
       }
     }
   },

@@ -81,14 +81,24 @@
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
-        <a-button
-          size="large"
-          type="primary"
-          htmlType="submit"
-          class="login-button"
-          :loading="state.loginBtn"
-          :disabled="state.loginBtn"
-        >确定</a-button>
+        <Captcha
+          id="Captcha"
+          scene="Login"
+          type="Geetest"
+          :parm="captchaOption"
+          @callback="captchaNotice"
+          url="http://localhost:7600/service/geetest/init"
+        >
+          <a-button
+            size="large"
+            type="primary"
+            htmlType="button"
+            id="Captcha"
+            class="login-button"
+            :loading="state.loginBtn"
+            :disabled="state.loginBtn"
+          >确定</a-button>
+        </Captcha>
       </a-form-item>
     </a-form>
 
@@ -128,6 +138,13 @@ export default {
         // login type: 0 email, 1 username, 2 telephone
         loginType: 0,
         smsSendBtn: false
+      },
+      captchaOption: {
+        // 各平台的参数，具体请参阅个平台文档
+        // 以下为腾讯验证码的参数
+        // appid: '',
+        // 以下为极验验证码的参数
+        product: 'bind'
       }
     }
   },
@@ -157,6 +174,13 @@ export default {
     handleTabClick (key) {
       this.customActiveKey = key
       // this.form.resetFields()
+    },
+    // 回调监听
+    // status: 1成功,2验证中,0失败
+    // res: 三方返回的原始数据
+    captchaNotice (status, res) {
+      console.log(status)
+      console.log(res)
     },
     handleSubmit (e) {
       e.preventDefault()
