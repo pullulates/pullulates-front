@@ -1,6 +1,4 @@
 // eslint-disable-next-line
-import * as loginService from '@/api/login'
-// eslint-disable-next-line
 import { BasicLayout, RouteView, BlankLayout, PageView } from '@/layouts'
 
 // 前端路由表
@@ -60,43 +58,16 @@ const notFoundRouter = {
   path: '*', redirect: '/404', hidden: true
 }
 
-// 根级菜单
-const rootRouter = {
-  key: '',
-  name: 'index',
-  path: '',
-  component: 'BasicLayout',
-  redirect: '/dashboard',
-  meta: {
-    title: '首页'
-  },
-  children: []
-}
-
 /**
  * 动态生成菜单
- * @param token
+ * @param data
  * @returns {Promise<Router>}
  */
-export const generatorDynamicRouter = (token) => {
-  return new Promise((resolve, reject) => {
-    loginService.getCurrentUserNav(token).then(res => {
-      console.log('res', res)
-      const { result } = res
-      const menuNav = []
-      const childrenNav = []
-      //      后端数据, 根级树数组,  根级 PID
-      listToTree(result, childrenNav, 0)
-      rootRouter.children = childrenNav
-      menuNav.push(rootRouter)
-      console.log('menuNav', menuNav)
-      const routers = generator(menuNav)
-      routers.push(notFoundRouter)
-      console.log('routers', routers)
-      resolve(routers)
-    }).catch(err => {
-      reject(err)
-    })
+export const generatorDynamicRouter = (data) => {
+  return new Promise((resolve) => {
+    const routers = generator(data.routers)
+    routers.push(notFoundRouter)
+    resolve(routers)
   })
 }
 
@@ -143,32 +114,5 @@ export const generator = (routerMap, parent) => {
       currentRouter.children = generator(item.children, currentRouter)
     }
     return currentRouter
-  })
-}
-
-/**
- * 数组转树形结构
- * @param list 源数组
- * @param tree 树
- * @param parentId 父ID
- */
-const listToTree = (list, tree, parentId) => {
-  list.forEach(item => {
-    // 判断是否为父级菜单
-    if (item.parentId === parentId) {
-      const child = {
-        ...item,
-        key: item.key || item.name,
-        children: []
-      }
-      // 迭代 list， 找到当前菜单相符合的所有子菜单
-      listToTree(list, child.children, item.id)
-      // 删掉不存在 children 值的属性
-      if (child.children.length <= 0) {
-        delete child.children
-      }
-      // 加入到树中
-      tree.push(child)
-    }
   })
 }
