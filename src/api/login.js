@@ -1,5 +1,6 @@
 import api from './index'
 import PULLULATES_USER_URL from './url/pullulates.user.url'
+import PULLULATES_SERVICE_URL from './url/pullulates.service.url'
 import { axios } from '@/utils/request'
 import Qs from 'qs'
 
@@ -29,31 +30,16 @@ export function getInfo () {
   })
 }
 
-export function getCurrentUserNav (token) {
-  return axios({
-    url: '/user/nav',
-    method: 'get'
-  })
-}
-
 export function logout () {
   return axios({
-    url: '/auth/logout',
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+    url: PULLULATES_USER_URL.Logout,
+    method: 'post'
   })
 }
 
-/**
- * get user 2step code open?
- * @param parameter {*}
- */
-export function get2step (parameter) {
+export function requestGeetest () {
   return axios({
-    url: api.twoStepCode,
-    method: 'post',
-    data: parameter
+    url: PULLULATES_SERVICE_URL.GEETEST_INIT,
+    method: 'get'
   })
 }

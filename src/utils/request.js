@@ -40,6 +40,12 @@ const err = (error) => {
         description: '您访问的资源丢失了，请检查访问地址或联系帅气的管理员'
       })
     }
+    if (error.response.status === 504) {
+      notification.error({
+        message: '提示',
+        description: '网关服务转发超时，请检查当前服务是否可用或联系帅气的管理员'
+      })
+    }
     if (error.response.data.code === 500 && !(error.response.status === 401 || error.response.status === 403 || error.response.status === 404)) {
       notification.error({
         message: '提示',

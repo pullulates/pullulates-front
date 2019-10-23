@@ -15,10 +15,8 @@ import './core/use'
 import './permission' // permission control
 import './utils/filter' // global filter
 
-// import Captcha from './components/Captcha/index'
-// Vue.use(Captcha)
-import captcha from 'vue-social-captcha'
-Vue.use(captcha)
+import Captcha from './components/Captcha/index'
+Vue.use(Captcha)
 
 Vue.config.productionTip = false
 

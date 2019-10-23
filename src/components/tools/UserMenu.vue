@@ -60,7 +60,7 @@ export default {
     handleLogout () {
       this.$confirm({
         title: '提示',
-        content: '真的要注销登录吗 ?',
+        content: '确定要退出当前登录吗 ?',
         onOk: () => {
           return this.Logout({}).then(() => {
             setTimeout(() => {

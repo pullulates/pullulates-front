@@ -7,15 +7,12 @@
 <script>
 /*eslint-disable */
 import axios from 'axios'
+import { requestGeetest } from "@/api/login";
 export default {
     name: 'Captcha',
     props: {
         parm: {
             type: Object,
-            required: true
-        },
-        url: {
-            type: String,
             required: true
         },
         type: {
@@ -54,6 +51,10 @@ export default {
         // 验证中
         loading(res){
             this.$emit('callback', 2,res);
+        },
+        // 验证之前
+        before(){
+            this.$emit('before');
         },
         init(){
             // 腾讯验证码
@@ -123,37 +124,30 @@ export default {
         },
         GeetestInit(){
             const t = this;
-            axios.get(t.url,{
-                params: {
-                    g_type: t.type,
-                    g_scene: t.scene,
-                }
-            }).then((response) => {
-                if(response.data.code == 1){
-                    const data = response.data.data;
+            requestGeetest().then((res) => {
+                if(res.success == 1){
                     const o = {
                         // 以下配置参数来自服务端 SDK
-                        gt: data.gt,
-                        challenge: data.challenge,
-                        offline: !data.success, // 表示用户后台检测极验服务器是否宕机
+                        gt: res.gt,
+                        challenge: res.challenge,
+                        offline: !res.success, // 表示用户后台检测极验服务器是否宕机
                         new_captcha: true // 用于宕机时表示是新验证码的宕机
                     }
                     initGeetest(Object.assign(o,t.parm), function (captchaObj) {
                         captchaObj.appendTo("#"+t.id);
-                        //console.log(captchaObj)
                         captchaObj.onReady(function(){
-                            //验证码ready之后才能调用verify方法显示验证码
                         }).onSuccess(function(){
                             t.success();
                         }).onError(function(){
                             t.error();
                         })
                         document.getElementById(t.id).addEventListener('click', function(){
+                            t.before();
                             captchaObj.verify();
                         }, false)
                     })
                 }else{
-                    t.error(response.data);
+                    t.error(res.data);
                 }
             }).catch(function (error) {
                 t.error(error);
