@@ -24,7 +24,7 @@ const err = (error) => {
     if (error.response.status === 401) {
       notification.error({
         message: '提示',
-        description: '认证失败咯，请先去登录一下啦~'
+        description: '权限不足，请先登录'
       })
       if (token) {
         store.dispatch('Logout').then(() => {
@@ -40,10 +40,16 @@ const err = (error) => {
         description: '您访问的资源丢失了，请检查访问地址或联系帅气的管理员'
       })
     }
+    if (error.response.status === 500) {
+      notification.error({
+        message: '提示',
+        description: '服务器错误，请联系帅气的管理员'
+      })
+    }
     if (error.response.status === 504) {
       notification.error({
         message: '提示',
-        description: '网关服务转发超时，请检查当前服务是否可用或联系帅气的管理员'
+        description: '服务响应超时，请检查当前服务是否可用或联系帅气的管理员'
       })
     }
     if (error.response.data.code === 500 && !(error.response.status === 401 || error.response.status === 403 || error.response.status === 404)) {

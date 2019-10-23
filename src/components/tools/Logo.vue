@@ -2,7 +2,7 @@
   <div class="logo">
     <router-link :to="{name:'dashboard'}">
       <LogoSvg alt="logo" />
-      <h1 v-if="showTitle">{{ title }}</h1>
+      <h1>{{ title }}</h1>
     </router-link>
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'PULLULATES CLOUD',
+      default: 'PULLULATES',
       required: false
     },
     showTitle: {

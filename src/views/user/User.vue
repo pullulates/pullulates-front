@@ -1,46 +1,47 @@
 <template>
   <div>
-    <a-card :bordered="false">
-      <a-row>
-        <a-col :sm="8" :xs="24">
-          <head-info title="我的待办" content="8个任务" :bordered="true" />
-        </a-col>
-        <a-col :sm="8" :xs="24">
-          <head-info title="本周任务平均处理时间" content="32分钟" :bordered="true" />
-        </a-col>
-        <a-col :sm="8" :xs="24">
-          <head-info title="本周完成任务数" content="24个" />
-        </a-col>
-      </a-row>
-    </a-card>
-
     <a-card style="margin-top: 24px" :bordered="false" title="用户列表">
       <div class="operate">
-        <a-button type="dashed" style="width: 100%" icon="plus" @click="$refs.taskForm.add()">添加</a-button>
+        <a-button type="primary" icon="plus" @click="$refs.taskForm.add()">添加</a-button>
+      </div>
+      <a-divider dashed />
+
+      <div slot="extra">
+        <a-input-search style="margin-left: 16px; width: 272px;" />
       </div>
 
-      <a-list size="large" :loading="loading" itemLayout="horizontal" :dataSource="data">
-        <div
-          v-if="showLoadingMore"
-          slot="loadMore"
-          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
-        >
-          <a-spin v-if="loadingMore" />
-          <a-button v-else>查看更多</a-button>
-        </div>
+      <a-list size="large" itemLayout="horizontal" :dataSource="data" :pagination="pagination">
+        <div slot="footer"><b>总有一天，你要成为像我这样的人</b> — 来自于帅气的超级管理员</div>
         <a-list-item slot="renderItem" slot-scope="item">
           <a slot="actions">编辑</a>
           <a slot="actions">更多</a>
-          <a-list-item-meta
-            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-          >
-            <a slot="title" href="https://vue.ant.design/">{{ item.userName }}</a>
+          <a-list-item-meta :description="item.sign">
+            <a-tooltip placement="topLeft" title="点击查看详细信息" slot="title">{{ item.userName }} <a-tag v-for="role in item.roles" color="pink" :key="role">{{ role.roleName }}</a-tag></a-tooltip>
             <a-avatar
               slot="avatar"
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
             />
           </a-list-item-meta>
-          <div>content</div>
+          <div class="list-content">
+            <div class="list-content-item">
+              <p>{{ item.realName }}</p>
+            </div>
+            <div class="list-content-item">
+              <p>{{ item.idCard }}</p>
+            </div>
+            <div class="list-content-item">
+              <p>{{ item.sex == 1?'男':'女' }}</p>
+            </div>
+            <div class="list-content-item">
+              <p>{{ item.status == 1?'启用':'禁用' }}</p>
+            </div>
+            <div class="list-content-item">
+              <p>{{ item.phone }}</p>
+            </div>
+            <div class="list-content-item">
+              <p>{{ item.email }}</p>
+            </div>
+          </div>
         </a-list-item>
       </a-list>
 
@@ -62,10 +63,10 @@ export default {
   },
   data () {
     return {
-      loading: true,
-      loadingMore: false,
-      showLoadingMore: true,
-      data: []
+      data: [],
+      pagination: {
+        pageSize: 5
+      }
     }
   },
   mounted () {
@@ -75,8 +76,15 @@ export default {
     getData () {
       getUserList().then(res => {
         this.loading = false
-        this.data = res.rows
+        this.data = res.data
       })
+    },
+    onLoadMore () {
+      this.loadingMore = true
+      getUserList().then(res => {
+        this.data = this.data.concat(res.data)
+      })
+      this.loadingMore = false
     }
   }
 }
