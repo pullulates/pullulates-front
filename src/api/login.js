@@ -1,6 +1,6 @@
 import api from './index'
-import PULLULATES_USER_URL from './url/pullulates.user.url'
-import PULLULATES_SERVICE_URL from './url/pullulates.service.url'
+import { PULLULATES_USER_URL } from './url/pullulates.user.url'
+import { PULLULATES_SERVICE_URL } from './url/pullulates.service.url'
 import { axios } from '@/utils/request'
 import Qs from 'qs'
 

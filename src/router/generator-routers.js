@@ -17,6 +17,7 @@ const constantRouterComponents = {
   'Analysis': () => import('@/views/dashboard/Analysis'),
   // 系统管理
   'User': () => import('@/views/user/User'),
+  'Role': () => import('@/views/role/Role'),
 
   // form
   'BasicForm': () => import('@/views/form/BasicForm'),
