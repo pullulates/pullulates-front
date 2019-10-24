@@ -16,3 +16,12 @@ export function getMyMenuIds () {
     method: 'get'
   })
 }
+
+/** 获取指定角色的菜单id集合 */
+export function getMenuIdsByRoleId (parameter) {
+  return axios({
+    url: PULLULATES_MENU_URL.Role_MenuIds,
+    method: 'get',
+    data: parameter
+  })
+}

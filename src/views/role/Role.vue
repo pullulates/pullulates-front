@@ -47,11 +47,11 @@
           <h3><b>菜单权限：</b></h3>
         </div>
         <a-tree
-          checkable
+          :checkable="checkable"
+          @expand="onExpand"
           :autoExpandParent="autoExpandParent"
-          :defaultExpandAll="defaultExpandAll"
-          @select="onSelect"
-          :selectedKeys="selectedKeys"
+          :expandedKeys="expandedKeys"
+          :checkedKeys="checkedKeys"
           :treeData="treeData"
         />
       </a-col>
@@ -72,7 +72,7 @@
 
 <script>
 import { getRoleList } from '@/api/role'
-import { getMenuTree, getMyMenuIds } from '@/api/menu'
+import { getMenuTree, getMenuIdsByRoleId } from '@/api/menu'
 import { mixinDevice } from '@/utils/mixin'
 import pick from 'lodash.pick'
 
@@ -86,8 +86,9 @@ export default {
       mdl: {},
       roles: [],
       autoExpandParent: true,
-      defaultExpandAll: true,
-      selectedKeys: [],
+      expandedKeys: [],
+      checkable: true,
+      checkedKeys: [],
       treeData: []
     }
   },
@@ -102,6 +103,7 @@ export default {
     })
     getMenuTree().then((res) => {
       this.treeData = res.data
+      this.expandedKeys = res.data
     })
   },
   methods: {
@@ -109,18 +111,20 @@ export default {
       this.edit({ id: 0 })
     },
 
+    onExpand (expandedKeys) {
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
+    },
+
     edit (record) {
       this.mdl = Object.assign({}, record)
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'roleId', 'roleKey', 'roleName', 'status', 'desct'))
       })
-      getMyMenuIds().then((res) => {
-        this.selectedKeys = res.data
+      const params = { 'roleId': record.roleId }
+      getMenuIdsByRoleId(params).then((res) => {
+        this.checkedKeys = res.data
       })
-    },
-
-    onSelect (selectedKeys, info) {
-      this.selectedKeys = selectedKeys
     }
   }
 }

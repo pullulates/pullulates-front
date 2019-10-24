@@ -4,11 +4,11 @@ import store from '@/store'
 import notification from 'ant-design-vue/es/notification'
 import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
+import Qs from 'qs'
 
-// 创建 axios 实例
 const service = axios.create({
-  baseURL: process.env.VUE_APP_API_BASE_URL, // api base_url
-  timeout: 6000 // 请求超时时间
+  baseURL: process.env.VUE_APP_API_BASE_URL,
+  timeout: 6000
 })
 
 const err = (error) => {
@@ -62,16 +62,19 @@ const err = (error) => {
   return Promise.reject(error)
 }
 
-// request interceptor
 service.interceptors.request.use(config => {
   const token = Vue.ls.get(ACCESS_TOKEN)
   if (token) {
-    config.headers['PULLULATES-TOKEN'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+    config.headers['PULLULATES-TOKEN'] = token
+  }
+  if (config.method === 'get') {
+    config.params = config.data
+  } else if (config.method === 'post') {
+    config.data = Qs.stringify(config.data)
   }
   return config
 }, err)
 
-// response interceptor
 service.interceptors.response.use((response) => {
   if (response.data.code === 500) {
     notification.error({

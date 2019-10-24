@@ -13,5 +13,6 @@ export const PULLULATES_ROLE_URL = {
 
 export const PULLULATES_MENU_URL = {
   Menu_Tree: PULLULATES_USER_BASE_URL + '/menus/tree',
-  My_MenuIds: PULLULATES_USER_BASE_URL + '/menus/menuids/my'
+  My_MenuIds: PULLULATES_USER_BASE_URL + '/menus/menuids/my',
+  Role_MenuIds: PULLULATES_USER_BASE_URL + '/menus/menuids/role'
 }
