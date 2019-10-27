@@ -47,11 +47,13 @@
           <h3><b>菜单权限：</b></h3>
         </div>
         <a-tree
-          :checkable="checkable"
+          checkable
           @expand="onExpand"
-          :autoExpandParent="autoExpandParent"
           :expandedKeys="expandedKeys"
-          :checkedKeys="checkedKeys"
+          :autoExpandParent="autoExpandParent"
+          v-model="checkedKeys"
+          @select="onSelect"
+          :selectedKeys="selectedKeys"
           :treeData="treeData"
         />
       </a-col>
@@ -65,7 +67,16 @@
       </a-col>
     </a-row>
     <a-row>
-      <a-divider dashed>用户信息</a-divider>
+      <a-divider dashed><b>用户信息</b></a-divider>
+      <a-table
+        :columns="columns"
+        :rowKey="record => record.userId"
+        :dataSource="users"
+        :pagination="pagination"
+        :loading="loading"
+        :rowSelection="rowSelection"
+      >
+      </a-table>
     </a-row>
   </a-card>
 </template>
@@ -73,6 +84,7 @@
 <script>
 import { getRoleList } from '@/api/role'
 import { getMenuTree, getMenuIdsByRoleId } from '@/api/menu'
+import { getUserList } from '@/api/user'
 import { mixinDevice } from '@/utils/mixin'
 import pick from 'lodash.pick'
 
@@ -85,35 +97,66 @@ export default {
       form: this.$form.createForm(this),
       mdl: {},
       roles: [],
-      autoExpandParent: true,
       expandedKeys: [],
-      checkable: true,
       checkedKeys: [],
-      treeData: []
+      treeData: [],
+      selectedKeys: [],
+      autoExpandParent: true,
+      users: [],
+      pagination: {
+        pageSize: 5
+      },
+      loading: false,
+      columns,
+      rowSelection: {
+        type: 'checkbox'
+      }
     }
   },
   created () {
-    getRoleList().then((res) => {
-      this.roles = res.data
-      this.roles.push({
-        roleId: '-1',
-        roleName: '新增角色',
-        desct: '新增一个角色'
-      })
-    })
-    getMenuTree().then((res) => {
-      this.treeData = res.data
-      this.expandedKeys = res.data
-    })
+    this.getData()
   },
   methods: {
+    getData () {
+      this.loading = true
+      this.getRoles()
+      this.getMenuTree()
+      this.getUsers()
+      this.loading = false
+    },
+
+    getRoles () {
+      getRoleList().then((res) => {
+        this.roles = res.data
+        this.roles.push({
+          roleId: '-1',
+          roleName: '新增角色',
+          desct: '新增一个角色'
+        })
+      })
+    },
+
+    getUsers (parameter) {
+      getUserList(parameter).then(res => {
+        const pagination = { ...this.pagination }
+        pagination.total = res.data.length
+        this.users = res.data
+        this.pagination = pagination
+      })
+    },
+
+    getMenuTree () {
+      getMenuTree().then((res) => {
+        this.treeData = res.data
+      })
+    },
+
     add () {
       this.edit({ id: 0 })
     },
 
     onExpand (expandedKeys) {
       this.expandedKeys = expandedKeys
-      this.autoExpandParent = false
     },
 
     edit (record) {
@@ -125,9 +168,55 @@ export default {
       getMenuIdsByRoleId(params).then((res) => {
         this.checkedKeys = res.data
       })
+      this.getUsers(params)
+    },
+    onCheck (checkedKeys) {
+      this.checkedKeys = checkedKeys
+    },
+    onSelect (selectedKeys, info) {
+      this.selectedKeys = selectedKeys
     }
   }
 }
+
+const columns = [
+  {
+    title: '用户ID',
+    dataIndex: 'userId',
+    width: '10%'
+  },
+  {
+    title: '账户名称',
+    dataIndex: 'userName',
+    width: '20%'
+  },
+  {
+    title: '姓名',
+    dataIndex: 'realName',
+    width: '10%'
+  },
+  {
+    title: '证件号码',
+    dataIndex: 'idCard',
+    width: '20%'
+  },
+  {
+    title: '手机',
+    dataIndex: 'phone',
+    width: '20%'
+  },
+  {
+    title: '性别',
+    dataIndex: 'sex',
+    filters: [{ text: '男', value: '1' }, { text: '女', value: '2' }, { text: '未知', value: '3' }],
+    width: '10%'
+  },
+  {
+    title: '所属机构',
+    dataIndex: 'org.orgName',
+    width: '20%'
+  }
+]
 </script>
 
 <style scoped>
