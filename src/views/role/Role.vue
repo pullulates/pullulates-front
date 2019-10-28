@@ -164,11 +164,12 @@ export default {
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'roleId', 'roleKey', 'roleName', 'status', 'desct'))
       })
-      const params = { 'roleId': record.roleId }
-      getMenuIdsByRoleId(params).then((res) => {
-        this.checkedKeys = res.data
-      })
-      this.getUsers(params)
+      if (record.roleId !== '-1') {
+        getMenuIdsByRoleId({ 'roleId': record.roleId }).then((res) => {
+          this.checkedKeys = res.data
+        })
+        this.getUsers({ 'roleIds': record.roleId })
+      }
     },
     onCheck (checkedKeys) {
       this.checkedKeys = checkedKeys
