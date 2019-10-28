@@ -25,3 +25,11 @@ export function getMenuIdsByRoleId (parameter) {
     data: parameter
   })
 }
+
+/** 获取菜单列表的菜单树 */
+export function getMenuListTree () {
+  return axios({
+    url: PULLULATES_MENU_URL.Menu_List_Tree,
+    method: 'get'
+  })
+}
