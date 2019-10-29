@@ -2,7 +2,7 @@
   <div>
     <a-card style="margin-top: 24px" :bordered="false" title="用户列表">
       <div class="operate">
-        <a-button type="primary" icon="plus" @click="$refs.taskForm.add()">添加</a-button>
+        <a-button type="primary" icon="plus">添加</a-button>
       </div>
       <a-divider dashed />
 
@@ -44,23 +44,15 @@
           </div>
         </a-list-item>
       </a-list>
-
-      <task-form ref="taskForm" />
     </a-card>
   </div>
 </template>
 
 <script>
-import HeadInfo from '@/components/tools/HeadInfo'
-import TaskForm from '@/views/list/modules/TaskForm'
 import { getUserList } from '@/api/user'
 
 export default {
   name: 'StandardList',
-  components: {
-    HeadInfo,
-    TaskForm
-  },
   data () {
     return {
       data: [],
