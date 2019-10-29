@@ -87,13 +87,9 @@ export default {
     }
   },
   created () {
-    this.$notification.success({
-      message: 'PULLULATES CLOUD',
-      description: `${timeFix()}`
-    })
     this.$notification.info({
-      message: '提示',
-      description: `试用账户：admin，密码：111111`
+      message: 'PULLULATES CLOUD',
+      description: `${timeFix()}！试用账户：admin，密码：111111`
     })
   },
   methods: {
@@ -129,13 +125,13 @@ export default {
       })
     },
     loginSuccess (res) {
+      this.isLoginError = false
       this.$router.push({ name: '/dashboard' }, () => {
         this.$notification.success({
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`
         })
       })
-      this.isLoginError = false
     },
     requestFailed (err) {
       if (err) {
