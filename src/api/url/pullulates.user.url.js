@@ -17,3 +17,12 @@ export const PULLULATES_MENU_URL = {
   Role_MenuIds: PULLULATES_USER_BASE_URL + '/menus/menuids/role',
   Menu_List_Tree: PULLULATES_USER_BASE_URL + '/menus/list/tree'
 }
+
+export const PULLULATES_ORG_URL = {
+  Org_List_Tree: PULLULATES_USER_BASE_URL + '/orgs/list/tree'
+}
+
+export const PULLULATES_DICT_URL = {
+  Dict_Type_List: PULLULATES_USER_BASE_URL + '/dicts/types/list',
+  Dict_Data_List: PULLULATES_USER_BASE_URL + '/dicts/datas/list'
+}
