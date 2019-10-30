@@ -13,7 +13,7 @@ export default {
       rowKey: 'menuId'
     }
   },
-  mounted () {
+  created () {
     this.getMenuList()
   },
   methods: {

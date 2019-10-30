@@ -6,7 +6,6 @@
       ref="formLogin"
       :form="form"
     >
-      <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" message="账户或密码错误" />
       <a-form-item>
         <a-input
           size="large"
@@ -75,7 +74,6 @@ import { timeFix } from '@/utils/util'
 export default {
   data () {
     return {
-      isLoginError: false,
       form: this.$form.createForm(this),
       state: {
         time: 60,
@@ -89,7 +87,7 @@ export default {
   created () {
     this.$notification.info({
       message: 'PULLULATES CLOUD',
-      description: `${timeFix()}！试用账户：admin，密码：111111`
+      description: `${timeFix()}！账户：admin，密码：111111`
     })
   },
   methods: {
@@ -113,30 +111,17 @@ export default {
           const loginParams = { ...values }
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
-            .catch(err => this.requestFailed(err))
-            .finally(() => {
-              state.loginBtn = false
-            })
-        } else {
-          setTimeout(() => {
-            state.loginBtn = false
-          }, 600)
         }
+        state.loginBtn = false
       })
     },
     loginSuccess (res) {
-      this.isLoginError = false
       this.$router.push({ name: '/dashboard' }, () => {
         this.$notification.success({
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`
         })
       })
-    },
-    requestFailed (err) {
-      if (err) {
-        this.isLoginError = true
-      }
     }
   }
 }

@@ -38,6 +38,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           Vue.ls.set(ACCESS_TOKEN, response.data, 7 * 24 * 60 * 60 * 1000)
+          console.info('登录成功,设置token信息')
           commit('SET_TOKEN', response.data)
           resolve()
         }).catch(error => {
@@ -55,12 +56,12 @@ const user = {
             commit('SET_ROLES', result.user.roles)
             commit('SET_INFO', result.user)
           } else {
-            reject(new Error('getInfo: roles must be a non-null array !'))
+            reject(new Error('用户权限不足，无法登录'))
           }
 
           commit('SET_NAME', { name: result.user.userName, welcome: welcome() })
           commit('SET_AVATAR', result.user.avatar)
-
+          console.info('登录成功,设置用户信息')
           resolve(response)
         }).catch(error => {
           reject(error)
