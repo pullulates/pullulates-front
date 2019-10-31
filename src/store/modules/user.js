@@ -38,7 +38,6 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           Vue.ls.set(ACCESS_TOKEN, response.data, 7 * 24 * 60 * 60 * 1000)
-          console.info('登录成功,设置token信息')
           commit('SET_TOKEN', response.data)
           resolve()
         }).catch(error => {
@@ -61,7 +60,6 @@ const user = {
 
           commit('SET_NAME', { name: result.user.userName, welcome: welcome() })
           commit('SET_AVATAR', result.user.avatar)
-          console.info('登录成功,设置用户信息')
           resolve(response)
         }).catch(error => {
           reject(error)
