@@ -84,13 +84,6 @@
           >
             <a-input type="hidden" v-decorator="['org.orgId']" />
           </a-form-item>
-          <a-form-item
-            label="组织机构名称"
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-          >
-            <a-input placeholder="请在下方选择组织机构" v-decorator="['org.orgName', {initialValue: '1', rules: [{required: true, message: '请选择用户所属的组织机构'}]}]" />
-          </a-form-item>
           <s-tree
             :dataSource="orgTree"
             :autoExpandParent="autoExpandParent"
@@ -101,23 +94,15 @@
         </div>
 
         <div v-show="currentStep === 2">
-          <a-form-item
-            label="开始时间"
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-          >
-            <a-date-picker v-decorator="['time', {rules: [{ type: 'object', required: true, message: 'Please select time!' }]}]" style="width: 100%" />
-          </a-form-item>
-          <a-form-item
-            label="调度周期"
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-          >
-            <a-select v-decorator="['frequency', { initialValue: 'month', rules: [{required: true}]}]" style="width: 100%">
-              <a-select-option value="month">月</a-select-option>
-              <a-select-option value="week">周</a-select-option>
-            </a-select>
-          </a-form-item>
+          <div>
+            <div :style="{ borderBottom: '1px solid #E9E9E9' }">
+              <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll">
+                全选
+              </a-checkbox>
+            </div>
+            <br />
+            <a-checkbox-group :options="plainOptions" v-model="checkedList" @change="onChange" />
+          </div>
         </div>
         <!-- step1 end -->
       </a-form>
@@ -162,7 +147,12 @@ export default {
       form: this.$form.createForm(this),
       orgTree: [],
       expandedKeys: [],
-      autoExpandParent: true
+      autoExpandParent: true,
+
+      indeterminate: true,
+      checkAll: false,
+      plainOptions: [],
+      checkedList: []
     }
   },
   created () {
@@ -224,11 +214,21 @@ export default {
     },
     handleClick (e) {
       this.form.setFieldsValue({ 'org.orgId': e.key })
-      this.form.setFieldsValue({ 'org.orgName': e.title })
     },
     onExpand  (expandedKeys) {
       this.expandedKeys = expandedKeys
       this.autoExpandParent = false
+    },
+    onChange (checkedList) {
+      this.indeterminate = !!this.checkedList.length && this.checkedList.length < this.plainOptions.length
+      this.checkAll = this.checkedList.length === this.plainOptions.length
+    },
+    onCheckAllChange (e) {
+      Object.assign(this, {
+        checkedList: e.target.checked ? this.plainOptions : [],
+        indeterminate: false,
+        checkAll: e.target.checked
+      })
     }
   }
 }
