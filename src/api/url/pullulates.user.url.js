@@ -4,7 +4,8 @@ export const PULLULATES_USER_URL = {
   Login: PULLULATES_USER_BASE_URL + '/login',
   Logout: PULLULATES_USER_BASE_URL + '/logout',
   User_Info: PULLULATES_USER_BASE_URL + '/users/get',
-  User_List: PULLULATES_USER_BASE_URL + '/users/list'
+  User_List: PULLULATES_USER_BASE_URL + '/users/list',
+  User_Save: PULLULATES_USER_BASE_URL + '/users/save'
 }
 
 export const PULLULATES_ROLE_URL = {
@@ -14,7 +15,8 @@ export const PULLULATES_ROLE_URL = {
 export const PULLULATES_MENU_URL = {
   Menu_Tree: PULLULATES_USER_BASE_URL + '/menus/tree',
   My_MenuIds: PULLULATES_USER_BASE_URL + '/menus/menuids/my',
-  Role_MenuIds: PULLULATES_USER_BASE_URL + '/menus/menuids/role',
+  Role_MenuIds_By_RoleId: PULLULATES_USER_BASE_URL + '/menus/menuids/roleid',
+  Role_MenuIds_By_RoleKeys: PULLULATES_USER_BASE_URL + '/menus/menuids/rolekeys',
   Menu_List_Tree: PULLULATES_USER_BASE_URL + '/menus/list/tree'
 }
 

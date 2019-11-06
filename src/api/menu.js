@@ -20,7 +20,16 @@ export function getMyMenuIds () {
 /** 获取指定角色的菜单id集合 */
 export function getMenuIdsByRoleId (parameter) {
   return axios({
-    url: PULLULATES_MENU_URL.Role_MenuIds,
+    url: PULLULATES_MENU_URL.Role_MenuIds_By_RoleId,
+    method: 'get',
+    data: parameter
+  })
+}
+
+/** 获取指定角色(可能为多个)的菜单id集合 */
+export function getMenuIdsByRoleKeys (parameter) {
+  return axios({
+    url: PULLULATES_MENU_URL.Role_MenuIds_By_RoleKeys,
     method: 'get',
     data: parameter
   })

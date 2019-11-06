@@ -9,3 +9,12 @@ export function getUserList (parameter) {
     data: parameter
   })
 }
+
+/** 保存新的用户 */
+export function saveUser (parameter) {
+  return axios({
+    url: PULLULATES_USER_URL.User_Save,
+    method: 'post',
+    data: parameter
+  })
+}

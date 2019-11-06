@@ -64,7 +64,7 @@
             <a-input type="password" v-decorator="['confirm', {rules: [{required: true, message: '请确认用户密码'},{max: 20, message: '用户密码最多20个字符'},{validator: compareToFirstPassword}]}]" @blur="handleConfirmBlur"/>
           </a-form-item>
           <a-form-item
-            label="性别"
+            label="用户性别"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
@@ -94,14 +94,31 @@
         </div>
 
         <div v-show="currentStep === 2">
+          <a-form-item
+            hidden="true"
+            label="角色key"
+            :labelCol="labelCol"
+            :wrapperCol="wrapperCol"
+          >
+            <a-input type="hidden" v-decorator="['roleKeys']" />
+          </a-form-item>
           <div>
-            <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-              <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll">
-                全选
-              </a-checkbox>
-            </div>
-            <br />
+            <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll">
+              全选
+            </a-checkbox>
+            <br><br>
             <a-checkbox-group :options="plainOptions" v-model="checkedList" @change="onChange" />
+            <a-divider dashed></a-divider>
+            <b>当前用户拥有的菜单权限：</b>
+            <a-spin :spinning="spinning" />
+            <a-tree
+              checkable
+              @expand="onMenuExpand"
+              :expandedKeys="expandedMenuKeys"
+              :autoExpandParent="autoExpandMenuParent"
+              v-model="checkedMenuKeys"
+              :treeData="menuTreeData"
+            />
           </div>
         </div>
         <!-- step1 end -->
@@ -118,10 +135,13 @@
 <script>
 import STree from '@/components/Tree/Tree'
 import { getOrgTree } from '@/api/org'
+import { getRoleList } from '@/api/role'
+import { getMenuTree, getMenuIdsByRoleKeys } from '@/api/menu'
+import { saveUser } from '@/api/user'
 const stepForms = [
   ['userName', 'realName', 'idCard', 'phone', 'email', 'password', 'confirm', 'sex'],
   ['org.orgId', 'org.orgName'],
-  ['time', 'frequency']
+  ['roleKeys']
 ]
 
 export default {
@@ -152,13 +172,26 @@ export default {
       indeterminate: true,
       checkAll: false,
       plainOptions: [],
-      checkedList: []
+      checkedList: [],
+
+      expandedMenuKeys: [],
+      autoExpandMenuParent: true,
+      checkedMenuKeys: [],
+      menuTreeData: [],
+
+      spinning: false
     }
   },
   created () {
     getOrgTree().then(res => {
       this.orgTree = res.data
       this.expandedKeys = res.data.map(item => item.parentId)
+    })
+    getRoleList().then(res => {
+      this.plainOptions = res.data.map(item => item.roleKey)
+    })
+    getMenuTree().then(res => {
+      this.menuTreeData = res.data
     })
   },
   methods: {
@@ -186,6 +219,13 @@ export default {
       const { form: { validateFields } } = this
       const currentStep = step + 1
       if (currentStep <= 2) {
+        if (this.currentStep === 1 && !this.form.getFieldValue('org.orgId')) {
+          this.$notification.warning({
+            message: '提示',
+            description: `请选择用户组织机构信息`
+          })
+          return
+        }
         validateFields(stepForms[ this.currentStep ], (errors, values) => {
           if (!errors) {
             this.currentStep = currentStep
@@ -193,13 +233,23 @@ export default {
         })
         return
       }
+      if (!this.form.getFieldValue('roleKeys')) {
+        this.$notification.warning({
+          message: '提示',
+          description: `请选择用户角色信息`
+        })
+        return
+      }
       this.confirmLoading = true
       validateFields((errors, values) => {
+        console.log(values)
         if (!errors) {
-          setTimeout(() => {
-            this.confirmLoading = false
-            this.$emit('ok', values)
-          }, 1500)
+          saveUser(values).then(res => {
+            if (res.code === 200) {
+              this.$emit('ok', values)
+            }
+          })
+          this.confirmLoading = false
         } else {
           this.confirmLoading = false
         }
@@ -222,6 +272,8 @@ export default {
     onChange (checkedList) {
       this.indeterminate = !!this.checkedList.length && this.checkedList.length < this.plainOptions.length
       this.checkAll = this.checkedList.length === this.plainOptions.length
+      this.form.setFieldsValue({ 'roleKeys': this.checkedList.join(',') })
+      this.getMenuIds(this.checkedList)
     },
     onCheckAllChange (e) {
       Object.assign(this, {
@@ -229,6 +281,25 @@ export default {
         indeterminate: false,
         checkAll: e.target.checked
       })
+      this.form.setFieldsValue({ 'roleKeys': this.checkedList.join(',') })
+      this.getMenuIds(this.checkedList)
+    },
+    onMenuExpand (expandedMenuKeys) {
+      this.expandedMenuKeys = expandedMenuKeys
+    },
+    getMenuIds (parameter) {
+      if (parameter.length > 0) {
+        this.changeSpinning()
+        getMenuIdsByRoleKeys({ roleKeys: parameter }).then(res => {
+          this.checkedMenuKeys = res.data
+          this.changeSpinning()
+        })
+      } else {
+        this.checkedMenuKeys = []
+      }
+    },
+    changeSpinning () {
+      this.spinning = !this.spinning
     }
   }
 }

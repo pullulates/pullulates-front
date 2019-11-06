@@ -139,8 +139,8 @@ export default {
     getUsers (parameter) {
       getUserList(parameter).then(res => {
         const pagination = { ...this.pagination }
-        pagination.total = res.data.length
-        this.users = res.data
+        pagination.total = res.total
+        this.users = res.rows
         this.pagination = pagination
       })
     },

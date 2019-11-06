@@ -69,6 +69,9 @@ service.interceptors.request.use(config => {
   }
   if (config.method === 'get') {
     config.params = config.data
+    config.paramsSerializer = function (params) {
+      return Qs.stringify(params, { arrayFormat: 'repeat' })
+    }
   } else if (config.method === 'post') {
     config.data = Qs.stringify(config.data)
   }
