@@ -83,6 +83,7 @@
       :data="loadData"
       :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
     >
+      <a slot="detail" slot-scope="text" href="javascript:;" @click="$refs.UserInfo.visible()">{{ text }}</a>
       <span slot="sex" slot-scope="sex">
         <a-tag
           :color="sex==='1' ? 'red' : (sex === '2' ? 'geekblue' : 'green')"
@@ -120,12 +121,13 @@
 import { getUserList } from '@/api/user'
 import { STable } from '@/components'
 import moment from 'moment'
-import AddUser from './modal/Add'
+import { AddUser, UserDetail } from './modal'
 
 export default {
   components: {
     STable,
-    AddUser
+    AddUser,
+    UserDetail
   },
   data () {
     return {
@@ -167,7 +169,8 @@ const columns = [
   {
     title: '用户名称',
     dataIndex: 'userName',
-    align: 'center'
+    align: 'center',
+    scopedSlots: { customRender: 'detail' }
   },
   {
     title: '姓名',
@@ -224,8 +227,8 @@ const columns = [
     ]
   },
   {
-    title: '更新时间',
-    dataIndex: 'updateTime',
+    title: '创建时间',
+    dataIndex: 'createTime',
     align: 'center',
     sorter: true
   },

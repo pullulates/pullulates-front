@@ -82,7 +82,7 @@
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input type="hidden" v-decorator="['org.orgId']" />
+            <a-input type="hidden" v-decorator="['orgId']" />
           </a-form-item>
           <s-tree
             :dataSource="orgTree"
@@ -140,7 +140,7 @@ import { getMenuTree, getMenuIdsByRoleKeys } from '@/api/menu'
 import { saveUser } from '@/api/user'
 const stepForms = [
   ['userName', 'realName', 'idCard', 'phone', 'email', 'password', 'confirm', 'sex'],
-  ['org.orgId', 'org.orgName'],
+  ['orgId'],
   ['roleKeys']
 ]
 
@@ -219,7 +219,7 @@ export default {
       const { form: { validateFields } } = this
       const currentStep = step + 1
       if (currentStep <= 2) {
-        if (this.currentStep === 1 && !this.form.getFieldValue('org.orgId')) {
+        if (this.currentStep === 1 && !this.form.getFieldValue('orgId')) {
           this.$notification.warning({
             message: '提示',
             description: `请选择用户组织机构信息`
@@ -242,14 +242,22 @@ export default {
       }
       this.confirmLoading = true
       validateFields((errors, values) => {
-        console.log(values)
         if (!errors) {
           saveUser(values).then(res => {
             if (res.code === 200) {
+              this.$notification.success({
+                message: '消息',
+                description: `添加用户成功`
+              })
               this.$emit('ok', values)
+              this.visible = false
+              this.currentStep = 0
+              this.form.resetFields()
+              this.checkedList = []
+              this.checkedMenuKeys = []
             }
+            this.confirmLoading = false
           })
-          this.confirmLoading = false
         } else {
           this.confirmLoading = false
         }
@@ -263,7 +271,7 @@ export default {
       this.currentStep = 0
     },
     handleClick (e) {
-      this.form.setFieldsValue({ 'org.orgId': e.key })
+      this.form.setFieldsValue({ 'orgId': e.key })
     },
     onExpand  (expandedKeys) {
       this.expandedKeys = expandedKeys

@@ -43,7 +43,7 @@ const err = (error) => {
     if (error.response.status === 500) {
       notification.error({
         message: '提示',
-        description: '服务器错误，请联系帅气的管理员'
+        description: error.response.data.msg || '服务器错误，请联系帅气的管理员'
       })
     }
     if (error.response.status === 504) {
