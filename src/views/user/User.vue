@@ -2,7 +2,7 @@
   <a-card :bordered="false">
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
-        <a-row :gutter="36">
+        <a-row :gutter="24">
           <a-col :md="6" :sm="18">
             <a-form-item label="用户名称">
               <a-input v-model="queryParam.userName" placeholder="请填写用户名称"/>
@@ -38,7 +38,7 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="18">
+            <a-col :md="6" :sm="18">
               <a-form-item label="更新时间">
                 <a-range-picker
                   :ranges="{ '今天': [moment(), moment()], '这个月': [moment(), moment().endOf('month')] }"

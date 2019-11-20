@@ -97,6 +97,7 @@ export const generator = (routerMap, parent) => {
       // Recursion
       currentRouter.children = generator(item.children, currentRouter)
     }
+    console.log(item.name, currentRouter)
     return currentRouter
   })
 }

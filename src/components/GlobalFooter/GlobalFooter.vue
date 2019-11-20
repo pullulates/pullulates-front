@@ -1,7 +1,6 @@
 <template>
   <div class="footer">
     <div class="copyright">
-      Copyright
       <a-icon type="copyright" /> 2019 <span>PULLULATES CLOUD</span>
     </div>
   </div>

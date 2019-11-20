@@ -22,7 +22,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2019 PULLULATES
+          <a-icon type="copyright" /> 2019 PULLULATES CLOUD
         </div>
       </div>
     </div>
