@@ -121,8 +121,8 @@
 import { getUserList } from '@/api/user'
 import { STable } from '@/components'
 import moment from 'moment'
-import AddUser from './modal/Add'
-import UserDetail from './modal/Detail'
+import AddUser from './module/Add'
+import UserDetail from './module/Detail'
 
 export default {
   components: {

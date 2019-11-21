@@ -1,19 +1,75 @@
 <template>
-  <a-table :columns="columns" :dataSource="data" :rowKey="rowKey" @expand="expand" :expandedRowKeys="expandedRowKeys" >
-    <a-table
-      slot="expandedRowRender"
-      :columns="innerColumns"
-      :dataSource="innerData"
-      :pagination="false"
-      :rowKey="innerRowKey"
-    >
+  <a-card :bordered="false">
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline">
+        <a-row :gutter="24">
+          <a-col :md="6" :sm="24">
+            <a-form-item label="字典类型">
+              <a-input v-model="queryParam.dictType" placeholder="请填写字典类型"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="字典名称">
+              <a-input v-model="queryParam.dictName" placeholder="请填写字典名称"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="是否内置">
+              <a-select v-model="queryParam.isDefault" placeholder="请选择是否内置" default-value="">
+                <a-select-option value="">全部</a-select-option>
+                <a-select-option value="1">内置</a-select-option>
+                <a-select-option value="2">非内置</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <template v-if="advanced">
+            <a-col :md="7" :sm="24">
+              <a-form-item label="创建时间">
+                <a-range-picker
+                  showTime
+                  format="YYYY-MM-DD HH:mm:ss"
+                />
+              </a-form-item>
+            </a-col>
+          </template>
+          <a-col :md="6" :sm="24">
+            <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+              <a @click="toggleAdvanced" style="margin-left: 8px">
+                {{ advanced ? '收起' : '展开' }}
+                <a-icon :type="advanced ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+    <div class="table-operator">
+      <a-button type="primary" icon="plus" @click="$refs.AddType.show()">添加字典类别</a-button>
+      <a-button type="default" icon="plus" @click="$refs.AddType.show()">添加字典数据</a-button>
+    </div>
+    <a-table :columns="columns" :dataSource="data" :rowKey="rowKey" @expand="expand" :expandedRowKeys="expandedRowKeys" >
+      <a-table
+        slot="expandedRowRender"
+        :columns="innerColumns"
+        :dataSource="innerData"
+        :pagination="false"
+        :rowKey="innerRowKey"
+      >
+      </a-table>
     </a-table>
-  </a-table>
+    <add-type ref="AddType" @ok="handleSaveType"/>
+  </a-card>
 </template>
 <script>
 import { getDictTypeList, getDictDataList } from '@/api/dict'
+import AddType from './module/AddType'
 
 export default {
+  components: {
+    AddType
+  },
   data () {
     return {
       data: [],
@@ -22,7 +78,13 @@ export default {
       expandedRowKeys: [],
       innerColumns,
       innerData: [],
-      innerRowKey: 'dictId'
+      innerRowKey: 'dictId',
+      advanced: false,
+      queryParam: {
+        dictType: '',
+        dictName: '',
+        isDefault: ''
+      }
     }
   },
   created () {
@@ -45,6 +107,12 @@ export default {
         this.expandedRowKeys = [record.dictType]
         this.getDataList({ 'dictType': this.expandedRowKeys[0] })
       }
+    },
+    toggleAdvanced () {
+      this.advanced = !this.advanced
+    },
+    handleSaveType () {
+      this.$refs.table.refresh(true)
     }
   }
 }

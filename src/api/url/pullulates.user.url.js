@@ -27,5 +27,9 @@ export const PULLULATES_ORG_URL = {
 
 export const PULLULATES_DICT_URL = {
   Dict_Type_List: PULLULATES_USER_BASE_URL + '/dicts/types/list',
-  Dict_Data_List: PULLULATES_USER_BASE_URL + '/dicts/datas/list'
+  Dict_Data_List: PULLULATES_USER_BASE_URL + '/dicts/datas/list',
+  Dict_Data_List_By_Type: PULLULATES_USER_BASE_URL + '/dicts/datas/dicttype',
+  Dict_Data_Info: PULLULATES_USER_BASE_URL + '/dicts/datas/info',
+  Dict_Save_Type: PULLULATES_USER_BASE_URL + '/dicts/types/save',
+  Dict_Save_Data: PULLULATES_USER_BASE_URL + '/dicts/datas/save'
 }
