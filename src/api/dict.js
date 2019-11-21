@@ -54,3 +54,11 @@ export function saveData (parameter) {
     data: parameter
   })
 }
+
+/** 获取建议排序编号 */
+export function getSuggestSortNo () {
+  return axios({
+    url: PULLULATES_DICT_URL.Dict_Type_Suggest_Sortno,
+    method: 'get'
+  })
+}

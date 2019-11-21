@@ -26,8 +26,9 @@
         label="排序编号"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
+        :extra="'建议排序:' + suggestSortNo"
       >
-        <a-input-number v-decorator="['sortNo', {rules: [{required: true, message: '请输入排序编号'}]}]" />
+        <a-input-number v-decorator="['sortNo', {rules: [{required: true, message: '请输入排序编号'}], initialValue: suggestSortNo}]" />
       </a-form-item>
       <a-form-item
         :labelCol="labelCol"
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-import { saveType } from '@/api/dict'
+import { saveType, getSuggestSortNo } from '@/api/dict'
 export default {
   name: 'AddType',
   data () {
@@ -64,15 +65,22 @@ export default {
       wrapperCol: {
         xs: { span: 24 },
         sm: { span: 13 }
-      }
+      },
+      suggestSortNo: 1
     }
   },
   methods: {
     show () {
       this.visible = !this.visible
+      this.getSuggestSortNo()
     },
     handleCancel () {
       this.visible = false
+    },
+    getSuggestSortNo () {
+      getSuggestSortNo().then(res => {
+        this.suggestSortNo = res.data
+      })
     },
     handleSubmit () {
       this.confirmLoading = true

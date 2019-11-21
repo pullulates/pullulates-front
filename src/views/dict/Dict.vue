@@ -47,7 +47,7 @@
     </div>
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="$refs.AddType.show()">添加字典类别</a-button>
-      <a-button type="default" icon="plus" @click="$refs.AddType.show()">添加字典数据</a-button>
+      <a-button type="default" icon="plus" @click="$refs.AddData.show()">添加字典数据</a-button>
     </div>
     <a-table :columns="columns" :dataSource="data" :rowKey="rowKey" @expand="expand" :expandedRowKeys="expandedRowKeys" >
       <a-table
@@ -60,15 +60,18 @@
       </a-table>
     </a-table>
     <add-type ref="AddType" @ok="handleSaveType"/>
+    <add-data ref="AddData" @ok="handleSaveData"/>
   </a-card>
 </template>
 <script>
 import { getDictTypeList, getDictDataList } from '@/api/dict'
 import AddType from './module/AddType'
+import AddData from './module/AddData'
 
 export default {
   components: {
-    AddType
+    AddType,
+    AddData
   },
   data () {
     return {
@@ -112,7 +115,10 @@ export default {
       this.advanced = !this.advanced
     },
     handleSaveType () {
-      this.$refs.table.refresh(true)
+      this.getTypeList()
+    },
+    handleSaveData () {
+      this.getTypeList()
     }
   }
 }
@@ -123,20 +129,15 @@ const columns = [
   { title: '是否默认', dataIndex: 'isDefault' },
   { title: '排序编号', dataIndex: 'sortNo' },
   { title: '创建人', dataIndex: 'createBy' },
-  { title: '创建时间', dataIndex: 'createTime' },
-  { title: '修改人', dataIndex: 'updateBy' },
-  { title: '修改时间', dataIndex: 'updateTime' }
+  { title: '创建时间', dataIndex: 'createTime' }
 ]
 
 const innerColumns = [
-  { title: '字典类型', dataIndex: 'dictType' },
   { title: '字典值', dataIndex: 'dictValue' },
   { title: '字典名称', dataIndex: 'dictName' },
   { title: '字典排序', dataIndex: 'sortNo' },
   { title: '字典样式', dataIndex: 'dictCss' },
   { title: '创建人', dataIndex: 'createBy' },
-  { title: '创建时间', dataIndex: 'createTime' },
-  { title: '修改人', dataIndex: 'updateBy' },
-  { title: '修改时间', dataIndex: 'updateTime' }
+  { title: '创建时间', dataIndex: 'createTime' }
 ]
 </script>
