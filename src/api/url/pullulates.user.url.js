@@ -3,9 +3,10 @@ const PULLULATES_USER_BASE_URL = '/pullulates_user_api'
 export const PULLULATES_USER_URL = {
   Login: PULLULATES_USER_BASE_URL + '/login',
   Logout: PULLULATES_USER_BASE_URL + '/logout',
-  User_Info: PULLULATES_USER_BASE_URL + '/users/get',
+  My_User_Info: PULLULATES_USER_BASE_URL + '/users/get/my',
   User_List: PULLULATES_USER_BASE_URL + '/users/list',
-  User_Save: PULLULATES_USER_BASE_URL + '/users/save'
+  User_Save: PULLULATES_USER_BASE_URL + '/users/save',
+  User_Info: PULLULATES_USER_BASE_URL + '/users/get'
 }
 
 export const PULLULATES_ROLE_URL = {

@@ -83,7 +83,7 @@ export default {
     },
     getDictTypes () {
       getDictTypeList().then(res => {
-        this.options = res.data.map(item => { item.dictType, item.dictName })
+        // this.options = res.data.map(item => { item.dictType, item.dictName })
       })
     },
     handleSubmit () {

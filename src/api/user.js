@@ -18,3 +18,12 @@ export function saveUser (parameter) {
     data: parameter
   })
 }
+
+/** 根据用户id获取用户的一些核心信息，包含了用户基本信息，用户组织机构信息， 用户角色信息 */
+export function getUserInfo (parameter) {
+  return axios({
+    url: PULLULATES_USER_URL.User_Info,
+    method: 'get',
+    data: parameter
+  })
+}

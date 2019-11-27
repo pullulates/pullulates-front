@@ -83,7 +83,7 @@
       :data="loadData"
       :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
     >
-      <a slot="detail" slot-scope="text" href="javascript:;" @click="$refs.UserInfo.visible()">{{ text }}</a>
+      <a slot="detail" slot-scope="text, record" href="javascript:;" @click="$refs.UserDetail.show(record)">{{ text }}</a>
       <span slot="sex" slot-scope="sex">
         <a-tag
           :color="sex==='1' ? 'red' : (sex === '2' ? 'geekblue' : 'green')"
@@ -114,6 +114,7 @@
       </span>
     </s-table>
     <add-user ref="AddUser" @ok="handleSave"/>
+    <user-detail ref="UserDetail" />
   </a-card>
 </template>
 
