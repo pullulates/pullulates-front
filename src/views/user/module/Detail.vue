@@ -7,7 +7,7 @@
     @cancel="handleCancel"
   >
     <a-spin :spinning="spinning">
-      <detail-list title="基本信息">
+      <detail-list title="基本信息" :col="3">
         <detail-list-item term="用户名称">{{ user.userName }}</detail-list-item>
         <detail-list-item term="真实姓名">{{ user.realName }}</detail-list-item>
         <detail-list-item term="证件号码">{{ user.idCard }}</detail-list-item>
@@ -22,9 +22,8 @@
         <detail-list-item term="最近签名">{{ user.sign }}</detail-list-item>
       </detail-list>
       <a-divider dashed/>
-      <detail-list title="角色信息">
+      <detail-list title="角色信息" :col="1">
         <detail-list-item term="拥有角色"><a-tag v-for="(item, index) in user.roles" :key="index">{{ item.roleName }}</a-tag></detail-list-item>
-        <br><br>
         <detail-list-item term="菜单权限">
           <a-tree
             :treeData="menuTree"
