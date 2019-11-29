@@ -21,22 +21,24 @@
         <detail-list-item term="更新人">{{ user.updateBy }}</detail-list-item>
         <detail-list-item term="最近签名">{{ user.sign }}</detail-list-item>
       </detail-list>
+      <a-divider dashed/>
       <detail-list title="角色信息">
-        <detail-list-item term="拥有角色"><a-tag v-for="item in user.roles" :key="item">{{ item.roleName }}</a-tag></detail-list-item>
+        <detail-list-item term="拥有角色"><a-tag v-for="(item, index) in user.roles" :key="index">{{ item.roleName }}</a-tag></detail-list-item>
+        <br><br>
         <detail-list-item term="菜单权限">
-          <s-tree
-            :dataSource="menuTree"
+          <a-tree
+            :treeData="menuTree"
             :autoExpandParent="autoExpandParent"
-            :search="false"
-            @onExpand="onExpand"></s-tree>
+            @onExpand="onExpand"></a-tree>
         </detail-list-item>
       </detail-list>
+      <a-divider dashed/>
       <detail-list title="组织机构信息">
-        <detail-list-item term="机构名称">{{ user.org.orgName }}</detail-list-item>
-        <detail-list-item term="机构编号">{{ user.org.orgNo }}</detail-list-item>
-        <detail-list-item term="机构状态"><a-tag :color="user.org.status === '1' ? 'green' : 'red'">{{ user.org.status === '1' ? '启用':'禁用' }}</a-tag></detail-list-item>
-        <detail-list-item term="排序编号">{{ user.org.sortNo }}</detail-list-item>
-        <detail-list-item term="机构描述">{{ user.org.desct }}</detail-list-item>
+        <detail-list-item term="机构名称">{{ org.orgName }}</detail-list-item>
+        <detail-list-item term="机构编号">{{ org.orgNo }}</detail-list-item>
+        <detail-list-item term="机构状态"><a-tag :color="org.status === '1' ? 'green' : 'red'">{{ org.status === '1' ? '启用':'禁用' }}</a-tag></detail-list-item>
+        <detail-list-item term="排序编号">{{ org.sortNo }}</detail-list-item>
+        <detail-list-item term="机构描述">{{ org.desct }}</detail-list-item>
       </detail-list>
     </a-spin>
   </a-modal>
@@ -46,7 +48,6 @@
 import DetailList from '@/components/tools/DetailList'
 import { getUserInfo } from '@/api/user'
 import { getMenuTree } from '@/api/menu'
-import STree from '@/components/Tree/Tree'
 
 const DetailListItem = DetailList.Item
 
@@ -54,14 +55,14 @@ export default {
   name: 'UserDetail',
   components: {
     DetailList,
-    DetailListItem,
-    STree
+    DetailListItem
   },
   data () {
     return {
       visible: false,
       spinning: false,
       user: '',
+      org: '',
       menuTree: [],
       autoExpandParent: false
     }
@@ -72,6 +73,7 @@ export default {
       this.spinning = true
       getUserInfo({ userId: record.userId }).then(res => {
         this.user = res.data
+        this.org = this.user.org
       })
       getMenuTree().then(res => {
         this.menuTree = res.data
@@ -80,6 +82,8 @@ export default {
     },
     handleCancel () {
       this.visible = false
+    },
+    onExpand (expandedKeys) {
     }
   }
 }
