@@ -19,8 +19,10 @@
           optionFilterProp="children"
           :filterOption="filterOption"
           v-decorator="['dictType', {rules: [{required: true, message: '请选择所属类别'}]}]"
-          :options="options"
         >
+          <a-select-option v-for="item in options" :key="item.dictType">
+            {{ item.dictName }}
+          </a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item
@@ -28,7 +30,7 @@
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
       >
-        <a-input v-decorator="['dictType', {rules: [{required: true, message: '请输入字典数据'},{max: 25, message: '字典数据最多25个字符'}]}]" />
+        <a-input v-decorator="['dictValue', {rules: [{required: true, message: '请输入字典数据'},{max: 25, message: '字典数据最多25个字符'}]}]" />
       </a-form-item>
       <a-form-item
         label="数据名称"
@@ -49,7 +51,7 @@
 </template>
 
 <script>
-import { saveType, getDictTypeList } from '@/api/dict'
+import { saveData, getDictTypeList } from '@/api/dict'
 export default {
   name: 'AddData',
   data () {
@@ -83,7 +85,7 @@ export default {
     },
     getDictTypes () {
       getDictTypeList().then(res => {
-        // this.options = res.data.map(item => { item.dictType, item.dictName })
+        this.options = res.data
       })
     },
     handleSubmit () {
@@ -91,7 +93,7 @@ export default {
       const { form: { validateFields } } = this
       validateFields((errors, values) => {
         if (!errors) {
-          saveType(values).then(res => {
+          saveData(values).then(res => {
             if (res.code === 200) {
               this.$notification.success({
                 message: '消息',
