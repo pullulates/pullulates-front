@@ -20,7 +20,7 @@
           :filterOption="filterOption"
           v-decorator="['dictType', {rules: [{required: true, message: '请选择所属类别'}]}]"
         >
-          <a-select-option v-for="item in options" :key="item.dictType">
+          <a-select-option v-for="item in dictTypeOptions" :key="item.dictType">
             {{ item.dictName }}
           </a-select-option>
         </a-select>
@@ -40,6 +40,23 @@
         <a-input v-decorator="['dictName', {rules: [{required: true, message: '请输入数据名称'},{max: 50, message: '数据名称最多50个字符'}]}]" />
       </a-form-item>
       <a-form-item
+        label="字典样式"
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
+      >
+        <a-select
+          showSearch
+          placeholder="请选择字典样式"
+          optionFilterProp="children"
+          :filterOption="filterOption"
+          v-decorator="['dictCss', {rules: [{required: true, message: '请选择字典样式'}]}]"
+        >
+          <a-select-option v-for="item in dictCssOptions" :key="item.dictValue">
+            {{ item.dictName }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item
         label="排序编号"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
@@ -51,7 +68,7 @@
 </template>
 
 <script>
-import { saveData, getDictTypeList } from '@/api/dict'
+import { saveData, getDictTypeList, getDictDataList } from '@/api/dict'
 export default {
   name: 'AddData',
   data () {
@@ -67,13 +84,15 @@ export default {
         xs: { span: 24 },
         sm: { span: 13 }
       },
-      options: []
+      dictTypeOptions: [],
+      dictCssOptions: []
     }
   },
   methods: {
     show () {
       this.visible = !this.visible
       this.getDictTypes()
+      this.getDictCss()
     },
     handleCancel () {
       this.visible = false
@@ -85,7 +104,12 @@ export default {
     },
     getDictTypes () {
       getDictTypeList().then(res => {
-        this.options = res.data
+        this.dictTypeOptions = res.data
+      })
+    },
+    getDictCss () {
+      getDictDataList({ dictType: 'dict_css' }).then(res => {
+        this.dictCssOptions = res.data
       })
     },
     handleSubmit () {

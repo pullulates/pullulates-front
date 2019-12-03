@@ -21,25 +21,20 @@
           <template v-if="advanced">
             <a-col :md="6" :sm="18">
               <a-form-item label="用户性别">
-                <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="">
-                  <a-select-option value="">全部</a-select-option>
-                  <a-select-option value="1">男</a-select-option>
-                  <a-select-option value="2">女</a-select-option>
-                  <a-select-option value="3">未知</a-select-option>
+                <a-select v-model="queryParam.sex" placeholder="请选择性别">
+                  <a-select-option v-for="item in sexs" :key="item.dictValue">{{ item.dictName }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="18">
               <a-form-item label="用户状态">
-                <a-select v-model="queryParam.status" placeholder="请选择状态" default-value="">
-                  <a-select-option value="">全部</a-select-option>
-                  <a-select-option value="1">启用</a-select-option>
-                  <a-select-option value="2">禁用</a-select-option>
+                <a-select v-model="queryParam.status" placeholder="请选择状态">
+                  <a-select-option v-for="item in dataStatus" :key="item.dictValue">{{ item.dictName }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="18">
-              <a-form-item label="更新时间">
+              <a-form-item label="创建时间">
                 <a-range-picker
                   :ranges="{ '今天': [moment(), moment()], '这个月': [moment(), moment().endOf('month')] }"
                   showTime
@@ -86,25 +81,25 @@
       <a slot="detail" slot-scope="text, record" href="javascript:;" @click="$refs.UserDetail.show(record)">{{ text }}</a>
       <span slot="sex" slot-scope="sex">
         <a-tag
-          :color="sex==='1' ? 'red' : (sex === '2' ? 'geekblue' : 'green')"
+          :color="getDictCss(sexs, sex)"
         >
-          {{ sex==='1' ? '男' : (sex === '2' ? '女' : '未知') }}
+          {{ getDictOption(sexs, sex) }}
         </a-tag>
       </span>
       <span slot="status" slot-scope="status">
         <a-tag
-          :color="status==='1' ? 'green' : 'red'"
+          :color="getDictCss(dataStatus, status)"
         >
-          {{ status==='1' ? '启用' : '禁用' }}
+          {{ getDictOption(dataStatus, status) }}
         </a-tag>
       </span>
-      <span slot="action">
+      <span slot="action" slot-scope="text, record">
         <a href="javascript:;">编辑</a>
         <a-divider type="vertical" />
         <a-dropdown>
           <a-menu slot="overlay">
-            <a-menu-item><a-icon type="unlock" />启用</a-menu-item>
-            <a-menu-item><a-icon type="lock" />禁用</a-menu-item>
+            <a-menu-item @click="handleChangeStatus(record, '1')"><a-icon type="unlock" />启用</a-menu-item>
+            <a-menu-item @click="handleChangeStatus(record, '2')"><a-icon type="lock" />禁用</a-menu-item>
             <a-menu-item><a-icon type="delete" />删除</a-menu-item>
           </a-menu>
           <a>
@@ -119,7 +114,8 @@
 </template>
 
 <script>
-import { getUserList } from '@/api/user'
+import { getUserList, changeUserStatus } from '@/api/user'
+import { getDictDataListByType } from '@/api/dict'
 import { STable } from '@/components'
 import moment from 'moment'
 import AddUser from './module/Add'
@@ -137,20 +133,40 @@ export default {
       advanced: false,
       queryParam: {
         userName: '',
-        sex: ''
+        sex: '',
+        phone: '',
+        email: '',
+        status: ''
       },
       columns,
       selectedRowKeys: [],
       selectedRows: [],
       loadData: parameter => {
         return this.getUsers(parameter)
-      }
+      },
+      sexs: [],
+      dataStatus: []
     }
+  },
+  created () {
+    getDictDataListByType({ dictType: 'sex' }).then(res => {
+      this.sexs = res.data
+    })
+    getDictDataListByType({ dictType: 'data_status' }).then(res => {
+      this.dataStatus = res.data
+    })
   },
   methods: {
     getUsers (parameter) {
       return getUserList(Object.assign(parameter, this.queryParam)).then(res => {
         return res
+      })
+    },
+    handleChangeStatus (record, status) {
+      this.loading = true
+      changeUserStatus({ userId: record.userId, status: status }).then(res => {
+        this.$refs.table.refresh(true)
+        this.loading = false
       })
     },
     onSelectChange (selectedRowKeys, selectedRows) {
@@ -163,6 +179,14 @@ export default {
     moment,
     handleSave () {
       this.$refs.table.refresh(true)
+    },
+    getDictOption (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictName : '未知'
+    },
+    getDictCss (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictCss : ''
     }
   }
 }

@@ -27,3 +27,12 @@ export function getUserInfo (parameter) {
     data: parameter
   })
 }
+
+/** 根据用户id修改用户的状态 */
+export function changeUserStatus (parameter) {
+  return axios({
+    url: PULLULATES_USER_URL.Change_User_Status,
+    method: 'put',
+    data: parameter
+  })
+}

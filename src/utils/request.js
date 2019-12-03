@@ -72,7 +72,7 @@ service.interceptors.request.use(config => {
     config.paramsSerializer = function (params) {
       return Qs.stringify(params, { arrayFormat: 'repeat' })
     }
-  } else if (config.method === 'post') {
+  } else if (config.method === 'post' || config.method === 'put') {
     config.data = Qs.stringify(config.data)
   }
   return config
@@ -81,6 +81,12 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use((response) => {
   if (response.data.code === 500) {
     notification.error({
+      message: '提示',
+      description: response.data.msg
+    })
+  }
+  if (response.data.code === 200 && (response.config.method === 'post' || response.config.method === 'put' || response.config.method === 'delete')) {
+    notification.success({
       message: '提示',
       description: response.data.msg
     })

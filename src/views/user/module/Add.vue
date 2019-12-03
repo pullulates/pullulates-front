@@ -69,9 +69,7 @@
             :wrapperCol="wrapperCol"
           >
             <a-select v-decorator="['sex', {initialValue: '1', rules: [{required: true, message: '请选择用户性别'}]}]">
-              <a-select-option value="1">男</a-select-option>
-              <a-select-option value="2">女</a-select-option>
-              <a-select-option value="3">未知</a-select-option>
+              <a-select-option v-for="item in sexs" :key="item.dictValue">{{ item.dictName }}</a-select-option>
             </a-select>
           </a-form-item>
         </div>
@@ -138,6 +136,7 @@ import { getOrgTree } from '@/api/org'
 import { getRoleList } from '@/api/role'
 import { getMenuTree, getMenuIdsByRoleKeys } from '@/api/menu'
 import { saveUser } from '@/api/user'
+import { getDictDataListByType } from '@/api/dict'
 const stepForms = [
   ['userName', 'realName', 'idCard', 'phone', 'email', 'password', 'confirm', 'sex'],
   ['orgId'],
@@ -163,6 +162,7 @@ export default {
       confirmLoading: false,
       currentStep: 0,
       mdl: {},
+      sexs: [],
 
       form: this.$form.createForm(this),
       orgTree: [],
@@ -192,6 +192,9 @@ export default {
     })
     getMenuTree().then(res => {
       this.menuTreeData = res.data
+    })
+    getDictDataListByType({ dictType: 'sex' }).then(res => {
+      this.sexs = res.data
     })
   },
   methods: {

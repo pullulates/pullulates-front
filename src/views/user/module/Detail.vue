@@ -11,8 +11,8 @@
         <detail-list-item term="用户名称">{{ user.userName }}</detail-list-item>
         <detail-list-item term="真实姓名">{{ user.realName }}</detail-list-item>
         <detail-list-item term="证件号码">{{ user.idCard }}</detail-list-item>
-        <detail-list-item term="用户性别"><a-tag :color="user.sex === '1' ? 'red' : 'green'">{{ user.sex === '1' ? '男':'女' }}</a-tag></detail-list-item>
-        <detail-list-item term="用户状态"><a-tag :color="user.status === '1' ? 'green' : 'red'">{{ user.status === '1' ? '启用':'禁用' }}</a-tag></detail-list-item>
+        <detail-list-item term="用户性别"><a-tag :color="getDictCss(sexs, user.sex)">{{ getDictOption(sexs, user.sex) }}</a-tag></detail-list-item>
+        <detail-list-item term="用户状态"><a-tag :color="getDictCss(dataStatus, user.status)">{{ getDictOption(dataStatus, user.status) }}</a-tag></detail-list-item>
         <detail-list-item term="手机号码">{{ user.phone }}</detail-list-item>
         <detail-list-item term="电子邮箱">{{ user.email }}</detail-list-item>
         <detail-list-item term="创建时间">{{ user.createTime }}</detail-list-item>
@@ -35,7 +35,6 @@
       <detail-list title="组织机构信息">
         <detail-list-item term="机构名称">{{ org.orgName }}</detail-list-item>
         <detail-list-item term="机构编号">{{ org.orgNo }}</detail-list-item>
-        <detail-list-item term="机构状态"><a-tag :color="org.status === '1' ? 'green' : 'red'">{{ org.status === '1' ? '启用':'禁用' }}</a-tag></detail-list-item>
         <detail-list-item term="排序编号">{{ org.sortNo }}</detail-list-item>
         <detail-list-item term="机构描述">{{ org.desct }}</detail-list-item>
       </detail-list>
@@ -47,6 +46,7 @@
 import DetailList from '@/components/tools/DetailList'
 import { getUserInfo } from '@/api/user'
 import { getMenuTree } from '@/api/menu'
+import { getDictDataListByType } from '@/api/dict'
 
 const DetailListItem = DetailList.Item
 
@@ -63,8 +63,18 @@ export default {
       user: '',
       org: '',
       menuTree: [],
-      autoExpandParent: false
+      autoExpandParent: false,
+      sexs: [],
+      dataStatus: []
     }
+  },
+  created () {
+    getDictDataListByType({ dictType: 'sex' }).then(res => {
+      this.sexs = res.data
+    })
+    getDictDataListByType({ dictType: 'data_status' }).then(res => {
+      this.dataStatus = res.data
+    })
   },
   methods: {
     show (record) {
@@ -83,6 +93,14 @@ export default {
       this.visible = false
     },
     onExpand (expandedKeys) {
+    },
+    getDictOption (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictName : '未知'
+    },
+    getDictCss (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictCss : ''
     }
   }
 }
