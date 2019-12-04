@@ -7,7 +7,11 @@ export const PULLULATES_USER_URL = {
   User_List: PULLULATES_USER_BASE_URL + '/users/list',
   User_Save: PULLULATES_USER_BASE_URL + '/users/save',
   User_Info: PULLULATES_USER_BASE_URL + '/users/get',
-  Change_User_Status: PULLULATES_USER_BASE_URL + '/users/update/status'
+  Change_User_Status: PULLULATES_USER_BASE_URL + '/users/update/status',
+  Batch_Change_User_Status: PULLULATES_USER_BASE_URL + '/users/batch-update/status',
+  Reset_Password: PULLULATES_USER_BASE_URL + '/users/update/reset-password',
+  Delete_User: PULLULATES_USER_BASE_URL + '/users/delete',
+  Batch_Delete_User: PULLULATES_USER_BASE_URL + '/users/batch-delete'
 }
 
 export const PULLULATES_ROLE_URL = {

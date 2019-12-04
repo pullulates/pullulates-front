@@ -67,7 +67,7 @@ service.interceptors.request.use(config => {
   if (token) {
     config.headers['PULLULATES-TOKEN'] = token
   }
-  if (config.method === 'get') {
+  if (config.method === 'get' || config.method === 'delete') {
     config.params = config.data
     config.paramsSerializer = function (params) {
       return Qs.stringify(params, { arrayFormat: 'repeat' })
@@ -75,18 +75,13 @@ service.interceptors.request.use(config => {
   } else if (config.method === 'post' || config.method === 'put') {
     config.data = Qs.stringify(config.data)
   }
+  console.info(config)
   return config
 }, err)
 
 service.interceptors.response.use((response) => {
-  if (response.data.code === 500) {
+  if (response.data.code === 500 && response.status !== 200) {
     notification.error({
-      message: '提示',
-      description: response.data.msg
-    })
-  }
-  if (response.data.code === 200 && (response.config.method === 'post' || response.config.method === 'put' || response.config.method === 'delete')) {
-    notification.success({
       message: '提示',
       description: response.data.msg
     })

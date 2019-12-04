@@ -36,3 +36,39 @@ export function changeUserStatus (parameter) {
     data: parameter
   })
 }
+
+/** 根据用户id批量修改用户的状态 */
+export function batchChangeUserStatus (parameter) {
+  return axios({
+    url: PULLULATES_USER_URL.Batch_Change_User_Status,
+    method: 'get',
+    data: parameter
+  })
+}
+
+/** 根据用户id重置用户的登录密码 */
+export function resetPassword (parameter) {
+  return axios({
+    url: PULLULATES_USER_URL.Reset_Password,
+    method: 'put',
+    data: parameter
+  })
+}
+
+/** 根据用户id删除用户 */
+export function deleteUser (parameter) {
+  return axios({
+    url: PULLULATES_USER_URL.Delete_User,
+    method: 'delete',
+    data: parameter
+  })
+}
+
+/** 根据用户id批量删除用户 */
+export function batchDeleteUser (parameter) {
+  return axios({
+    url: PULLULATES_USER_URL.Batch_Delete_User,
+    method: 'get',
+    data: parameter
+  })
+}

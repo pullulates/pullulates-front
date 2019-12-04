@@ -60,9 +60,9 @@
       <a-button type="primary" icon="plus" @click="$refs.AddUser.add()">添加</a-button>
       <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
-          <a-menu-item key="1"><a-icon type="unlock" />启用</a-menu-item>
-          <a-menu-item key="2"><a-icon type="lock" />禁用</a-menu-item>
-          <a-menu-item key="3"><a-icon type="delete" />删除</a-menu-item>
+          <a-menu-item key="1" @click="confirmBatchChangeStatus('1')"><a-icon type="unlock" />启用</a-menu-item>
+          <a-menu-item key="2" @click="confirmBatchChangeStatus('2')"><a-icon type="lock" />禁用</a-menu-item>
+          <a-menu-item key="3" @click="confirmBatchDelete()"><a-icon type="delete" />删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px">
           批量操作 <a-icon type="down" />
@@ -86,21 +86,16 @@
           {{ getDictOption(sexs, sex) }}
         </a-tag>
       </span>
-      <span slot="status" slot-scope="status">
-        <a-tag
-          :color="getDictCss(dataStatus, status)"
-        >
-          {{ getDictOption(dataStatus, status) }}
-        </a-tag>
+      <span slot="status" slot-scope="text, record">
+        <a-switch checkedChildren="启用" unCheckedChildren="禁用" :checked="text === '1'" @click="handleChangeStatus(record)" />
       </span>
       <span slot="action" slot-scope="text, record">
-        <a href="javascript:;">编辑</a>
+        <a href="javascript:;" @click="handleEdit(record)"><a-icon type="edit"/> 编辑</a>
         <a-divider type="vertical" />
         <a-dropdown>
           <a-menu slot="overlay">
-            <a-menu-item @click="handleChangeStatus(record, '1')"><a-icon type="unlock" />启用</a-menu-item>
-            <a-menu-item @click="handleChangeStatus(record, '2')"><a-icon type="lock" />禁用</a-menu-item>
-            <a-menu-item><a-icon type="delete" />删除</a-menu-item>
+            <a-menu-item @click="openResetModal(record)"><a-icon type="reload" />重置密码</a-menu-item>
+            <a-menu-item @click="confirmDelete(record)"><a-icon type="delete" />删除用户</a-menu-item>
           </a-menu>
           <a>
             更多 <a-icon type="down" />
@@ -110,22 +105,50 @@
     </s-table>
     <add-user ref="AddUser" @ok="handleSave"/>
     <user-detail ref="UserDetail" />
+    <edit-user ref="EditUser" @ok="handleSave"/>
+    <a-modal
+      title="重置密码"
+      :visible="resetVisible"
+      @ok="handleResetOk"
+      @cancel="handleResetCancel"
+    >
+      <a-form
+        :form="resetForm"
+      >
+        <a-form-item label="重置用户" :label-col="{ span: 5 }" :wrapper-col="{ span: 15 }">
+          {{ userName }}
+        </a-form-item>
+        <a-form-item label="密码" extra="默认的重置密码为：111111" :label-col="{ span: 5 }" :wrapper-col="{ span: 15 }">
+          <a-input
+            type="password"
+            placeholder="请输入重置后的密码"
+            v-decorator="[
+              'password',
+              { rules: [{ required: true, message: '请输入重置后的密码!' }], initialValue: resetValue }
+            ]" >
+            <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
+          </a-input>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </a-card>
 </template>
 
 <script>
-import { getUserList, changeUserStatus } from '@/api/user'
+import { getUserList, changeUserStatus, resetPassword, deleteUser, batchChangeUserStatus, batchDeleteUser } from '@/api/user'
 import { getDictDataListByType } from '@/api/dict'
 import { STable } from '@/components'
 import moment from 'moment'
 import AddUser from './module/Add'
 import UserDetail from './module/Detail'
+import EditUser from './module/Edit'
 
 export default {
   components: {
     STable,
     AddUser,
-    UserDetail
+    UserDetail,
+    EditUser
   },
   data () {
     return {
@@ -145,7 +168,12 @@ export default {
         return this.getUsers(parameter)
       },
       sexs: [],
-      dataStatus: []
+      dataStatus: [],
+      resetForm: this.$form.createForm(this),
+      resetVisible: false,
+      resetValue: '111111',
+      userId: '',
+      userName: ''
     }
   },
   created () {
@@ -162,11 +190,99 @@ export default {
         return res
       })
     },
-    handleChangeStatus (record, status) {
+    handleEdit (record) {
+      this.$refs.EditUser.edit(record, this.sexs, this.dataStatus)
+    },
+    handleChangeStatus (record) {
       this.loading = true
-      changeUserStatus({ userId: record.userId, status: status }).then(res => {
-        this.$refs.table.refresh(true)
-        this.loading = false
+      changeUserStatus({ userId: record.userId, status: record.status === '1' ? '2' : '1' }).then(res => {
+        if (res.code === 200) {
+          record.status = record.status === '1' ? '2' : '1'
+          this.$message.success(res.msg)
+        } else {
+          this.$message.warning(res.msg)
+        }
+      })
+      this.loading = false
+    },
+    openResetModal (record) {
+      this.userId = record.userId
+      this.userName = record.userName
+      this.resetVisible = true
+    },
+    handleResetCancel () {
+      this.userName = ''
+      this.userId = ''
+      this.resetVisible = false
+    },
+    handleResetOk () {
+      this.resetForm.validateFields((err, fieldsValue) => {
+        if (err) {
+          return false
+        }
+        fieldsValue.userId = this.userId
+        resetPassword(fieldsValue).then(res => {
+          if (res.code === 200) {
+            this.$message.success(res.msg)
+            this.handleResetCancel()
+          } else {
+            this.$message.warning(res.msg)
+          }
+        })
+      })
+    },
+    confirmDelete (record) {
+      const self = this
+      this.$confirm({
+        title: '确认删除当前选中的用户吗?',
+        okText: '是的',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleDelete(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleDelete (record) {
+      deleteUser({ userId: record.userId }).then(res => {
+        this.callback(res)
+      })
+    },
+    confirmBatchChangeStatus (status) {
+      const self = this
+      this.$confirm({
+        title: '确认批量更改已选用户的状态吗?',
+        onOk () {
+          self.handleBatchChangeStatus(status)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleBatchChangeStatus (status) {
+      batchChangeUserStatus({ userIds: this.selectedRowKeys, status: status }).then(res => {
+        this.callback(res)
+      })
+    },
+    confirmBatchDelete () {
+      const self = this
+      this.$confirm({
+        title: '确认批量删除已选用户吗?',
+        onOk () {
+          self.handleBatchDelete(status)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleBatchDelete () {
+      batchDeleteUser({ userIds: this.selectedRowKeys }).then(res => {
+        this.callback(res)
       })
     },
     onSelectChange (selectedRowKeys, selectedRows) {
@@ -187,6 +303,18 @@ export default {
     getDictCss (datas, param) {
       const result = datas.filter(item => item.dictValue === param)
       return result.length > 0 ? result[0].dictCss : ''
+    },
+    destroyAll () {
+      this.$destroyAll()
+    },
+    callback (res) {
+      if (res.code === 200) {
+        this.$message.success(res.msg)
+        this.$refs.table.refresh(true)
+      } else {
+        this.$message.warning(res.msg)
+      }
+      this.destroyAll()
     }
   }
 }

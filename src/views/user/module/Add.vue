@@ -182,24 +182,22 @@ export default {
       spinning: false
     }
   },
-  created () {
-    getOrgTree().then(res => {
-      this.orgTree = res.data
-      this.expandedKeys = res.data.map(item => item.parentId)
-    })
-    getRoleList().then(res => {
-      this.plainOptions = res.data.map(item => item.roleKey)
-    })
-    getMenuTree().then(res => {
-      this.menuTreeData = res.data
-    })
-    getDictDataListByType({ dictType: 'sex' }).then(res => {
-      this.sexs = res.data
-    })
-  },
   methods: {
     add (record) {
       this.visible = true
+      getOrgTree().then(res => {
+        this.orgTree = res.data
+        this.expandedKeys = res.data.map(item => item.parentId)
+      })
+      getRoleList().then(res => {
+        this.plainOptions = res.data.map(item => item.roleKey)
+      })
+      getMenuTree().then(res => {
+        this.menuTreeData = res.data
+      })
+      getDictDataListByType({ dictType: 'sex' }).then(res => {
+        this.sexs = res.data
+      })
     },
     handleConfirmBlur (e) {
       const value = e.target.value
