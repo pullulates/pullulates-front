@@ -75,7 +75,6 @@ service.interceptors.request.use(config => {
   } else if (config.method === 'post' || config.method === 'put') {
     config.data = Qs.stringify(config.data)
   }
-  console.info(config)
   return config
 }, err)
 

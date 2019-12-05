@@ -51,7 +51,7 @@ import { getDictDataListByType } from '@/api/dict'
 const DetailListItem = DetailList.Item
 
 export default {
-  name: 'UserDetail',
+  name: 'Detail',
   components: {
     DetailList,
     DetailListItem

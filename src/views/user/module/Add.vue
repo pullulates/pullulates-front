@@ -132,11 +132,8 @@
 
 <script>
 import STree from '@/components/Tree/Tree'
-import { getOrgTree } from '@/api/org'
-import { getRoleList } from '@/api/role'
 import { getMenuTree, getMenuIdsByRoleKeys } from '@/api/menu'
 import { saveUser } from '@/api/user'
-import { getDictDataListByType } from '@/api/dict'
 const stepForms = [
   ['userName', 'realName', 'idCard', 'phone', 'email', 'password', 'confirm', 'sex'],
   ['orgId'],
@@ -144,7 +141,7 @@ const stepForms = [
 ]
 
 export default {
-  name: 'AddUser',
+  name: 'Add',
   components: {
     STree
   },
@@ -183,21 +180,15 @@ export default {
     }
   },
   methods: {
-    add (record) {
-      this.visible = true
-      getOrgTree().then(res => {
-        this.orgTree = res.data
-        this.expandedKeys = res.data.map(item => item.parentId)
-      })
-      getRoleList().then(res => {
-        this.plainOptions = res.data.map(item => item.roleKey)
-      })
+    add (orgTree, roles, sexs, dataStatus) {
+      this.orgTree = orgTree
+      this.expandedKeys = orgTree.map(item => item.parentId)
+      this.plainOptions = roles.map(item => item.roleKey)
       getMenuTree().then(res => {
         this.menuTreeData = res.data
       })
-      getDictDataListByType({ dictType: 'sex' }).then(res => {
-        this.sexs = res.data
-      })
+      this.sexs = sexs
+      this.visible = true
     },
     handleConfirmBlur (e) {
       const value = e.target.value

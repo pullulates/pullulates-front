@@ -6,6 +6,7 @@ export const PULLULATES_USER_URL = {
   My_User_Info: PULLULATES_USER_BASE_URL + '/users/get/my',
   User_List: PULLULATES_USER_BASE_URL + '/users/list',
   User_Save: PULLULATES_USER_BASE_URL + '/users/save',
+  User_Update: PULLULATES_USER_BASE_URL + '/users/update',
   User_Info: PULLULATES_USER_BASE_URL + '/users/get',
   Change_User_Status: PULLULATES_USER_BASE_URL + '/users/update/status',
   Batch_Change_User_Status: PULLULATES_USER_BASE_URL + '/users/batch-update/status',
