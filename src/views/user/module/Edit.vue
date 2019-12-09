@@ -220,11 +220,12 @@ export default {
           return
         }
         fieldsValue.orgId = this.orgId
-        fieldsValue.roleIds = this.checkedList.join(',')
+        fieldsValue.roleKeys = this.checkedList.join(',')
         updateUser(fieldsValue).then(res => {
           if (res.code === 200) {
             this.$message.success(res.msg)
-            this.$refs.table.refresh(true)
+            this.$emit('ok', fieldsValue)
+            this.handleCancel()
           } else {
             this.$message.warning(res.msg)
           }

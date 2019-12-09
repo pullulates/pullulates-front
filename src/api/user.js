@@ -19,7 +19,7 @@ export function saveUser (parameter) {
   })
 }
 
-/** 保存新的用户 */
+/** 修改用户 */
 export function updateUser (parameter) {
   return axios({
     url: PULLULATES_USER_URL.User_Update,

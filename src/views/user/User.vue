@@ -1,68 +1,5 @@
 <template>
   <a-card :bordered="false">
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="24">
-            <a-form-item label="用户名称">
-              <a-input v-model="queryParam.userName" placeholder="请填写用户名称"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="手机号码">
-              <a-input v-model="queryParam.phone" placeholder="请填写手机号码"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="电子邮箱">
-              <a-input v-model="queryParam.email" placeholder="请填写电子邮箱"/>
-            </a-form-item>
-          </a-col>
-          <template v-if="advanced">
-            <a-col :md="6" :sm="24">
-              <a-form-item label="用户性别">
-                <a-select v-model="queryParam.sex" placeholder="请选择性别">
-                  <a-select-option v-for="item in sexs" :key="item.dictValue">{{ item.dictName }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="用户状态">
-                <a-select v-model="queryParam.status" placeholder="请选择状态">
-                  <a-select-option v-for="item in dataStatus" :key="item.dictValue">{{ item.dictName }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="所属角色">
-                <a-select v-model="queryParam.roleIds" placeholder="请选择所属角色" mode="multiple" @change="handleRoleSelectChange">
-                  <a-select-option v-for="item in roles" :key="item.roleId">{{ item.roleName }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="创建时间">
-                <a-range-picker
-                  :ranges="{ '今天': [moment(), moment()], '这个月': [moment(), moment().endOf('month')] }"
-                  showTime
-                  format="YYYY-MM-DD HH:mm:ss"
-                />
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="4" :sm="24">
-            <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-              <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-              <a @click="toggleAdvanced" style="margin-left: 8px">
-                {{ advanced ? '收起' : '展开' }}
-                <a-icon :type="advanced ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
     <a-row :gutter="8">
       <a-col :span="4">
         <s-tree
@@ -74,6 +11,69 @@
           @onExpand="onExpand"></s-tree>
       </a-col>
       <a-col :span="20">
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline">
+            <a-row :gutter="24">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="用户名称">
+                  <a-input v-model="queryParam.userName" placeholder="请填写用户名称"/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="手机号码">
+                  <a-input v-model="queryParam.phone" placeholder="请填写手机号码"/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="电子邮箱">
+                  <a-input v-model="queryParam.email" placeholder="请填写电子邮箱"/>
+                </a-form-item>
+              </a-col>
+              <template v-if="advanced">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="用户性别">
+                    <a-select v-model="queryParam.sex" placeholder="请选择性别">
+                      <a-select-option v-for="item in sexs" :key="item.dictValue">{{ item.dictName }}</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="用户状态">
+                    <a-select v-model="queryParam.status" placeholder="请选择状态">
+                      <a-select-option v-for="item in dataStatus" :key="item.dictValue">{{ item.dictName }}</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="所属角色">
+                    <a-select v-model="queryParam.roleIds" placeholder="请选择所属角色" mode="multiple" @change="handleRoleSelectChange">
+                      <a-select-option v-for="item in roles" :key="item.roleId">{{ item.roleName }}</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="8" :sm="12">
+                  <a-form-item label="创建时间">
+                    <a-range-picker
+                      :ranges="{ '今天': [moment(), moment()], '这个月': [moment(), moment().endOf('month')] }"
+                      showTime
+                      format="YYYY-MM-DD HH:mm:ss"
+                    />
+                  </a-form-item>
+                </a-col>
+              </template>
+              <a-col :md="4" :sm="24">
+                <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                  <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+                  <a @click="toggleAdvanced" style="margin-left: 8px">
+                    {{ advanced ? '收起' : '展开' }}
+                    <a-icon :type="advanced ? 'up' : 'down'"/>
+                  </a>
+                </span>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
         <div class="table-operator">
           <a-button type="primary" icon="plus" @click="handleAdd()">添加</a-button>
           <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
@@ -174,16 +174,10 @@ export default {
   },
   data () {
     return {
+      description: '列表使用场景：后台管理中的权限管理以及角色管理，可用于基于 RBAC 设计的角色权限控制，颗粒度细到每一个操作类型。',
       loading: true,
       advanced: false,
       queryParam: {
-        userName: '',
-        sex: '',
-        phone: '',
-        email: '',
-        status: '',
-        orgId: '',
-        roleIds: []
       },
       columns,
       selectedRowKeys: [],
@@ -209,8 +203,8 @@ export default {
   },
   created () {
     getOrgTree().then(res => {
-      this.expandedKeys = res.data.map(item => item.parentId)
       this.orgTree = res.data
+      this.expandedKeys = res.data.map(item => item.parentId)
     })
     getDictDataListByType({ dictType: 'sex' }).then(res => {
       this.sexs = res.data
