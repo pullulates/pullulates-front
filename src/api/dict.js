@@ -62,3 +62,15 @@ export function getSuggestSortNo () {
     method: 'get'
   })
 }
+
+/** 获取字典选项描述文本 */
+export function getDictOption (datas, param) {
+  const result = datas.filter(item => item.dictValue === param)
+  return result.length > 0 ? result[0].dictName : '未知'
+}
+
+/** 获取字典选项描述文本 */
+export function getDictCss (datas, param) {
+  const result = datas.filter(item => item.dictValue === param)
+  return result.length > 0 ? result[0].dictCss : ''
+}

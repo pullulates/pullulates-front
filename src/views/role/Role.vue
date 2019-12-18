@@ -1,225 +1,173 @@
 <template>
-  <a-card :bordered="false" :style="{ height: '100%' }">
+  <a-card :bordered="false">
     <a-row :gutter="24">
-      <a-col :md="4">
-        <div>
-          <h3><b>角色列表：</b></h3>
-        </div>
-        <a-list itemLayout="vertical" :dataSource="roles">
-          <a-list-item slot="renderItem" slot-scope="item, index" :key="index">
-            <a-list-item-meta :style="{ marginBottom: '0' }">
-              <span slot="description" style="text-align: center; display: block">{{ item.desct }}</span>
-              <a slot="title" style="text-align: center; display: block" @click="edit(item)">{{ item.roleName }}</a>
-            </a-list-item-meta>
-          </a-list-item>
-        </a-list>
-      </a-col>
-      <a-col :md="10">
-        <div style="max-width: 800px">
-          <a-divider v-if="isMobile()" />
-          <div>
-            <h3><b v-if="mdl.roleId">当前角色：{{ mdl.roleName }}</b><b v-else>未选中任何角色</b></h3>
-          </div>
-          <a-form :form="form" :layout="isMobile() ? 'vertical' : 'horizontal'">
-            <a-form-item label="角色标识">
-              <a-input v-decorator="[ 'roleKey', {rules: [{ required: true, max: 10, message: '请填写唯一的角色标识!' }]} ]" placeholder="请填写唯一的角色标识" />
-            </a-form-item>
-
-            <a-form-item label="角色名称">
-              <a-input v-decorator="[ 'roleName', {rules: [{ required: true, max: 15, message: '请填写角色名称!' }]} ]" placeholder="请填写角色名称" />
-            </a-form-item>
-
-            <a-form-item label="状态">
-              <a-select :value="mdl.status === '1'?'启用':'禁用'">
-                <a-select-option :value="1">启用</a-select-option>
-                <a-select-option :value="2">禁用</a-select-option>
-              </a-select>
-            </a-form-item>
-
-            <a-form-item label="角色描述">
-              <a-textarea :row="3" v-decorator="[ 'desct', {rules: [{ required: true, max: 100, message: '请填写角色描述!' }]} ]" placeholder="请填写角色描述" />
-            </a-form-item>
+      <a-col :col="12">
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline">
+            <a-row :gutter="24">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="角色名称">
+                  <a-input v-model="queryParam.roleName" placeholder="请填写角色名称" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="角色状态">
+                  <a-select v-model="queryParam.status" placeholder="请选择角色状态">
+                    <a-select-option
+                      v-for="item in dataStatus"
+                      :key="item.dictValue"
+                    >{{ item.dictName }}</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="角色标识">
+                  <a-input v-model="queryParam.roleKey" placeholder="请填写角色标识" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <span class="table-page-search-submitButtons" >
+                  <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+                </span>
+              </a-col>
+            </a-row>
           </a-form>
         </div>
-      </a-col>
-      <a-col :md="5">
-        <div>
-          <h3><b>菜单权限：</b></h3>
+        <div class="table-operator">
+          <a-button type="primary" icon="plus" @click="handleAdd()">添加</a-button>
         </div>
-        <a-tree
-          checkable
-          @expand="onExpand"
-          :expandedKeys="expandedKeys"
-          :autoExpandParent="autoExpandParent"
-          v-model="checkedKeys"
-          @select="onSelect"
-          :selectedKeys="selectedKeys"
-          :treeData="treeData"
-        />
+        <s-table
+          ref="table"
+          size="default"
+          :loading="loading"
+          :rowKey="(record) => record.roleId"
+          :columns="columns"
+          :data="loadData"
+          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        >
+          <span slot="status" slot-scope="text, record">
+            <a-switch checkedChildren="启用" unCheckedChildren="禁用" :checked="text === '1'" @click="confirmChangeStatus(record)" />
+          </span>
+          <span slot="yesOrNo" slot-scope="yesOrNo">
+            <a-tag :color="getDictCss(yesOrNos, yesOrNo)">
+              {{ getDictOption(yesOrNos, yesOrNo) }}
+            </a-tag>
+          </span>
+        </s-table>
       </a-col>
-      <a-col :md="5">
-        <div>
-          <h3><b>数据权限：</b></h3>
-        </div>
-        <div>
-          <h3>正在开发中......</h3>
-        </div>
-      </a-col>
-    </a-row>
-    <a-row>
-      <a-divider dashed><b>用户信息</b></a-divider>
-      <a-table
-        :columns="columns"
-        :rowKey="record => record.userId"
-        :dataSource="users"
-        :pagination="pagination"
-        :loading="loading"
-        :rowSelection="rowSelection"
-      >
-      </a-table>
     </a-row>
   </a-card>
 </template>
 
 <script>
+import { STable } from '@/components'
 import { getRoleList } from '@/api/role'
-import { getMenuTree, getMenuIdsByRoleId } from '@/api/menu'
-import { getUserList } from '@/api/user'
-import { mixinDevice } from '@/utils/mixin'
-import pick from 'lodash.pick'
+import { getDictDataListByType } from '@/api/dict'
 
 export default {
-  name: 'RoleList',
-  mixins: [mixinDevice],
-  components: {},
+  name: 'Role',
+  components: {
+    STable
+  },
   data () {
     return {
-      form: this.$form.createForm(this),
-      mdl: {},
-      roles: [],
-      expandedKeys: [],
-      checkedKeys: [],
-      treeData: [],
-      selectedKeys: [],
-      autoExpandParent: true,
-      users: [],
-      pagination: {
-        pageSize: 5
+      description: '使用场景：角色管理管理了系统内部所有用户的菜单权限和数据权限，您可以在这里维护权限信息以达到控制系统资源的目的。',
+      loading: true,
+      queryParam: {
       },
-      loading: false,
+      selectedRowKeys: [],
+      selectedRows: [],
       columns,
-      rowSelection: {
-        type: 'checkbox'
-      }
+      loadData: parameter => {
+        return this.getList(parameter)
+      },
+
+      dataStatus: [],
+      yesOrNos: []
     }
   },
   created () {
-    this.getData()
+    getDictDataListByType({ dictType: 'data_status' }).then(res => {
+      this.dataStatus = res.data
+    })
+    getDictDataListByType({ dictType: 'yes_or_no' }).then(res => {
+      this.yesOrNos = res.data
+    })
   },
   methods: {
-    getData () {
-      this.loading = true
-      this.getRoles()
-      this.getMenuTree()
-      this.getUsers()
-      this.loading = false
-    },
-
-    getRoles () {
-      getRoleList().then((res) => {
-        this.roles = res.data
-        this.roles.push({
-          roleId: '-1',
-          roleName: '新增角色',
-          desct: '新增一个角色'
-        })
+    getList (parameter) {
+      return getRoleList(Object.assign(parameter, this.queryParam)).then(res => {
+        return res
       })
     },
-
-    getUsers (parameter) {
-      getUserList(parameter).then(res => {
-        const pagination = { ...this.pagination }
-        pagination.total = res.total
-        this.users = res.rows
-        this.pagination = pagination
-      })
+    onSelectChange (selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
     },
-
-    getMenuTree () {
-      getMenuTree().then((res) => {
-        this.treeData = res.data
-      })
+    getDictOption (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictName : '未知'
     },
-
-    add () {
-      this.edit({ id: 0 })
-    },
-
-    onExpand (expandedKeys) {
-      this.expandedKeys = expandedKeys
-    },
-
-    edit (record) {
-      this.mdl = Object.assign({}, record)
-      this.$nextTick(() => {
-        this.form.setFieldsValue(pick(this.mdl, 'roleId', 'roleKey', 'roleName', 'status', 'desct'))
-      })
-      if (record.roleId !== '-1') {
-        getMenuIdsByRoleId({ 'roleId': record.roleId }).then((res) => {
-          this.checkedKeys = res.data
-        })
-        this.getUsers({ 'roleIds': record.roleId })
-      }
-    },
-    onCheck (checkedKeys) {
-      this.checkedKeys = checkedKeys
-    },
-    onSelect (selectedKeys, info) {
-      this.selectedKeys = selectedKeys
+    getDictCss (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictCss : ''
     }
   }
 }
 
 const columns = [
   {
-    title: '用户ID',
-    dataIndex: 'userId',
-    width: '10%'
+    title: '角色名称',
+    dataIndex: 'roleName',
+    align: 'center'
   },
   {
-    title: '账户名称',
-    dataIndex: 'userName',
-    width: '20%'
+    title: '角色标识',
+    dataIndex: 'roleKey',
+    align: 'center'
   },
   {
-    title: '姓名',
-    dataIndex: 'realName',
-    width: '10%'
+    title: '角色状态',
+    dataIndex: 'status',
+    align: 'center',
+    scopedSlots: { customRender: 'status' }
   },
   {
-    title: '证件号码',
-    dataIndex: 'idCard',
-    width: '20%'
+    title: '角色权限',
+    align: 'center',
+    children: [
+      {
+        title: '是否拥有全部菜单权限',
+        align: 'center',
+        dataIndex: 'hasAllMenu',
+        scopedSlots: { customRender: 'yesOrNo' }
+      },
+      {
+        title: '是否拥有全部数据权限',
+        align: 'center',
+        dataIndex: 'hasAllData',
+        scopedSlots: { customRender: 'yesOrNo' }
+      }
+    ]
   },
   {
-    title: '手机',
-    dataIndex: 'phone',
-    width: '20%'
+    title: '角色描述',
+    dataIndex: 'desct',
+    align: 'center'
   },
   {
-    title: '性别',
-    dataIndex: 'sex',
-    filters: [{ text: '男', value: '1' }, { text: '女', value: '2' }, { text: '未知', value: '3' }],
-    width: '10%'
+    title: '创建时间',
+    dataIndex: 'createTime',
+    align: 'center',
+    sorter: true
   },
   {
-    title: '所属机构',
-    dataIndex: 'org.orgName',
-    width: '20%'
+    title: '操作',
+    dataIndex: 'action',
+    width: '150px',
+    align: 'center',
+    scopedSlots: { customRender: 'action' }
   }
 ]
 </script>
-
-<style scoped>
-
-</style>
