@@ -66,7 +66,7 @@ export default {
         xs: { span: 24 },
         sm: { span: 13 }
       },
-      suggestSortNo: 1
+      suggestSortNo: ''
     }
   },
   methods: {

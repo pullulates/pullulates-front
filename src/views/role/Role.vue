@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered="false">
     <a-row :gutter="24">
-      <a-col :col="12">
+      <a-col :md="18">
         <div class="table-page-search-wrapper">
           <a-form layout="inline">
             <a-row :gutter="24">
@@ -56,19 +56,54 @@
           </span>
         </s-table>
       </a-col>
+      <a-col :md="3">
+        <div>
+          <h3><b>菜单权限：</b></h3>
+        </div>
+        <a-tree
+          checkable
+          @expand="menuOnExpand"
+          :expandedKeys="menuExpandedKeys"
+          :autoExpandParent="menuAutoExpandParent"
+          v-model="menuCheckedKeys"
+          @select="menuOnSelect"
+          :selectedKeys="menuSelectedKeys"
+          :treeData="menuTreeData"
+        />
+      </a-col>
+      <a-col :md="3">
+        <div>
+          <h3><b>数据权限：</b></h3>
+        </div>
+        <a-tree
+          checkable
+          @expand="orgOnExpand"
+          :expandedKeys="orgExpandedKeys"
+          :autoExpandParent="orgAutoExpandParent"
+          v-model="orgCheckedKeys"
+          @select="orgOnSelect"
+          :selectedKeys="orgSelectedKeys"
+          :treeData="orgTreeData"
+        />
+      </a-col>
     </a-row>
+    <add ref="Add" @ok="handleSave"/>
   </a-card>
 </template>
 
 <script>
 import { STable } from '@/components'
-import { getRoleList } from '@/api/role'
+import { getRolePage, changeRoleStatus } from '@/api/role'
 import { getDictDataListByType } from '@/api/dict'
+import { getMenuTree } from '@/api/menu'
+import { getOrgTree } from '@/api/org'
+import Add from './module/Add'
 
 export default {
   name: 'Role',
   components: {
-    STable
+    STable,
+    Add
   },
   data () {
     return {
@@ -80,11 +115,25 @@ export default {
       selectedRows: [],
       columns,
       loadData: parameter => {
-        return this.getList(parameter)
+        return this.getPage(parameter)
       },
 
       dataStatus: [],
-      yesOrNos: []
+      yesOrNos: [],
+
+      menuExpandedKeys: [],
+      menuCheckedKeys: [],
+      menuTreeData: [],
+      menuSelectedKeys: [],
+      menuAutoExpandParent: true,
+
+      orgTreeData: [],
+      orgExpandedKeys: [],
+      orgAutoExpandParent: true,
+      orgCheckedKeys: [],
+      orgSelectedKeys: [],
+
+      form: this.$form.createForm(this)
     }
   },
   created () {
@@ -94,10 +143,17 @@ export default {
     getDictDataListByType({ dictType: 'yes_or_no' }).then(res => {
       this.yesOrNos = res.data
     })
+    getMenuTree().then(res => {
+      this.menuTreeData = res.data
+    })
+    getOrgTree().then(res => {
+      this.orgTreeData = res.data
+      this.orgExpandedKeys = res.data.map(item => item.parentId)
+    })
   },
   methods: {
-    getList (parameter) {
-      return getRoleList(Object.assign(parameter, this.queryParam)).then(res => {
+    getPage (parameter) {
+      return getRolePage(Object.assign(parameter, this.queryParam)).then(res => {
         return res
       })
     },
@@ -112,6 +168,66 @@ export default {
     getDictCss (datas, param) {
       const result = datas.filter(item => item.dictValue === param)
       return result.length > 0 ? result[0].dictCss : ''
+    },
+    handleSave () {
+      this.$refs.table.refresh(true)
+    },
+    handleAdd () {
+      this.$refs.Add.add(this.menuTreeData, this.orgTreeData, this.yesOrNos, this.dataStatus)
+    },
+    confirmChangeStatus (record) {
+      const self = this
+      this.$confirm({
+        title: '确认改变当前角色的状态码?',
+        okText: '是的',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleChangeStatus(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleChangeStatus (record) {
+      this.loading = true
+      changeRoleStatus({ roleId: record.roleId, status: record.status === '1' ? '2' : '1' }).then(res => {
+        if (res.code === 200) {
+          record.status = record.status === '1' ? '2' : '1'
+          this.$message.success(res.msg)
+        } else {
+          this.$message.warning(res.msg)
+        }
+      })
+      this.loading = false
+    },
+    menuOnExpand (expandedKeys) {
+      this.menuExpandedKeys = expandedKeys
+    },
+    menuOnSelect (selectedKeys, info) {
+      this.menuSelectedKeys = selectedKeys
+    },
+    orgOnExpand (expandedKeys) {
+      this.orgExpandedKeys = expandedKeys
+    },
+    orgOnSelect (selectedKeys, info) {
+      this.orgSelectedKeys = selectedKeys
+    },
+    destroyAll () {
+      this.$destroyAll()
+    },
+    callback (res) {
+      if (res.code === 200) {
+        this.$message.success(res.msg)
+        this.$refs.table.refresh(true)
+      } else {
+        this.$message.warning(res.msg)
+      }
+      this.destroyAll()
+    },
+    handleRoleSelectChange (selectedItems) {
+      this.selectedItems = selectedItems
     }
   }
 }
@@ -138,18 +254,24 @@ const columns = [
     align: 'center',
     children: [
       {
-        title: '是否拥有全部菜单权限',
+        title: '全部菜单权限',
         align: 'center',
         dataIndex: 'hasAllMenu',
         scopedSlots: { customRender: 'yesOrNo' }
       },
       {
-        title: '是否拥有全部数据权限',
+        title: '全部数据权限',
         align: 'center',
         dataIndex: 'hasAllData',
         scopedSlots: { customRender: 'yesOrNo' }
       }
     ]
+  },
+  {
+    title: '排序编号',
+    dataIndex: 'sortNo',
+    align: 'center',
+    sorter: true
   },
   {
     title: '角色描述',

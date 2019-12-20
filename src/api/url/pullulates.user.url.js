@@ -16,7 +16,11 @@ export const PULLULATES_USER_URL = {
 }
 
 export const PULLULATES_ROLE_URL = {
-  Role_List: PULLULATES_USER_BASE_URL + '/roles/list'
+  Role_Page: PULLULATES_USER_BASE_URL + '/roles/page',
+  Role_List: PULLULATES_USER_BASE_URL + '/roles/list',
+  Role_Save: PULLULATES_USER_BASE_URL + '/roles/save',
+  Role_Suggest_No: PULLULATES_USER_BASE_URL + '/roles/suggest-sortno',
+  Change_Role_Status: PULLULATES_USER_BASE_URL + '/roles/update/status'
 }
 
 export const PULLULATES_MENU_URL = {
