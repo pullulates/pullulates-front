@@ -54,6 +54,19 @@
               {{ getDictOption(yesOrNos, yesOrNo) }}
             </a-tag>
           </span>
+          <span slot="action" slot-scope="text, record">
+            <a href="javascript:;" @click="handleEdit(record)"><a-icon type="edit"/> 编辑</a>
+            <a-divider type="vertical" />
+            <a-dropdown>
+              <a-menu slot="overlay">
+                <a-menu-item @click="openResetModal(record)"><a-icon type="reload" />分配用户</a-menu-item>
+                <a-menu-item @click="confirmDelete(record)"><a-icon type="delete" />删除用户</a-menu-item>
+              </a-menu>
+              <a>
+                更多 <a-icon type="down" />
+              </a>
+            </a-dropdown>
+          </span>
         </s-table>
       </a-col>
       <a-col :md="3">
