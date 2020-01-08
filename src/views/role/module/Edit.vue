@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="添加新的角色"
+    title="修改角色"
     :width="800"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -129,9 +129,10 @@
 
 <script>
 import { saveRole, getSuggestNo } from '@/api/role'
+import pick from 'lodash.pick'
 
 export default {
-  name: 'Add',
+  name: 'Edit',
   data () {
     return {
       labelCol: {
@@ -145,6 +146,7 @@ export default {
       visible: false,
       confirmLoading: false,
       form: this.$form.createForm(this),
+      mdl: {},
       suggestSortNo: '',
 
       menuExpandedKeys: [],
@@ -164,7 +166,7 @@ export default {
     }
   },
   methods: {
-    add (menuTree, orgTree, yesOrNos, dataStatus) {
+    edit (record, menuTree, orgTree, yesOrNos, dataStatus) {
       this.visible = true
       this.confirmLoading = true
       this.menuTreeData = menuTree
@@ -173,6 +175,13 @@ export default {
       this.yesOrNos = yesOrNos
       this.dataStatus = dataStatus
       this.getSuggestNo()
+      this.loadEditInfo(record)
+    },
+    loadEditInfo (record) {
+      this.mdl = Object.assign({}, record)
+      this.$nextTick(() => {
+        this.form.setFieldsValue(pick(this.mdl, 'roleId', 'roleName', 'roleKey', 'hasAllMenu', 'hasAllData', 'remark'))
+      })
       this.confirmLoading = false
     },
     handleCancel () {

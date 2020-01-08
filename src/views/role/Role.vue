@@ -60,7 +60,7 @@
             <a-dropdown>
               <a-menu slot="overlay">
                 <a-menu-item @click="openResetModal(record)"><a-icon type="reload" />分配用户</a-menu-item>
-                <a-menu-item @click="confirmDelete(record)"><a-icon type="delete" />删除用户</a-menu-item>
+                <a-menu-item @click="confirmDelete(record)"><a-icon type="delete" />删除角色</a-menu-item>
               </a-menu>
               <a>
                 更多 <a-icon type="down" />
@@ -101,22 +101,25 @@
       </a-col>
     </a-row>
     <add ref="Add" @ok="handleSave"/>
+    <edit ref="Edit" @ok="handleSave"/>
   </a-card>
 </template>
 
 <script>
 import { STable } from '@/components'
-import { getRolePage, changeRoleStatus } from '@/api/role'
+import { getRolePage, changeRoleStatus, deleteRole } from '@/api/role'
 import { getDictDataListByType } from '@/api/dict'
 import { getMenuTree } from '@/api/menu'
 import { getOrgTree } from '@/api/org'
 import Add from './module/Add'
+import Edit from './module/Edit'
 
 export default {
   name: 'Role',
   components: {
     STable,
-    Add
+    Add,
+    Edit
   },
   data () {
     return {
@@ -188,6 +191,9 @@ export default {
     handleAdd () {
       this.$refs.Add.add(this.menuTreeData, this.orgTreeData, this.yesOrNos, this.dataStatus)
     },
+    handleEdit (record) {
+      this.$refs.Edit.edit(record, this.menuTreeData, this.orgTreeData, this.yesOrNos, this.dataStatus)
+    },
     confirmChangeStatus (record) {
       const self = this
       this.$confirm({
@@ -209,6 +215,33 @@ export default {
         if (res.code === 200) {
           record.status = record.status === '1' ? '2' : '1'
           this.$message.success(res.msg)
+        } else {
+          this.$message.warning(res.msg)
+        }
+      })
+      this.loading = false
+    },
+    confirmDelete (record) {
+      const self = this
+      this.$confirm({
+        title: '确认删除当前角色码?',
+        okText: '是的',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleDelete(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleDelete (record) {
+      this.loading = true
+      deleteRole({ roleId: record.roleId }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.msg)
+          this.$refs.table.refresh(true)
         } else {
           this.$message.warning(res.msg)
         }
@@ -288,7 +321,7 @@ const columns = [
   },
   {
     title: '角色描述',
-    dataIndex: 'desct',
+    dataIndex: 'remark',
     align: 'center'
   },
   {

@@ -37,11 +37,20 @@ export function getSuggestNo (parameter) {
   })
 }
 
-/** 根据角色id修改用户的状态 */
+/** 根据角色id修改角色的状态 */
 export function changeRoleStatus (parameter) {
   return axios({
     url: PULLULATES_ROLE_URL.Change_Role_Status,
     method: 'put',
+    data: parameter
+  })
+}
+
+/** 根据角色id删除角色 */
+export function deleteRole (parameter) {
+  return axios({
+    url: PULLULATES_ROLE_URL.Delete_Role,
+    method: 'delete',
     data: parameter
   })
 }
