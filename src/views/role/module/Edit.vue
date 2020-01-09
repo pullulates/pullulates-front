@@ -31,8 +31,8 @@
           </a-form-item>
         </a-col>
         <a-col :lg="8">
-          <a-form-item label="排序编号" :extra="'建议排序:' + suggestSortNo">
-            <a-input-number v-decorator="['sortNo', {rules: [{required: true, message: '请输入排序编号'}], initialValue: suggestSortNo}]" />
+          <a-form-item label="排序编号" :extra="'最新排序:' + suggestSortNo">
+            <a-input-number v-decorator="['sortNo', {rules: [{required: true, message: '请输入排序编号'}]}]" />
           </a-form-item>
         </a-col>
       </a-row>
@@ -43,7 +43,7 @@
               buttonStyle="solid"
               v-decorator="[
                 'status',
-                {rules: [{ required: true, message: '请选择角色状态'}], initialValue: '1'}
+                {rules: [{ required: true, message: '请选择角色状态'}]}
               ]"
             >
               <a-radio-button v-for="item in dataStatus" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -57,7 +57,7 @@
               @change="handleMenuChange"
               v-decorator="[
                 'hasAllMenu',
-                {rules: [{ required: true, message: '请选择是否为全部菜单权限'}], initialValue: '2'}
+                {rules: [{ required: true, message: '请选择是否为全部菜单权限'}]}
               ]"
             >
               <a-radio-button v-for="item in yesOrNos" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -71,7 +71,7 @@
               @change="handleOrgChange"
               v-decorator="[
                 'hasAllData',
-                {rules: [{ required: true, message: '请选择是否为全部数据权限'}], initialValue: '2'}
+                {rules: [{ required: true, message: '请选择是否为全部数据权限'}]}
               ]"
             >
               <a-radio-button v-for="item in yesOrNos" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -171,7 +171,7 @@ export default {
       this.confirmLoading = true
       this.menuTreeData = menuTree
       this.orgTreeData = orgTree
-      this.menuExpandedKeys = menuTree.map(item => item.parentId)
+      this.menuExpandedKeys = menuTree.map(item => item.key)
       this.yesOrNos = yesOrNos
       this.dataStatus = dataStatus
       this.getSuggestNo()
@@ -180,7 +180,13 @@ export default {
     loadEditInfo (record) {
       this.mdl = Object.assign({}, record)
       this.$nextTick(() => {
-        this.form.setFieldsValue(pick(this.mdl, 'roleId', 'roleName', 'roleKey', 'hasAllMenu', 'hasAllData', 'remark'))
+        this.form.setFieldsValue(pick(this.mdl, 'roleId', 'roleName', 'status', 'roleKey', 'hasAllMenu', 'hasAllData', 'sortNo', 'remark'))
+        if (record.hasAllMenu === '1') {
+          this.menuCheckedKeys = this.menuTreeData.map(item => item.key)
+        }
+        if (record.hasAllData === '1') {
+          this.menuCheckedKeys = this.orgTreeData.map(item => item.key)
+        }
       })
       this.confirmLoading = false
     },
