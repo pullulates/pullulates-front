@@ -54,3 +54,21 @@ export function deleteRole (parameter) {
     data: parameter
   })
 }
+
+/** 获取角色推荐的排序编号 */
+export function getDataScope (parameter) {
+  return axios({
+    url: PULLULATES_ROLE_URL.Datascope,
+    method: 'get',
+    data: parameter
+  })
+}
+
+/** 修改角色 */
+export function updateRole (parameter) {
+  return axios({
+    url: PULLULATES_ROLE_URL.Role_Update,
+    method: 'put',
+    data: parameter
+  })
+}

@@ -7,6 +7,9 @@
     @cancel="handleCancel"
   >
     <a-form :form="form">
+      <a-form-item hidden="true">
+        <a-input type="hidden" v-decorator="['roleId']" />
+      </a-form-item>
       <a-row class="form-row" :gutter="24">
         <a-col :lg="8">
           <a-form-item label="角色名称">
@@ -128,7 +131,8 @@
 </template>
 
 <script>
-import { saveRole, getSuggestNo } from '@/api/role'
+import { getSuggestNo, getDataScope, updateRole } from '@/api/role'
+import { getMenuIdsByRoleId } from '@/api/menu'
 import pick from 'lodash.pick'
 
 export default {
@@ -171,26 +175,28 @@ export default {
       this.confirmLoading = true
       this.menuTreeData = menuTree
       this.orgTreeData = orgTree
-      this.menuExpandedKeys = menuTree.map(item => item.key)
       this.yesOrNos = yesOrNos
       this.dataStatus = dataStatus
       this.getSuggestNo()
       this.loadEditInfo(record)
     },
     loadEditInfo (record) {
+      getMenuIdsByRoleId({ 'roleId': record.roleId }).then(res => {
+        this.menuCheckedKeys = res.data
+        // this.menuExpandedKeys = res.data
+      })
+      getDataScope({ 'roleId': record.roleId }).then(res => {
+        this.orgCheckedKeys = res.data
+        // this.orgExpandedKeys = res.data
+      })
       this.mdl = Object.assign({}, record)
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'roleId', 'roleName', 'status', 'roleKey', 'hasAllMenu', 'hasAllData', 'sortNo', 'remark'))
-        if (record.hasAllMenu === '1') {
-          this.menuCheckedKeys = this.menuTreeData.map(item => item.key)
-        }
-        if (record.hasAllData === '1') {
-          this.menuCheckedKeys = this.orgTreeData.map(item => item.key)
-        }
       })
       this.confirmLoading = false
     },
     handleCancel () {
+      this.form.resetFields()
       this.visible = false
     },
     handleSave () {
@@ -210,12 +216,11 @@ export default {
           }
           values.menuIds = this.menuCheckedKeys.join(',')
           values.orgIds = this.orgCheckedKeys.join(',')
-          saveRole(values).then(res => {
+          updateRole(values).then(res => {
             if (res.code === 200) {
               this.$message.success(res.msg)
               this.$emit('ok', values)
               this.handleCancel()
-              this.form.resetFields()
             } else {
               this.$message.warning(res.msg)
             }

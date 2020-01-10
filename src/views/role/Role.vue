@@ -141,11 +141,11 @@ export default {
       menuCheckedKeys: [],
       menuTreeData: [],
       menuSelectedKeys: [],
-      menuAutoExpandParent: true,
+      menuAutoExpandParent: false,
 
       orgTreeData: [],
       orgExpandedKeys: [],
-      orgAutoExpandParent: true,
+      orgAutoExpandParent: false,
       orgCheckedKeys: [],
       orgSelectedKeys: [],
 
@@ -161,10 +161,11 @@ export default {
     })
     getMenuTree().then(res => {
       this.menuTreeData = res.data
+      this.menuExpandedKeys = res.data.map(item => item.key)
     })
     getOrgTree().then(res => {
       this.orgTreeData = res.data
-      this.orgExpandedKeys = res.data.map(item => item.parentId)
+      this.orgExpandedKeys = res.data.map(item => item.key)
     })
   },
   methods: {

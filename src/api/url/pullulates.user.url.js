@@ -21,7 +21,9 @@ export const PULLULATES_ROLE_URL = {
   Role_Save: PULLULATES_USER_BASE_URL + '/roles/save',
   Role_Suggest_No: PULLULATES_USER_BASE_URL + '/roles/suggest-sortno',
   Change_Role_Status: PULLULATES_USER_BASE_URL + '/roles/update/status',
-  Delete_Role: PULLULATES_USER_BASE_URL + '/roles/delete'
+  Delete_Role: PULLULATES_USER_BASE_URL + '/roles/delete',
+  Datascope: PULLULATES_USER_BASE_URL + '/roles/datascope',
+  Role_Update: PULLULATES_USER_BASE_URL + '/roles/update'
 }
 
 export const PULLULATES_MENU_URL = {
