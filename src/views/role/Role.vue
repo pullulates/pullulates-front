@@ -59,7 +59,7 @@
             <a-divider type="vertical" />
             <a-dropdown>
               <a-menu slot="overlay">
-                <a-menu-item @click="openResetModal(record)"><a-icon type="reload" />分配用户</a-menu-item>
+                <a-menu-item @click="handleAllocated(record)"><a-icon type="reload" />分配用户</a-menu-item>
                 <a-menu-item @click="confirmDelete(record)"><a-icon type="delete" />删除角色</a-menu-item>
               </a-menu>
               <a>
@@ -102,24 +102,27 @@
     </a-row>
     <add ref="Add" @ok="handleSave"/>
     <edit ref="Edit" @ok="handleSave"/>
+    <allocated ref="Allocated" @ok="handleSave"/>
   </a-card>
 </template>
 
 <script>
 import { STable } from '@/components'
-import { getRolePage, changeRoleStatus, deleteRole } from '@/api/role'
+import { getRolePage, changeRoleStatus, deleteRole, getDataScope } from '@/api/role'
 import { getDictDataListByType } from '@/api/dict'
-import { getMenuTree } from '@/api/menu'
+import { getMenuTree, getMenuIdsByRoleId } from '@/api/menu'
 import { getOrgTree } from '@/api/org'
 import Add from './module/Add'
 import Edit from './module/Edit'
+import Allocated from './module/Allocated'
 
 export default {
   name: 'Role',
   components: {
     STable,
     Add,
-    Edit
+    Edit,
+    Allocated
   },
   data () {
     return {
@@ -177,6 +180,19 @@ export default {
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
+      if (this.selectedRowKeys.length === 1) {
+        this.loading = true
+        getMenuIdsByRoleId({ 'roleId': this.selectedRowKeys[0] }).then(res => {
+          this.menuCheckedKeys = res.data
+        })
+        getDataScope({ 'roleId': this.selectedRowKeys[0] }).then(res => {
+          this.orgCheckedKeys = res.data
+          this.loading = false
+        })
+      } else {
+        this.menuCheckedKeys = []
+        this.orgCheckedKeys = []
+      }
     },
     getDictOption (datas, param) {
       const result = datas.filter(item => item.dictValue === param)
@@ -194,6 +210,9 @@ export default {
     },
     handleEdit (record) {
       this.$refs.Edit.edit(record, this.menuTreeData, this.orgTreeData, this.yesOrNos, this.dataStatus)
+    },
+    handleAllocated (record) {
+      this.$refs.Allocated.allolcated(this.dataStatus, record.roleId)
     },
     confirmChangeStatus (record) {
       const self = this

@@ -15,33 +15,18 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="菜单类型">
-              <a-select v-model="queryParam.menuType" placeholder="请选择菜单类型" default-value="">
-                <a-select-option value="">全部</a-select-option>
-                <a-select-option value="1">模块菜单</a-select-option>
-                <a-select-option value="2">目录菜单</a-select-option>
-                <a-select-option value="3">列表菜单</a-select-option>
-                <a-select-option value="4">按钮菜单</a-select-option>
+              <a-select v-model="queryParam.menuType" placeholder="请选择菜单类型">
+                <a-select-option
+                  v-for="item in menuType"
+                  :key="item.dictValue"
+                >{{ item.dictName }}</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
-          <template v-if="advanced">
-            <a-col :md="7" :sm="24">
-              <a-form-item label="创建时间">
-                <a-range-picker
-                  showTime
-                  format="YYYY-MM-DD HH:mm:ss"
-                />
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="24">
-            <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+            <span class="table-page-search-submitButtons">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-              <a @click="toggleAdvanced" style="margin-left: 8px">
-                {{ advanced ? '收起' : '展开' }}
-                <a-icon :type="advanced ? 'up' : 'down'"/>
-              </a>
             </span>
           </a-col>
         </a-row>
@@ -56,22 +41,24 @@
 
 <script>
 import { getMenuListTree } from '@/api/menu'
+import { getDictDataListByType } from '@/api/dict'
 
 export default {
   data () {
     return {
+      description: '使用场景：菜单管理维护了系统内的页面菜单和功能菜单，您可以在这里查看菜单资源，但建议您不要修改或删除它们，这可能导致访问异常或资源丢失。',
       menus: [],
       columns,
       rowKey: 'menuId',
-      advanced: false,
       queryParam: {
-        menuName: '',
-        menuKey: '',
-        menuType: ''
-      }
+      },
+      menuType: []
     }
   },
   created () {
+    getDictDataListByType({ dictType: 'menu_type' }).then(res => {
+      this.menuType = res.data
+    })
     this.getMenuList()
   },
   methods: {
@@ -79,9 +66,6 @@ export default {
       getMenuListTree().then((res) => {
         this.menus = res.data
       })
-    },
-    toggleAdvanced () {
-      this.advanced = !this.advanced
     }
   }
 }

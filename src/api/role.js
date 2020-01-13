@@ -55,7 +55,7 @@ export function deleteRole (parameter) {
   })
 }
 
-/** 获取角色推荐的排序编号 */
+/** 获取角色的数据权限 */
 export function getDataScope (parameter) {
   return axios({
     url: PULLULATES_ROLE_URL.Datascope,

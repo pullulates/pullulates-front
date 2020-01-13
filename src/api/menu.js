@@ -35,7 +35,7 @@ export function getMenuIdsByRoleKeys (parameter) {
   })
 }
 
-/** 获取菜单列表的菜单树 */
+/** 获取菜单列表的菜单树，结果不分页 */
 export function getMenuListTree () {
   return axios({
     url: PULLULATES_MENU_URL.Menu_List_Tree,
