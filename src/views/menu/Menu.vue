@@ -33,17 +33,22 @@
       </a-form>
     </div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus">添加</a-button>
+      <a-button type="primary" icon="plus" @click="handleAdd()">添加</a-button>
     </div>
     <a-table :rowKey="rowKey" :columns="columns" :dataSource="menus" />
+    <add ref="Add" @ok="handleSave"/>
   </a-card>
 </template>
 
 <script>
 import { getMenuListTree } from '@/api/menu'
 import { getDictDataListByType } from '@/api/dict'
+import Add from './module/Add'
 
 export default {
+  components: {
+    Add
+  },
   data () {
     return {
       description: '使用场景：菜单管理维护了系统内的页面菜单和功能菜单，您可以在这里查看菜单资源，但建议您不要修改或删除它们，这可能导致访问异常或资源丢失。',
@@ -66,6 +71,9 @@ export default {
       getMenuListTree().then((res) => {
         this.menus = res.data
       })
+    },
+    handleAdd () {
+      this.$refs.Add.add(this.menuType)
     }
   }
 }
