@@ -1,14 +1,32 @@
 <template>
   <a-modal
     title="添加新的菜单"
-    :width="800"
+    :width="1100"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
   >
     <a-form :form="form">
+      <a-alert
+        message="模块及目录菜单仅作为扩展支持，系统当前不支持自定义添加；按钮菜单不需要填写布局、选择图标。"
+        type="warning"
+        closable
+      />
       <a-row class="form-row" :gutter="24">
         <a-col :lg="12">
+          <a-form-item label="上级菜单">
+            <a-tree-select
+              :treeData="menuTree"
+              v-decorator="[
+                'parentId',
+                {rules: [{ required: true, message: '请选择上级菜单'}]}
+              ]"
+              placeholder="请选择上级菜单"
+              allowClear
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :lg="6">
           <a-form-item label="菜单名称">
             <a-input
               placeholder="请输入菜单名称"
@@ -19,13 +37,13 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :lg="12">
+        <a-col :lg="6">
           <a-form-item label="菜单类型">
             <a-radio-group
               buttonStyle="solid"
               v-decorator="[
                 'menuType',
-                {rules: [{ required: true, message: '请选择菜单类型'}], initialValue: '1'}
+                {rules: [{ required: true, message: '请选择菜单类型'}], initialValue: '3'}
               ]"
             >
               <a-radio-button v-for="item in menuType" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -35,6 +53,45 @@
       </a-row>
       <a-row class="form-row" :gutter="24">
         <a-col :lg="12">
+          <a-form-item label="菜单布局">
+            <a-select
+              v-decorator="[
+                'pageLayout',
+                {rules: [{ required: true, message: '请选择菜单布局'}], initialValue: 'PageView'}
+              ]"
+              @change="menuLayoutChange"
+              placeholder="请选择菜单布局">
+              <a-select-option
+                v-for="item in pageLayout"
+                :key="item.dictValue"
+              >{{ item.dictName }}</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :lg="6" v-if="customizeLayout">
+          <a-form-item label="布局路径">
+            <a-input
+              placeholder="请输入自定义布局路径"
+              v-decorator="[
+                'customizeLayout',
+                {rules: [{max: 25, message: '自定义布局路径最多25个字符'}]}
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :lg="6">
+          <a-form-item label="排序编号">
+            <a-input-number
+              v-decorator="[
+                'sortNo',
+                {rules: [{ required: true, message: '请输入排序编号'}]}
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row class="form-row" :gutter="24">
+        <a-col :lg="6">
           <a-form-item label="菜单标识">
             <a-input
               placeholder="请输入菜单标识"
@@ -45,7 +102,7 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :lg="12">
+        <a-col :lg="6">
           <a-form-item label="权限标识">
             <a-input
               placeholder="请输入权限标识"
@@ -56,9 +113,7 @@
             />
           </a-form-item>
         </a-col>
-      </a-row>
-      <a-row class="form-row" :gutter="24">
-        <a-col :lg="12">
+        <a-col :lg="6">
           <a-form-item label="请求路径">
             <a-input
               placeholder="请输入请求路径"
@@ -69,7 +124,7 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :lg="12">
+        <a-col :lg="6">
           <a-form-item label="重定向路径">
             <a-input
               placeholder="请输入重定向路径"
@@ -137,45 +192,8 @@
       </a-row>
       <a-row class="form-row" :gutter="24">
         <a-col :lg="24">
-          <a-form-item label="菜单布局">
-            <a-select
-              v-decorator="[
-                'pageLayout',
-                {rules: [{ required: true, message: '请选择菜单布局'}], initialValue: 'BasicLayout'}
-              ]"
-              placeholder="请选择菜单布局">
-              <a-select-option
-                v-for="item in pageLayout"
-                :key="item.dictValue"
-              >{{ item.dictName }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <a-row class="form-row" :gutter="24">
-        <a-col :lg="12">
           <a-form-item label="菜单图标">
-            <a-select
-              v-decorator="[
-                'icon',
-                {rules: [{ required: true, message: '请选择菜单图标'}], initialValue: 'BasicLayout'}
-              ]"
-              placeholder="请选择菜单图标">
-              <a-select-option
-                v-for="item in pageLayout"
-                :key="item.dictValue"
-              >{{ item.dictName }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :lg="12">
-          <a-form-item label="排序编号">
-            <a-input-number
-              v-decorator="[
-                'sortNo',
-                {rules: [{ required: true, message: '请输入排序编号', whitespace: true}]}
-              ]"
-            />
+            <icon-selector @change="handleIconChange"/>
           </a-form-item>
         </a-col>
       </a-row>
@@ -189,9 +207,14 @@
 
 <script>
 import { getDictDataListByType } from '@/api/dict'
+import { getMenuTree } from '@/api/menu'
+import IconSelector from '@/components/IconSelector'
 
 export default {
   name: 'Add',
+  components: {
+    IconSelector
+  },
   data () {
     return {
       labelCol: {
@@ -205,7 +228,10 @@ export default {
       visible: false,
       confirmLoading: false,
       form: this.$form.createForm(this),
-      suggestSortNo: '',
+      menuTree: [],
+      expandedKeys: [],
+      autoExpandParent: true,
+      customizeLayout: false,
 
       menuType: [],
       pageLayout: [],
@@ -215,6 +241,9 @@ export default {
     }
   },
   created () {
+    getMenuTree().then(res => {
+      this.menuTree = res.data
+    })
     getDictDataListByType({ dictType: 'page_layout' }).then(res => {
       this.pageLayout = res.data
     })
@@ -237,8 +266,34 @@ export default {
     },
     handleCancel () {
       this.visible = false
+      this.form.resetFields()
     },
     handleSave () {
+      this.confirmLoading = true
+      const { form: { validateFields } } = this
+      validateFields((errors, values) => {
+        if (!errors) {
+          if (this.form.getFieldValue('menuType') === '3') {
+            if (this.form.getFieldValue('menuLayout') === 'others' && !this.form.getFieldValue('customizeLayout')) {
+              this.$message.warning('请填写自定义布局的路径')
+              this.confirmLoading = false
+              return false
+            }
+            if (!this.form.getFieldValue('icon')) {
+              this.$message.warning('请选择菜单的图标')
+              this.confirmLoading = false
+              return false
+            }
+          }
+        }
+        this.confirmLoading = false
+      })
+    },
+    handleIconChange (icon) {
+      this.form.setFieldsValue({ 'icon': icon })
+    },
+    menuLayoutChange (value) {
+      this.customizeLayout = (value === 'others')
     }
   }
 }
