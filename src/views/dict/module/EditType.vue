@@ -1,13 +1,16 @@
 <template>
   <a-modal
-    title="添加字典类别"
+    title="编辑字典类别"
     :width="800"
     :visible="visible"
     :confirmLoading="confirmLoading"
-    @ok="handleSubmit"
     @cancel="handleCancel"
+    @ok="handleSubmit"
   >
     <a-form :form="form">
+      <a-form-item hidden="true">
+        <a-input type="hidden" v-decorator="['dictId']" />
+      </a-form-item>
       <a-form-item
         label="字典类别"
         :labelCol="labelCol"
@@ -26,7 +29,6 @@
         label="排序编号"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
-        :extra="'建议排序:' + suggestSortNo"
       >
         <a-input-number v-decorator="['sortNo', {rules: [{required: true, message: '请输入排序编号'}], initialValue: suggestSortNo}]" />
       </a-form-item>
@@ -40,7 +42,7 @@
             <a-icon type="question-circle-o" />
           </a-tooltip>
         </span>
-        <a-select v-decorator="['isDefault', { initialValue: '2' }]">
+        <a-select v-decorator="['isDefault']">
           <a-select-option value="1">内置</a-select-option>
           <a-select-option value="2">非内置</a-select-option>
         </a-select>
@@ -50,9 +52,11 @@
 </template>
 
 <script>
-import { saveType, getSuggestSortNo } from '@/api/dict'
+import pick from 'lodash.pick'
+import { updateType } from '@/api/dict'
+
 export default {
-  name: 'AddType',
+  name: 'EditType',
   data () {
     return {
       visible: false,
@@ -66,43 +70,35 @@ export default {
         xs: { span: 24 },
         sm: { span: 13 }
       },
-      suggestSortNo: ''
+      mdl: {}
     }
   },
   methods: {
-    show () {
+    show (record) {
+      this.mdl = Object.assign({}, record)
+      this.$nextTick(() => {
+        this.form.setFieldsValue(pick(this.mdl, 'dictId', 'dictType', 'dictName', 'sortNo', 'isDefault'))
+      })
       this.visible = !this.visible
-      this.getSuggestSortNo()
+    },
+    handleSubmit () {
+      this.form.validateFields((err, fieldsValue) => {
+        if (err) {
+          return false
+        }
+        updateType(fieldsValue).then(res => {
+          if (res.code === 200) {
+            this.$message.success(res.msg)
+            this.$emit('ok', fieldsValue)
+            this.handleCancel()
+          } else {
+            this.$message.warning(res.msg)
+          }
+        })
+      })
     },
     handleCancel () {
       this.visible = false
-    },
-    getSuggestSortNo () {
-      getSuggestSortNo().then(res => {
-        this.suggestSortNo = res.data
-      })
-    },
-    handleSubmit () {
-      this.confirmLoading = true
-      const { form: { validateFields } } = this
-      validateFields((errors, values) => {
-        if (!errors) {
-          saveType(values).then(res => {
-            if (res.code === 200) {
-              this.$notification.success({
-                message: '消息',
-                description: `添加字典类别成功`
-              })
-              this.$emit('ok', values)
-              this.visible = false
-              this.form.resetFields()
-            }
-            this.confirmLoading = false
-          })
-        } else {
-          this.confirmLoading = false
-        }
-      })
     }
   }
 }

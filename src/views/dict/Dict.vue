@@ -49,7 +49,11 @@
       <a-button type="primary" icon="plus" @click="$refs.AddType.show()">添加字典类别</a-button>
       <a-button type="default" icon="plus" @click="$refs.AddData.show()">添加字典数据</a-button>
     </div>
-    <a-table :columns="columns" :dataSource="data" :rowKey="rowKey" @expand="expand" :expandedRowKeys="expandedRowKeys" >
+    <a-table :columns="columns" :dataSource="data" :rowKey="rowKey" @expandelete="expand" :expandedRowKeys="expandedRowKeys" >
+      <a slot="operation" slot-scope="record">
+        <a href="javascript:;" @click="handleEditType(record)"><a-icon type="edit"/> 编辑  </a> |
+        <a href="javascript:;" @click="handleEditType(record)"><a-icon type="delete"/> 删除</a>
+      </a>
       <a-table
         slot="expandedRowRender"
         :columns="innerColumns"
@@ -59,22 +63,26 @@
       >
       </a-table>
     </a-table>
-    <add-type ref="AddType" @ok="handleSaveType"/>
-    <add-data ref="AddData" @ok="handleSaveData"/>
+    <add-type ref="AddType" @ok="handleOk"/>
+    <add-data ref="AddData" @ok="handleOk"/>
+    <edit-type ref="EditType" @ok="handleOk"/>
   </a-card>
 </template>
 <script>
 import { getDictTypeList, getDictDataList } from '@/api/dict'
 import AddType from './module/AddType'
 import AddData from './module/AddData'
+import EditType from './module/EditType'
 
 export default {
   components: {
     AddType,
-    AddData
+    AddData,
+    EditType
   },
   data () {
     return {
+      description: '使用场景：数据字典维护了系统内所有可配置项字段，您可以在这里查看数据字典，但建议您不要修改或删除它们，这可能导致访问异常。',
       data: [],
       columns,
       rowKey: 'dictType',
@@ -114,11 +122,11 @@ export default {
     toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    handleSaveType () {
+    handleOk () {
       this.getTypeList()
     },
-    handleSaveData () {
-      this.getTypeList()
+    handleEditType (record) {
+      this.$refs.EditType.show(record)
     }
   }
 }
@@ -129,7 +137,8 @@ const columns = [
   { title: '是否默认', dataIndex: 'isDefault' },
   { title: '排序编号', dataIndex: 'sortNo' },
   { title: '创建人', dataIndex: 'createBy' },
-  { title: '创建时间', dataIndex: 'createTime' }
+  { title: '创建时间', dataIndex: 'createTime' },
+  { title: '操作', key: 'operation', scopedSlots: { customRender: 'operation' } }
 ]
 
 const innerColumns = [
@@ -138,6 +147,7 @@ const innerColumns = [
   { title: '字典排序', dataIndex: 'sortNo' },
   { title: '字典样式', dataIndex: 'dictCss' },
   { title: '创建人', dataIndex: 'createBy' },
-  { title: '创建时间', dataIndex: 'createTime' }
+  { title: '创建时间', dataIndex: 'createTime' },
+  { title: '操作', key: 'operation', scopedSlots: { customRender: 'operation' } }
 ]
 </script>

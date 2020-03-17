@@ -55,6 +55,15 @@ export function saveData (parameter) {
   })
 }
 
+/** 修改字典类别信息 */
+export function updateType (parameter) {
+  return axios({
+    url: PULLULATES_DICT_URL.Dict_Update_Type,
+    method: 'put',
+    data: parameter
+  })
+}
+
 /** 获取建议排序编号 */
 export function getSuggestSortNo () {
   return axios({
