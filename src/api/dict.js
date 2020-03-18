@@ -64,6 +64,33 @@ export function updateType (parameter) {
   })
 }
 
+/** 删除字典类别信息 */
+export function deleteType (parameter) {
+  return axios({
+    url: PULLULATES_DICT_URL.Dict_DeleteType,
+    method: 'delete',
+    data: parameter
+  })
+}
+
+/** 修改字典数据信息 */
+export function updateData (parameter) {
+  return axios({
+    url: PULLULATES_DICT_URL.Dict_Update_Data,
+    method: 'put',
+    data: parameter
+  })
+}
+
+/** 删除字典数据信息 */
+export function deleteData (parameter) {
+  return axios({
+    url: PULLULATES_DICT_URL.Dict_DeleteData,
+    method: 'delete',
+    data: parameter
+  })
+}
+
 /** 获取建议排序编号 */
 export function getSuggestSortNo () {
   return axios({

@@ -30,7 +30,7 @@
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
       >
-        <a-input-number v-decorator="['sortNo', {rules: [{required: true, message: '请输入排序编号'}], initialValue: suggestSortNo}]" />
+        <a-input-number v-decorator="['sortNo', {rules: [{required: true, message: '请输入排序编号'}]}]" />
       </a-form-item>
       <a-form-item
         :labelCol="labelCol"
@@ -76,23 +76,26 @@ export default {
   methods: {
     show (record) {
       this.mdl = Object.assign({}, record)
+      this.visible = !this.visible
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'dictId', 'dictType', 'dictName', 'sortNo', 'isDefault'))
       })
-      this.visible = !this.visible
     },
     handleSubmit () {
       this.form.validateFields((err, fieldsValue) => {
         if (err) {
           return false
         }
+        this.confirmLoading = true
         updateType(fieldsValue).then(res => {
           if (res.code === 200) {
             this.$message.success(res.msg)
             this.$emit('ok', fieldsValue)
+            this.confirmLoading = false
             this.handleCancel()
           } else {
             this.$message.warning(res.msg)
+            this.confirmLoading = false
           }
         })
       })

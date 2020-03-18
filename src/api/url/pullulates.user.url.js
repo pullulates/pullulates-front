@@ -47,5 +47,8 @@ export const PULLULATES_DICT_URL = {
   Dict_Save_Type: PULLULATES_USER_BASE_URL + '/dicts/types/save',
   Dict_Save_Data: PULLULATES_USER_BASE_URL + '/dicts/datas/save',
   Dict_Update_Type: PULLULATES_USER_BASE_URL + '/dicts/types/update',
-  Dict_Type_Suggest_Sortno: PULLULATES_USER_BASE_URL + '/dicts/types/suggest-sortno'
+  Dict_Update_Data: PULLULATES_USER_BASE_URL + '/dicts/datas/update',
+  Dict_Type_Suggest_Sortno: PULLULATES_USER_BASE_URL + '/dicts/types/suggest-sortno',
+  Dict_DeleteType: PULLULATES_USER_BASE_URL + '/dicts/types/delete',
+  Dict_DeleteData: PULLULATES_USER_BASE_URL + '/dicts/datas/delete'
 }

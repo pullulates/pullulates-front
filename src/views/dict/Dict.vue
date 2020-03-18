@@ -15,10 +15,8 @@
           </a-col>
           <a-col :md="5" :sm="24">
             <a-form-item label="是否内置">
-              <a-select v-model="queryParam.isDefault" placeholder="请选择是否内置" default-value="">
-                <a-select-option value="">全部</a-select-option>
-                <a-select-option value="1">内置</a-select-option>
-                <a-select-option value="2">非内置</a-select-option>
+              <a-select v-model="queryParam.isDefault" placeholder="请选择是否内置">
+                <a-select-option v-for="item in isDefaults" :key="item.dictValue">{{ item.dictName }}</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -49,10 +47,15 @@
       <a-button type="primary" icon="plus" @click="$refs.AddType.show()">添加字典类别</a-button>
       <a-button type="default" icon="plus" @click="$refs.AddData.show()">添加字典数据</a-button>
     </div>
-    <a-table :columns="columns" :dataSource="data" :rowKey="rowKey" @expandelete="expand" :expandedRowKeys="expandedRowKeys" >
+    <a-table :columns="columns" :dataSource="data" :rowKey="rowKey" @expand="expand" :expandedRowKeys="expandedRowKeys" >
+      <span slot="isDefault" slot-scope="isDefault">
+        <a-tag :color="getDictCss(isDefaults, isDefault)">
+          {{ getDictOption(isDefaults, isDefault) }}
+        </a-tag>
+      </span>
       <a slot="operation" slot-scope="record">
         <a href="javascript:;" @click="handleEditType(record)"><a-icon type="edit"/> 编辑  </a> |
-        <a href="javascript:;" @click="handleEditType(record)"><a-icon type="delete"/> 删除</a>
+        <a href="javascript:;" @click="confirmDeleteType(record)"><a-icon type="delete"/> 删除</a>
       </a>
       <a-table
         slot="expandedRowRender"
@@ -61,24 +64,31 @@
         :pagination="false"
         :rowKey="innerRowKey"
       >
+        <a slot="operation" slot-scope="record">
+          <a href="javascript:;" @click="handleEditData(record)"><a-icon type="edit"/> 编辑  </a> |
+          <a href="javascript:;" @click="confirmDeleteData(record)"><a-icon type="delete"/> 删除</a>
+        </a>
       </a-table>
     </a-table>
     <add-type ref="AddType" @ok="handleOk"/>
     <add-data ref="AddData" @ok="handleOk"/>
     <edit-type ref="EditType" @ok="handleOk"/>
+    <edit-data ref="EditData" @ok="handleOk"/>
   </a-card>
 </template>
 <script>
-import { getDictTypeList, getDictDataList } from '@/api/dict'
+import { getDictTypeList, getDictDataList, getDictDataListByType, deleteType, deleteData } from '@/api/dict'
 import AddType from './module/AddType'
 import AddData from './module/AddData'
 import EditType from './module/EditType'
+import EditData from './module/EditData'
 
 export default {
   components: {
     AddType,
     AddData,
-    EditType
+    EditType,
+    EditData
   },
   data () {
     return {
@@ -92,13 +102,14 @@ export default {
       innerRowKey: 'dictId',
       advanced: false,
       queryParam: {
-        dictType: '',
-        dictName: '',
-        isDefault: ''
-      }
+      },
+      isDefaults: []
     }
   },
   created () {
+    getDictDataListByType({ dictType: 'is_default' }).then(res => {
+      this.isDefaults = res.data
+    })
     this.getTypeList()
   },
   methods: {
@@ -127,6 +138,69 @@ export default {
     },
     handleEditType (record) {
       this.$refs.EditType.show(record)
+    },
+    confirmDeleteType (record) {
+      const self = this
+      this.$confirm({
+        title: '字典类别存在下级数据时，仅超级管理员有权限一次性删除，请确认是否继续当前的操作？',
+        okText: '继续',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleDeleteType(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleDeleteType (record) {
+      deleteType({ dictId: record.dictId }).then(res => {
+        this.callback(res)
+      })
+    },
+    handleEditData (record) {
+      this.$refs.EditData.show(record)
+    },
+    confirmDeleteData (record) {
+      const self = this
+      this.$confirm({
+        title: '内置数据字典仅超级管理员有权限删除，请确认是否继续当前的操作？',
+        okText: '继续',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleDeleteData(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleDeleteData (record) {
+      deleteData({ dictId: record.dictId }).then(res => {
+        this.callback(res)
+      })
+    },
+    destroyAll () {
+      this.$destroyAll()
+    },
+    callback (res) {
+      if (res.code === 200) {
+        this.$message.success(res.msg)
+        this.getTypeList()
+      } else {
+        this.$message.warning(res.msg)
+      }
+      this.destroyAll()
+    },
+    getDictOption (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictName : '未知'
+    },
+    getDictCss (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictCss : ''
     }
   }
 }
@@ -134,7 +208,7 @@ export default {
 const columns = [
   { title: '字典类型', dataIndex: 'dictType' },
   { title: '字典名称', dataIndex: 'dictName' },
-  { title: '是否默认', dataIndex: 'isDefault' },
+  { title: '是否内置', dataIndex: 'isDefault', scopedSlots: { customRender: 'isDefault' } },
   { title: '排序编号', dataIndex: 'sortNo' },
   { title: '创建人', dataIndex: 'createBy' },
   { title: '创建时间', dataIndex: 'createTime' },
