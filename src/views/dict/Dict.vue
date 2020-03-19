@@ -71,9 +71,9 @@
       </a-table>
     </a-table>
     <add-type ref="AddType" @ok="handleOk"/>
-    <add-data ref="AddData" @ok="handleOk"/>
+    <add-data ref="AddData" @ok="handleDataOk"/>
     <edit-type ref="EditType" @ok="handleOk"/>
-    <edit-data ref="EditData" @ok="handleOk"/>
+    <edit-data ref="EditData" @ok="handleDataOk"/>
   </a-card>
 </template>
 <script>
@@ -135,6 +135,9 @@ export default {
     },
     handleOk () {
       this.getTypeList()
+    },
+    handleDataOk (parameter) {
+      this.getDataList(parameter)
     },
     handleEditType (record) {
       this.$refs.EditType.show(record)

@@ -89,13 +89,12 @@ export default {
         if (!errors) {
           saveType(values).then(res => {
             if (res.code === 200) {
-              this.$notification.success({
-                message: '消息',
-                description: `添加字典类别成功`
-              })
+              this.$message.success(res.msg)
               this.$emit('ok', values)
               this.visible = false
               this.form.resetFields()
+            } else {
+              this.$message.warning(res.msg)
             }
             this.confirmLoading = false
           })
