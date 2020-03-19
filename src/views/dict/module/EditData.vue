@@ -126,6 +126,11 @@ export default {
     handleCancel () {
       this.visible = false
     },
+    filterOption (input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      )
+    },
     getDictTypes () {
       getDictTypeList().then(res => {
         this.dictTypeOptions = res.data
