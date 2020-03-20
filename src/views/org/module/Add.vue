@@ -20,6 +20,7 @@
           placeholder="请选择上级组织机构"
           allowClear
           treeDefaultExpandAll
+          @change="orgSelectChange"
         />
       </a-form-item>
       <a-form-item
@@ -56,8 +57,7 @@
 </template>
 
 <script>
-import { saveType, getSuggestSortNo } from '@/api/dict'
-import { getOrgTree } from '@/api/org'
+import { getOrgTree, getSuggestSortNo, saveOrg } from '@/api/org'
 export default {
   name: 'AddOrg',
   data () {
@@ -81,10 +81,7 @@ export default {
     }
   },
   created () {
-    getOrgTree().then(res => {
-      this.orgTree = res.data
-      this.expandedKeys = res.data.map(item => item.parentId)
-    })
+    this.getOrgTrees()
   },
   methods: {
     show () {
@@ -94,8 +91,19 @@ export default {
     handleCancel () {
       this.visible = false
     },
+    getOrgTrees () {
+      getOrgTree().then(res => {
+        this.orgTree = res.data
+        this.expandedKeys = res.data.map(item => item.parentId)
+      })
+    },
     getSuggestSortNo () {
       getSuggestSortNo().then(res => {
+        this.suggestSortNo = res.data
+      })
+    },
+    orgSelectChange (value, label, extra) {
+      getSuggestSortNo({ orgId: value }).then(res => {
         this.suggestSortNo = res.data
       })
     },
@@ -104,8 +112,9 @@ export default {
       const { form: { validateFields } } = this
       validateFields((errors, values) => {
         if (!errors) {
-          saveType(values).then(res => {
+          saveOrg(values).then(res => {
             if (res.code === 200) {
+              this.getOrgTrees()
               this.$message.success(res.msg)
               this.$emit('ok', values)
               this.visible = false

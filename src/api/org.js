@@ -17,3 +17,21 @@ export function getOrgTree () {
     method: 'get'
   })
 }
+
+/** 获取组织机构建议排序 */
+export function getSuggestSortNo (parameter) {
+  return axios({
+    url: PULLULATES_ORG_URL.Suggest_Sort_No,
+    method: 'get',
+    data: parameter
+  })
+}
+
+/** 保存组织机构 */
+export function saveOrg (parameter) {
+  return axios({
+    url: PULLULATES_ORG_URL.Org_Save,
+    method: 'post',
+    data: parameter
+  })
+}

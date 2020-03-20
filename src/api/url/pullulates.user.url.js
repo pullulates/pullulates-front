@@ -36,7 +36,9 @@ export const PULLULATES_MENU_URL = {
 
 export const PULLULATES_ORG_URL = {
   Org_List_Tree: PULLULATES_USER_BASE_URL + '/orgs/list/tree',
-  Org_Tree: PULLULATES_USER_BASE_URL + '/orgs/tree'
+  Org_Tree: PULLULATES_USER_BASE_URL + '/orgs/tree',
+  Suggest_Sort_No: PULLULATES_USER_BASE_URL + '/orgs/suggest-sortno',
+  Org_Save: PULLULATES_USER_BASE_URL + '/orgs/save'
 }
 
 export const PULLULATES_DICT_URL = {
