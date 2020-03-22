@@ -35,19 +35,44 @@
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="handleAdd()">添加</a-button>
     </div>
-    <a-table :rowKey="rowKey" :columns="columns" :dataSource="menus" />
-    <add ref="Add" @ok="handleSave"/>
+    <a-table :rowKey="rowKey" :columns="columns" :dataSource="menus">
+      <span slot="menuType" slot-scope="text">
+        <a-tag :color="getDictCss(menuType, text)">
+          {{ getDictOption(menuType, text) }}
+        </a-tag>
+      </span>
+      <span slot="isShow" slot-scope="text">
+        <a-tag :color="getDictCss(isShow, text)">
+          {{ getDictOption(isShow, text) }}
+        </a-tag>
+      </span>
+      <span slot="operation" slot-scope="text, record">
+        <a-button v-if="record.parentId != '1'" type="primary" size="small" @click="handleEdit(record)" ghost><a-icon type="edit"/> 编辑</a-button>
+        <a-button
+          v-if="record.parentId != '1'"
+          type="danger"
+          size="small"
+          @click="confirmDelete(record)"
+          style="margin-left: 8px"
+          ghost>
+          <a-icon type="delete"/> 删除</a-button>
+      </span>
+    </a-table>
+    <add ref="Add" @ok="handleOk"/>
+    <edit-menu ref="EditMenu" @ok="handleOk"/>
   </a-card>
 </template>
 
 <script>
-import { getMenuListTree } from '@/api/menu'
+import { getMenuListTree, deleteMenu } from '@/api/menu'
 import { getDictDataListByType } from '@/api/dict'
 import Add from './module/Add'
+import EditMenu from './module/Edit'
 
 export default {
   components: {
-    Add
+    Add,
+    EditMenu
   },
   data () {
     return {
@@ -57,12 +82,16 @@ export default {
       rowKey: 'menuId',
       queryParam: {
       },
-      menuType: []
+      menuType: [],
+      isShow: []
     }
   },
   created () {
     getDictDataListByType({ dictType: 'menu_type' }).then(res => {
       this.menuType = res.data
+    })
+    getDictDataListByType({ dictType: 'is_visible' }).then(res => {
+      this.isShow = res.data
     })
     this.getMenuList()
   },
@@ -74,6 +103,52 @@ export default {
     },
     handleAdd () {
       this.$refs.Add.add(this.menuType)
+    },
+    handleEdit (record) {
+      this.$refs.EditMenu.show(record)
+    },
+    confirmDelete (record) {
+      const self = this
+      this.$confirm({
+        title: '菜单删除属于不可逆操作，请确认是否继续？',
+        okText: '继续',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleDelete(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleDelete (record) {
+      deleteMenu({ menuId: record.menuId }).then(res => {
+        this.callback(res)
+      })
+    },
+    getDictOption (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictName : '未知'
+    },
+    getDictCss (datas, param) {
+      const result = datas.filter(item => item.dictValue === param)
+      return result.length > 0 ? result[0].dictCss : ''
+    },
+    handleOk () {
+      this.getMenuList()
+    },
+    callback (res) {
+      if (res.code === 200) {
+        this.$message.success(res.msg)
+        this.getMenuList()
+      } else {
+        this.$message.warning(res.msg)
+      }
+      this.destroyAll()
+    },
+    destroyAll () {
+      this.$destroyAll()
     }
   }
 }
@@ -93,19 +168,26 @@ const columns = [
   },
   {
     title: '菜单类型',
-    dataIndex: 'menuType'
+    dataIndex: 'menuType',
+    scopedSlots: { customRender: 'menuType' }
   },
   {
     title: '菜单路径',
     dataIndex: 'url'
   },
   {
-    title: '是否显示',
-    dataIndex: 'isShow'
-  },
-  {
     title: '菜单布局',
     dataIndex: 'menuLayout'
+  },
+  {
+    title: '是否显示',
+    dataIndex: 'isShow',
+    scopedSlots: { customRender: 'isShow' }
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    scopedSlots: { customRender: 'operation' }
   }
 ]
 

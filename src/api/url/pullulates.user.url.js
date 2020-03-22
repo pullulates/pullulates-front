@@ -31,14 +31,19 @@ export const PULLULATES_MENU_URL = {
   My_MenuIds: PULLULATES_USER_BASE_URL + '/menus/menuids/my',
   Role_MenuIds_By_RoleId: PULLULATES_USER_BASE_URL + '/menus/menuids/roleid',
   Role_MenuIds_By_RoleKeys: PULLULATES_USER_BASE_URL + '/menus/menuids/rolekeys',
-  Menu_List_Tree: PULLULATES_USER_BASE_URL + '/menus/list/tree'
+  Menu_List_Tree: PULLULATES_USER_BASE_URL + '/menus/list/tree',
+  Menu_Save: PULLULATES_USER_BASE_URL + '/menus/save',
+  Menu_Update: PULLULATES_USER_BASE_URL + '/menus/update',
+  Menu_Delete: PULLULATES_USER_BASE_URL + '/menus/delete'
 }
 
 export const PULLULATES_ORG_URL = {
   Org_List_Tree: PULLULATES_USER_BASE_URL + '/orgs/list/tree',
   Org_Tree: PULLULATES_USER_BASE_URL + '/orgs/tree',
   Suggest_Sort_No: PULLULATES_USER_BASE_URL + '/orgs/suggest-sortno',
-  Org_Save: PULLULATES_USER_BASE_URL + '/orgs/save'
+  Org_Save: PULLULATES_USER_BASE_URL + '/orgs/save',
+  Org_Update: PULLULATES_USER_BASE_URL + '/orgs/update',
+  Org_Delete: PULLULATES_USER_BASE_URL + '/orgs/delete'
 }
 
 export const PULLULATES_DICT_URL = {

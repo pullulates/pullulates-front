@@ -35,3 +35,21 @@ export function saveOrg (parameter) {
     data: parameter
   })
 }
+
+/** 修改组织机构 */
+export function updateOrg (parameter) {
+  return axios({
+    url: PULLULATES_ORG_URL.Org_Update,
+    method: 'put',
+    data: parameter
+  })
+}
+
+/** 删除组织机构 */
+export function deleteOrg (parameter) {
+  return axios({
+    url: PULLULATES_ORG_URL.Org_Delete,
+    method: 'delete',
+    data: parameter
+  })
+}

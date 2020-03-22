@@ -42,3 +42,30 @@ export function getMenuListTree () {
     method: 'get'
   })
 }
+
+/** 保存菜单 */
+export function saveMenu (parameter) {
+  return axios({
+    url: PULLULATES_MENU_URL.Menu_Save,
+    method: 'post',
+    data: parameter
+  })
+}
+
+/** 编辑菜单 */
+export function updateMenu (parameter) {
+  return axios({
+    url: PULLULATES_MENU_URL.Menu_Update,
+    method: 'put',
+    data: parameter
+  })
+}
+
+/** 删除菜单 */
+export function deleteMenu (parameter) {
+  return axios({
+    url: PULLULATES_MENU_URL.Menu_Delete,
+    method: 'delete',
+    data: parameter
+  })
+}

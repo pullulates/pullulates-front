@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="添加新的菜单"
+    title="编辑菜单"
     :width="1100"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -12,6 +12,9 @@
         type="warning"
         closable
       />
+      <a-form-item hidden="true">
+        <a-input type="hidden" v-decorator="['menuId']" />
+      </a-form-item>
       <a-row class="form-row" :gutter="24">
         <a-col :lg="12">
           <a-form-item label="上级菜单">
@@ -43,7 +46,7 @@
               buttonStyle="solid"
               v-decorator="[
                 'menuType',
-                {rules: [{ required: true, message: '请选择菜单类型'}], initialValue: '3'}
+                {rules: [{ required: true, message: '请选择菜单类型'}]}
               ]"
             >
               <a-radio-button v-for="item in menuType" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -56,8 +59,8 @@
           <a-form-item label="菜单布局">
             <a-select
               v-decorator="[
-                'pageLayout',
-                {rules: [{ required: true, message: '请选择菜单布局'}], initialValue: 'PageView'}
+                'menuLayout',
+                {rules: [{ required: true, message: '请选择菜单布局'}]}
               ]"
               @change="menuLayoutChange"
               placeholder="请选择菜单布局">
@@ -143,7 +146,7 @@
               buttonStyle="solid"
               v-decorator="[
                 'target',
-                {rules: [{ required: true, message: '请选择打开方式'}], initialValue: '1'}
+                {rules: [{ required: true, message: '请选择打开方式'}]}
               ]"
             >
               <a-radio-button v-for="item in target" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -156,7 +159,7 @@
               buttonStyle="solid"
               v-decorator="[
                 'keepAlive',
-                {rules: [{ required: true, message: '请选择是否缓存路由'}], initialValue: '1'}
+                {rules: [{ required: true, message: '请选择是否缓存路由'}]}
               ]"
             >
               <a-radio-button v-for="item in keepAlive" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -169,7 +172,7 @@
               buttonStyle="solid"
               v-decorator="[
                 'isShow',
-                {rules: [{ required: true, message: '请选择是否是否显示菜单'}], initialValue: '1'}
+                {rules: [{ required: true, message: '请选择是否是否显示菜单'}]}
               ]"
             >
               <a-radio-button v-for="item in isVisible" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -182,7 +185,7 @@
               buttonStyle="solid"
               v-decorator="[
                 'hiddenHeaderContent',
-                {rules: [{ required: true, message: '请选择是否显示标题及面包屑'}], initialValue: '1'}
+                {rules: [{ required: true, message: '请选择是否显示标题及面包屑'}]}
               ]"
             >
               <a-radio-button v-for="item in isVisible" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
@@ -193,7 +196,7 @@
       <a-row class="form-row" :gutter="24">
         <a-col :lg="24">
           <a-form-item label="菜单图标">
-            <icon-selector @change="handleIconChange"/>
+            <icon-selector @change="handleIconChange" :value="icon"/>
           </a-form-item>
           <a-form-item hidden="true">
             <a-input type="hidden" v-decorator="['icon']" />
@@ -209,12 +212,13 @@
 </template>
 
 <script>
+import pick from 'lodash.pick'
 import { getDictDataListByType } from '@/api/dict'
-import { getMenuTree, saveMenu } from '@/api/menu'
+import { getMenuTree, updateMenu } from '@/api/menu'
 import IconSelector from '@/components/IconSelector'
 
 export default {
-  name: 'Add',
+  name: 'EditMenu',
   components: {
     IconSelector
   },
@@ -235,15 +239,19 @@ export default {
       expandedKeys: [],
       autoExpandParent: true,
       customizeLayout: false,
-
       menuType: [],
       pageLayout: [],
       target: [],
       keepAlive: [],
-      isVisible: []
+      isVisible: [],
+      icon: '',
+      mdl: {}
     }
   },
   created () {
+    getDictDataListByType({ dictType: 'menu_type' }).then(res => {
+      this.menuType = res.data
+    })
     getDictDataListByType({ dictType: 'page_layout' }).then(res => {
       this.pageLayout = res.data
     })
@@ -259,10 +267,14 @@ export default {
     this.getMenuList()
   },
   methods: {
-    add (menuType) {
-      this.visible = true
+    show (record) {
       this.confirmLoading = true
-      this.menuType = menuType
+      this.mdl = Object.assign({}, record)
+      this.visible = !this.visible
+      this.$nextTick(() => {
+        this.form.setFieldsValue(pick(this.mdl, 'menuId', 'parentId', 'menuName', 'menuKey', 'perm', 'menuLayout', 'target', 'url', 'redirect', 'menuType', 'isShow', 'keepAlive', 'hiddenHeaderContent', 'icon', 'sortNo'))
+      })
+      this.icon = record.icon
       this.confirmLoading = false
     },
     getMenuList (parameter) {
@@ -296,7 +308,7 @@ export default {
               return false
             }
           }
-          saveMenu(values).then(res => {
+          updateMenu(values).then(res => {
             if (res.code === 200) {
               this.$message.success(res.msg)
               this.$emit('ok', values)
