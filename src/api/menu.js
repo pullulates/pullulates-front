@@ -35,6 +35,14 @@ export function getMenuIdsByRoleKeys (parameter) {
   })
 }
 
+/** 获取所有父级菜单id */
+export function getAllParentIds () {
+  return axios({
+    url: PULLULATES_MENU_URL.Menu_All_ParentIds,
+    method: 'get'
+  })
+}
+
 /** 获取菜单列表的菜单树，结果不分页 */
 export function getMenuListTree (parameter) {
   return axios({

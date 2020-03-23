@@ -92,6 +92,7 @@
               :autoExpandParent="menuAutoExpandParent"
               v-model="menuCheckedKeys"
               :treeData="menuTreeData"
+              @check="menuCheck"
             />
           </a-form-item>
         </a-col>
@@ -155,6 +156,7 @@ export default {
 
       menuExpandedKeys: [],
       menuCheckedKeys: [],
+      menuHalfCheckKeys: [],
       menuTreeData: [],
       menuSelectedKeys: [],
       menuAutoExpandParent: true,
@@ -170,19 +172,20 @@ export default {
     }
   },
   methods: {
-    edit (record, menuTree, orgTree, yesOrNos, dataStatus) {
+    edit (record, menuTree, orgTree, yesOrNos, dataStatus, allMenuParentIds) {
       this.visible = true
       this.confirmLoading = true
       this.menuTreeData = menuTree
       this.orgTreeData = orgTree
       this.yesOrNos = yesOrNos
       this.dataStatus = dataStatus
+      this.menuHalfCheckKeys = allMenuParentIds
       this.getSuggestNo()
       this.loadEditInfo(record)
     },
     loadEditInfo (record) {
       getMenuIdsByRoleId({ 'roleId': record.roleId }).then(res => {
-        this.menuCheckedKeys = res.data
+        this.menuCheckedKeys = res.data.filter(id => !this.menuHalfCheckKeys.includes(id))
         // this.menuExpandedKeys = res.data
       })
       getDataScope({ 'roleId': record.roleId }).then(res => {
@@ -214,7 +217,7 @@ export default {
             this.confirmLoading = false
             return false
           }
-          values.menuIds = this.menuCheckedKeys.join(',')
+          values.menuIds = this.menuCheckedKeys.concat(this.menuHalfCheckKeys).join(',')
           values.orgIds = this.orgCheckedKeys.join(',')
           updateRole(values).then(res => {
             if (res.code === 200) {
@@ -234,9 +237,14 @@ export default {
         this.suggestSortNo = res.data
       })
     },
+    menuCheck (checkedKeys, info) {
+      this.menuCheckedKeys = checkedKeys
+      this.menuHalfCheckKeys = info.halfCheckedKeys
+    },
     handleMenuChange (e) {
       var value = e.target.value
       this.menuCheckedKeys = (value === '1' ? (this.menuTreeData.map(item => item.key)) : [])
+      this.menuHalfCheckKeys = []
     },
     handleOrgChange (e) {
       var value = e.target.value

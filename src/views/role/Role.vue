@@ -110,7 +110,7 @@
 import { STable } from '@/components'
 import { getRolePage, changeRoleStatus, deleteRole, getDataScope } from '@/api/role'
 import { getDictDataListByType } from '@/api/dict'
-import { getMenuTree, getMenuIdsByRoleId } from '@/api/menu'
+import { getMenuTree, getMenuIdsByRoleId, getAllParentIds } from '@/api/menu'
 import { getOrgTree } from '@/api/org'
 import Add from './module/Add'
 import Edit from './module/Edit'
@@ -140,6 +140,7 @@ export default {
       dataStatus: [],
       yesOrNos: [],
 
+      allMenuParentIds: [],
       menuExpandedKeys: [],
       menuCheckedKeys: [],
       menuTreeData: [],
@@ -170,6 +171,9 @@ export default {
       this.orgTreeData = res.data
       this.orgExpandedKeys = res.data.map(item => item.key)
     })
+    getAllParentIds().then(res => {
+      this.allMenuParentIds = res.data
+    })
   },
   methods: {
     getPage (parameter) {
@@ -183,7 +187,7 @@ export default {
       if (this.selectedRowKeys.length === 1) {
         this.loading = true
         getMenuIdsByRoleId({ 'roleId': this.selectedRowKeys[0] }).then(res => {
-          this.menuCheckedKeys = res.data
+          this.menuCheckedKeys = res.data.filter(id => !this.allMenuParentIds.includes(id))
         })
         getDataScope({ 'roleId': this.selectedRowKeys[0] }).then(res => {
           this.orgCheckedKeys = res.data
@@ -209,7 +213,7 @@ export default {
       this.$refs.Add.add(this.menuTreeData, this.orgTreeData, this.yesOrNos, this.dataStatus)
     },
     handleEdit (record) {
-      this.$refs.Edit.edit(record, this.menuTreeData, this.orgTreeData, this.yesOrNos, this.dataStatus)
+      this.$refs.Edit.edit(record, this.menuTreeData, this.orgTreeData, this.yesOrNos, this.dataStatus, this.allMenuParentIds)
     },
     handleAllocated (record) {
       this.$refs.Allocated.allolcated(this.dataStatus, record.roleId)

@@ -36,7 +36,8 @@ export const PULLULATES_MENU_URL = {
   Menu_List_Tree: PULLULATES_USER_BASE_URL + '/menus/list/tree',
   Menu_Save: PULLULATES_USER_BASE_URL + '/menus/save',
   Menu_Update: PULLULATES_USER_BASE_URL + '/menus/update',
-  Menu_Delete: PULLULATES_USER_BASE_URL + '/menus/delete'
+  Menu_Delete: PULLULATES_USER_BASE_URL + '/menus/delete',
+  Menu_All_ParentIds: PULLULATES_USER_BASE_URL + '/menus/parentids'
 }
 
 export const PULLULATES_ORG_URL = {
