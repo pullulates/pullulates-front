@@ -109,8 +109,9 @@ export default {
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
           const loginParams = { ...values }
-          Login(loginParams)
-            .then((res) => this.loginSuccess(res))
+          Login(loginParams).then((res) => {
+            res.code === 200 ? this.loginSuccess(res) : this.$message.warning(res.msg)
+          })
         }
         state.loginBtn = false
       })
