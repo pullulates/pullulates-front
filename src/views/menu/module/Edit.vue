@@ -16,7 +16,7 @@
         <a-input type="hidden" v-decorator="['menuId']" />
       </a-form-item>
       <a-row class="form-row" :gutter="24">
-        <a-col :lg="12">
+        <a-col :lg="6">
           <a-form-item label="上级菜单">
             <a-tree-select
               :treeData="menuTree"
@@ -41,43 +41,12 @@
           </a-form-item>
         </a-col>
         <a-col :lg="6">
-          <a-form-item label="菜单类型">
-            <a-radio-group
-              buttonStyle="solid"
-              v-decorator="[
-                'menuType',
-                {rules: [{ required: true, message: '请选择菜单类型'}]}
-              ]"
-            >
-              <a-radio-button v-for="item in menuType" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
-            </a-radio-group>
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <a-row class="form-row" :gutter="24">
-        <a-col :lg="12">
-          <a-form-item label="菜单布局">
-            <a-select
+          <a-form-item label="布局名称">
+            <a-input
+              placeholder="请输入自定义布局名称"
               v-decorator="[
                 'menuLayout',
-                {rules: [{ required: true, message: '请选择菜单布局'}]}
-              ]"
-              @change="menuLayoutChange"
-              placeholder="请选择菜单布局">
-              <a-select-option
-                v-for="item in pageLayout"
-                :key="item.dictValue"
-              >{{ item.dictName }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :lg="6" v-if="customizeLayout">
-          <a-form-item label="布局路径">
-            <a-input
-              placeholder="请输入自定义布局路径"
-              v-decorator="[
-                'customizeLayout',
-                {rules: [{max: 25, message: '自定义布局路径最多25个字符'}]}
+                {rules: [{max: 25, message: '自定义布局名称最多25个字符'}]}
               ]"
             />
           </a-form-item>
@@ -95,14 +64,16 @@
       </a-row>
       <a-row class="form-row" :gutter="24">
         <a-col :lg="6">
-          <a-form-item label="菜单标识">
-            <a-input
-              placeholder="请输入菜单标识"
+          <a-form-item label="菜单类型">
+            <a-radio-group
+              buttonStyle="solid"
               v-decorator="[
-                'menuKey',
-                {rules: [{ required: true, message: '请输入菜单标识', whitespace: true},{max: 32, message: '菜单标识最多32个字符'}]}
+                'menuType',
+                {rules: [{ required: true, message: '请选择菜单类型'}]}
               ]"
-            />
+            >
+              <a-radio-button v-for="item in menuType" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
+            </a-radio-group>
           </a-form-item>
         </a-col>
         <a-col :lg="6">
@@ -249,9 +220,6 @@ export default {
     }
   },
   created () {
-    getDictDataListByType({ dictType: 'menu_type' }).then(res => {
-      this.menuType = res.data
-    })
     getDictDataListByType({ dictType: 'page_layout' }).then(res => {
       this.pageLayout = res.data
     })
@@ -267,12 +235,13 @@ export default {
     this.getMenuList()
   },
   methods: {
-    show (record) {
+    show (record, menuType) {
       this.confirmLoading = true
+      this.menuType = menuType
       this.mdl = Object.assign({}, record)
       this.visible = !this.visible
       this.$nextTick(() => {
-        this.form.setFieldsValue(pick(this.mdl, 'menuId', 'parentId', 'menuName', 'menuKey', 'perm', 'menuLayout', 'target', 'url', 'redirect', 'menuType', 'isShow', 'keepAlive', 'hiddenHeaderContent', 'icon', 'sortNo'))
+        this.form.setFieldsValue(pick(this.mdl, 'menuId', 'parentId', 'menuName', 'perm', 'menuLayout', 'target', 'url', 'redirect', 'menuType', 'isShow', 'keepAlive', 'hiddenHeaderContent', 'icon', 'sortNo'))
       })
       this.icon = record.icon
       this.confirmLoading = false
@@ -325,9 +294,6 @@ export default {
     },
     handleIconChange (icon) {
       this.form.setFieldsValue({ 'icon': icon })
-    },
-    menuLayoutChange (value) {
-      this.customizeLayout = (value === 'others')
     }
   }
 }

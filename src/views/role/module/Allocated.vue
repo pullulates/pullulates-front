@@ -20,6 +20,13 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
+            <a-form-item label="角色类型">
+              <a-select v-model="queryParam.roleIds" placeholder="请选择角色类型" mode="multiple" @change="handleRoleSelectChange">
+                <a-select-option v-for="item in roles" :key="item.roleId">{{ item.roleName }}</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
             <a-form-item label="组织机构">
               <a-tree-select
                 showSearch
@@ -31,11 +38,6 @@
               />
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="电子邮箱">
-              <a-input v-model="queryParam.email" placeholder="请填写电子邮箱"/>
-            </a-form-item>
-          </a-col>
           <a-col :md="24" :sm="24">
             <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' }">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
@@ -45,9 +47,9 @@
         </a-row>
       </a-form>
     </div>
-    <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="handleAdd()" v-if="selectedRowKeys.length > 0">分配</a-button>
-      <a-button type="danger" icon="delete" @click="confirmBatchDelete()" v-if="selectedRowKeys.length > 0">移除</a-button>
+    <div class="table-operator" style="margin: 0 0 10px 0">
+      <a-button type="primary" icon="plus" @click="confirmOper(1)" v-if="selectedRowKeys.length > 0">分配</a-button>
+      <a-button type="danger" icon="delete" @click="confirmOper(2)" v-if="selectedRowKeys.length > 0" style="margin-left: 8px">移除</a-button>
     </div>
     <s-table
       ref="table"
@@ -68,8 +70,7 @@
       </span>
     </s-table>
     <template slot="footer">
-      <a-button key="cancel" @click="handleCancel">取消</a-button>
-      <a-button key="save" :loading="confirmLoading" type="primary" @click="handleSave">提交</a-button>
+      <a-button type="primary" key="cancel" @click="handleCancel">关闭</a-button>
     </template>
   </a-modal>
 </template>
@@ -77,6 +78,7 @@
 <script>
 import { getUserList } from '@/api/user'
 import { getOrgTree } from '@/api/org'
+import { getRoleList, allocateIn, allocateOut } from '@/api/role'
 import { getDictDataListByType } from '@/api/dict'
 import { STable } from '@/components'
 
@@ -99,11 +101,12 @@ export default {
       },
       sexs: [],
       dataStatus: [],
-
+      roles: [],
       orgTree: [],
       expandedKeys: [],
       autoExpandParent: true,
       visible: false,
+      loading: false,
       confirmLoading: false
     }
   },
@@ -115,11 +118,49 @@ export default {
     getDictDataListByType({ dictType: 'sex' }).then(res => {
       this.sexs = res.data
     })
+    getRoleList().then(res => {
+      this.roles = res.data
+    })
   },
   methods: {
     getUsers (parameter) {
       return getUserList(Object.assign(parameter, this.queryParam)).then(res => {
         return res
+      })
+    },
+    confirmOper (oper) {
+      const self = this
+      this.$confirm({
+        title: '请确认是否将选中用户' + (oper === 1 ? '分配至' : '移出') + '当前角色？',
+        okText: '确认',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          oper === 1 ? self.handleAdd() : self.handleDelete()
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleAdd () {
+      allocateIn({ roleId: this.roleId, allocateUserIds: this.selectedRowKeys.join(',') }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.msg)
+          this.$refs.table.refresh(true)
+        } else {
+          this.$message.warning(res.msg)
+        }
+      })
+    },
+    handleDelete () {
+      allocateOut({ roleId: this.roleId, allocateUserIds: this.selectedRowKeys.join(',') }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.msg)
+          this.$refs.table.refresh(true)
+        } else {
+          this.$message.warning(res.msg)
+        }
       })
     },
     onSelectChange (selectedRowKeys, selectedRows) {
@@ -136,14 +177,24 @@ export default {
     },
     allolcated (dataStatus, roleId) {
       this.visible = true
-      this.confirmLoading = true
+      this.loading = true
       this.dataStatus = dataStatus
+      this.roleId = roleId
+      this.queryParam.roleIds = []
       this.queryParam.roleIds.push(roleId)
-      this.$refs.table.refresh(true)
-      this.confirmLoading = false
+      if (this.$refs.table) {
+        this.$refs.table.refresh(true)
+      }
+      this.loading = false
     },
     handleCancel () {
       this.visible = false
+    },
+    handleRoleSelectChange (selectedItems) {
+      this.selectedItems = selectedItems
+    },
+    destroyAll () {
+      this.$destroyAll()
     }
   }
 }

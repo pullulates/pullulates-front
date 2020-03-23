@@ -13,7 +13,7 @@
         closable
       />
       <a-row class="form-row" :gutter="24">
-        <a-col :lg="12">
+        <a-col :lg="6">
           <a-form-item label="上级菜单">
             <a-tree-select
               :treeData="menuTree"
@@ -38,43 +38,12 @@
           </a-form-item>
         </a-col>
         <a-col :lg="6">
-          <a-form-item label="菜单类型">
-            <a-radio-group
-              buttonStyle="solid"
-              v-decorator="[
-                'menuType',
-                {rules: [{ required: true, message: '请选择菜单类型'}], initialValue: '3'}
-              ]"
-            >
-              <a-radio-button v-for="item in menuType" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
-            </a-radio-group>
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <a-row class="form-row" :gutter="24">
-        <a-col :lg="12">
-          <a-form-item label="菜单布局">
-            <a-select
-              v-decorator="[
-                'pageLayout',
-                {rules: [{ required: true, message: '请选择菜单布局'}], initialValue: 'PageView'}
-              ]"
-              @change="menuLayoutChange"
-              placeholder="请选择菜单布局">
-              <a-select-option
-                v-for="item in pageLayout"
-                :key="item.dictValue"
-              >{{ item.dictName }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :lg="6" v-if="customizeLayout">
-          <a-form-item label="布局路径">
+          <a-form-item label="布局名称">
             <a-input
-              placeholder="请输入自定义布局路径"
+              placeholder="请输入布局名称"
               v-decorator="[
-                'customizeLayout',
-                {rules: [{max: 25, message: '自定义布局路径最多25个字符'}]}
+                'menuLayout',
+                {rules: [{max: 25, message: '布局名称最多25个字符'}]}
               ]"
             />
           </a-form-item>
@@ -92,14 +61,16 @@
       </a-row>
       <a-row class="form-row" :gutter="24">
         <a-col :lg="6">
-          <a-form-item label="菜单标识">
-            <a-input
-              placeholder="请输入菜单标识"
+          <a-form-item label="菜单类型">
+            <a-radio-group
+              buttonStyle="solid"
               v-decorator="[
-                'menuKey',
-                {rules: [{ required: true, message: '请输入菜单标识', whitespace: true},{max: 32, message: '菜单标识最多32个字符'}]}
+                'menuType',
+                {rules: [{ required: true, message: '请选择菜单类型'}], initialValue: '3'}
               ]"
-            />
+            >
+              <a-radio-button v-for="item in menuType" :key="item.dictValue" :value="item.dictValue">{{ item.dictName }}</a-radio-button>
+            </a-radio-group>
           </a-form-item>
         </a-col>
         <a-col :lg="6">
@@ -234,7 +205,6 @@ export default {
       menuTree: [],
       expandedKeys: [],
       autoExpandParent: true,
-      customizeLayout: false,
 
       menuType: [],
       pageLayout: [],
@@ -280,8 +250,8 @@ export default {
       validateFields((errors, values) => {
         if (!errors) {
           if (this.form.getFieldValue('menuType') === '3') {
-            if (this.form.getFieldValue('menuLayout') === 'others' && !this.form.getFieldValue('customizeLayout')) {
-              this.$message.warning('请填写自定义布局的路径')
+            if (!this.form.getFieldValue('menuLayout')) {
+              this.$message.warning('请填写布局名称')
               this.confirmLoading = false
               return false
             }
@@ -313,9 +283,6 @@ export default {
     },
     handleIconChange (icon) {
       this.form.setFieldsValue({ 'icon': icon })
-    },
-    menuLayoutChange (value) {
-      this.customizeLayout = (value === 'others')
     }
   }
 }

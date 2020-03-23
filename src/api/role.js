@@ -72,3 +72,21 @@ export function updateRole (parameter) {
     data: parameter
   })
 }
+
+/** 分配用户 */
+export function allocateIn (parameter) {
+  return axios({
+    url: PULLULATES_ROLE_URL.Role_Allocate_In,
+    method: 'put',
+    data: parameter
+  })
+}
+
+/** 移出用户 */
+export function allocateOut (parameter) {
+  return axios({
+    url: PULLULATES_ROLE_URL.Role_Allocate_Out,
+    method: 'put',
+    data: parameter
+  })
+}

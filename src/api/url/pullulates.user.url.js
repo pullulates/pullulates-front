@@ -23,7 +23,9 @@ export const PULLULATES_ROLE_URL = {
   Change_Role_Status: PULLULATES_USER_BASE_URL + '/roles/update/status',
   Delete_Role: PULLULATES_USER_BASE_URL + '/roles/delete',
   Datascope: PULLULATES_USER_BASE_URL + '/roles/datascope',
-  Role_Update: PULLULATES_USER_BASE_URL + '/roles/update'
+  Role_Update: PULLULATES_USER_BASE_URL + '/roles/update',
+  Role_Allocate_In: PULLULATES_USER_BASE_URL + '/roles/allocate/in',
+  Role_Allocate_Out: PULLULATES_USER_BASE_URL + '/roles/allocate/out'
 }
 
 export const PULLULATES_MENU_URL = {

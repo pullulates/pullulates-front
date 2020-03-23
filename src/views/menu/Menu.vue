@@ -25,7 +25,7 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button type="primary" @click="this.getMenuList">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
             </span>
           </a-col>
@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     getMenuList () {
-      getMenuListTree().then((res) => {
+      getMenuListTree(this.queryParam).then((res) => {
         this.menus = res.data
       })
     },
@@ -105,7 +105,7 @@ export default {
       this.$refs.Add.add(this.menuType)
     },
     handleEdit (record) {
-      this.$refs.EditMenu.show(record)
+      this.$refs.EditMenu.show(record, this.menuType)
     },
     confirmDelete (record) {
       const self = this
@@ -159,17 +159,13 @@ const columns = [
     dataIndex: 'menuName'
   },
   {
-    title: '菜单标识',
-    dataIndex: 'menuKey'
+    title: '菜单类型',
+    dataIndex: 'menuType',
+    scopedSlots: { customRender: 'menuType' }
   },
   {
     title: '权限标识',
     dataIndex: 'perm'
-  },
-  {
-    title: '菜单类型',
-    dataIndex: 'menuType',
-    scopedSlots: { customRender: 'menuType' }
   },
   {
     title: '菜单路径',

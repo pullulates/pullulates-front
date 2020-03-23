@@ -36,10 +36,11 @@ export function getMenuIdsByRoleKeys (parameter) {
 }
 
 /** 获取菜单列表的菜单树，结果不分页 */
-export function getMenuListTree () {
+export function getMenuListTree (parameter) {
   return axios({
     url: PULLULATES_MENU_URL.Menu_List_Tree,
-    method: 'get'
+    method: 'get',
+    data: parameter
   })
 }
 
