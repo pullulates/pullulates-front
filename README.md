@@ -41,6 +41,7 @@ git clone https://github.com/pullulates/pullulates-vue.git
 4. 运行yarn run serve即可
 
 ## 快速查看
+
 > 用户登录
 
 ![用户登录](https://note.youdao.com/yws/api/personal/file/WEB8e7c0aa8a246336118d99499ed755ff1?method=getImage&version=32&cstk=xT3j_Fd2)
@@ -76,6 +77,5 @@ git clone https://github.com/pullulates/pullulates-vue.git
 > 组织机构
 
 ![组织机构](https://note.youdao.com/yws/api/personal/file/WEBd30ace7c2555783aca37d333e1b36690?method=getImage&version=24&cstk=xT3j_Fd2 "组织机构")
-
 
 ### End
