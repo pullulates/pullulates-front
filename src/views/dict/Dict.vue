@@ -44,8 +44,8 @@
       </a-form>
     </div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.AddType.show()">添加字典类别</a-button>
-      <a-button type="default" icon="plus" @click="$refs.AddData.show()">添加字典数据</a-button>
+      <a-button type="primary" icon="plus" v-action:add @click="$refs.AddType.show()">添加字典类别</a-button>
+      <a-button type="default" icon="plus" v-action:add @click="$refs.AddData.show()">添加字典数据</a-button>
     </div>
     <a-table :columns="columns" :dataSource="data" :rowKey="rowKey" @expand="expand" :expandedRowKeys="expandedRowKeys" >
       <span slot="isDefault" slot-scope="isDefault">
@@ -54,8 +54,8 @@
         </a-tag>
       </span>
       <a slot="operation" slot-scope="record">
-        <a href="javascript:;" @click="handleEditType(record)"><a-icon type="edit"/> 编辑  </a> |
-        <a href="javascript:;" @click="confirmDeleteType(record)"><a-icon type="delete"/> 删除</a>
+        <a href="javascript:;" v-action:edit @click="handleEditType(record)"><a-icon type="edit"/> 编辑  </a>
+        <a href="javascript:;" v-action:delete @click="confirmDeleteType(record)"><a-icon type="delete"/> 删除</a>
       </a>
       <a-table
         slot="expandedRowRender"
@@ -65,8 +65,8 @@
         :rowKey="innerRowKey"
       >
         <a slot="operation" slot-scope="record">
-          <a href="javascript:;" @click="handleEditData(record)"><a-icon type="edit"/> 编辑  </a> |
-          <a href="javascript:;" @click="confirmDeleteData(record)"><a-icon type="delete"/> 删除</a>
+          <a href="javascript:;" v-action:edit @click="handleEditData(record)"><a-icon type="edit"/> 编辑  </a>
+          <a href="javascript:;" v-action:delete @click="confirmDeleteData(record)"><a-icon type="delete"/> 删除</a>
         </a>
       </a-table>
     </a-table>

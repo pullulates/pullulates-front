@@ -10,7 +10,8 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
+    permissions: []
   },
 
   mutations: {
@@ -29,6 +30,9 @@ const user = {
     },
     SET_INFO: (state, info) => {
       state.info = info
+    },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
     }
   },
 
@@ -56,6 +60,7 @@ const user = {
           if (result && result.permissions.length > 0) {
             commit('SET_ROLES', result.user.roles)
             commit('SET_INFO', result.user)
+            commit('SET_PERMISSIONS', result.permissions)
           } else {
             reject(new Error('用户权限不足，无法登录'))
           }

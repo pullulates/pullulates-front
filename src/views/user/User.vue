@@ -76,7 +76,7 @@
       </a-form>
     </div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="handleAdd()">添加</a-button>
+      <a-button type="primary" icon="plus" v-action:add @click="handleAdd()">添加</a-button>
       <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="confirmBatchChangeStatus('1')"><a-icon type="unlock" />启用</a-menu-item>
@@ -107,12 +107,11 @@
         <a-switch checkedChildren="启用" unCheckedChildren="禁用" :checked="text === '1'" @click="confirmChangeStatus(record)" />
       </span>
       <span slot="action" slot-scope="text, record">
-        <a href="javascript:;" @click="handleEdit(record)"><a-icon type="edit"/> 编辑</a>
-        <a-divider type="vertical" />
-        <a-dropdown>
+        <a href="javascript:;" v-action:edit @click="handleEdit(record)"><a-icon type="edit"/> 编辑</a>
+        <a-dropdown v-action:edit>
           <a-menu slot="overlay">
-            <a-menu-item @click="openResetModal(record)"><a-icon type="reload" />重置密码</a-menu-item>
-            <a-menu-item @click="confirmDelete(record)"><a-icon type="delete" />删除用户</a-menu-item>
+            <a-menu-item v-action:reset @click="openResetModal(record)"><a-icon type="reload" />重置密码</a-menu-item>
+            <a-menu-item v-action:delete @click="confirmDelete(record)"><a-icon type="delete" />删除用户</a-menu-item>
           </a-menu>
           <a>
             更多 <a-icon type="down" />

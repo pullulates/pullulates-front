@@ -69,18 +69,20 @@ router.afterEach(() => {
  */
 const action = Vue.directive('action', {
   bind: function (el, binding, vnode) {
-    const actionName = binding.arg
     const roles = store.getters.roles
-    const elVal = vnode.context.$route.meta.permission
-    const permissionId = elVal instanceof String && [elVal] || elVal
-    roles.permissions.forEach(p => {
-      if (!permissionId.includes(p.permissionId)) {
-        return
-      }
-      if (p.actionList && !p.actionList.includes(actionName)) {
-        el.parentNode && el.parentNode.removeChild(el) || (el.style.display = 'none')
+    let jumpCheck = false
+    roles.forEach(role => {
+      if (role.hasAllMenu === '1') {
+        jumpCheck = true
       }
     })
+    if (!jumpCheck) {
+      const myPermissions = store.getters.permissions
+      const permission = vnode.context.$route.meta.permission + ':' + binding.arg
+      if (!myPermissions.includes(permission)) {
+        el.parentNode && el.parentNode.removeChild(el) || (el.style.display = 'none')
+      }
+    }
   }
 })
 

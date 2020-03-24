@@ -33,7 +33,7 @@
       </a-form>
     </div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="handleAdd()">添加</a-button>
+      <a-button type="primary" icon="plus" v-action:add @click="handleAdd()">添加</a-button>
     </div>
     <a-table :rowKey="rowKey" :columns="columns" :dataSource="menus">
       <span slot="menuType" slot-scope="text">
@@ -47,9 +47,17 @@
         </a-tag>
       </span>
       <span slot="operation" slot-scope="text, record">
-        <a-button v-if="record.parentId != '1'" type="primary" size="small" @click="handleEdit(record)" ghost><a-icon type="edit"/> 编辑</a-button>
         <a-button
           v-if="record.parentId != '1'"
+          type="primary"
+          size="small"
+          v-action:edit
+          @click="handleEdit(record)"
+          ghost>
+          <a-icon type="edit"/> 编辑</a-button>
+        <a-button
+          v-if="record.parentId != '1'"
+          v-action:delete
           type="danger"
           size="small"
           @click="confirmDelete(record)"

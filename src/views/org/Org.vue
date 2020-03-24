@@ -23,12 +23,19 @@
       </a-form>
     </div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.AddOrg.show()">添加机构</a-button>
+      <a-button type="primary" icon="plus" v-action:add @click="$refs.AddOrg.show()">添加机构</a-button>
     </div>
     <a-table :rowKey="rowKey" :columns="columns" :dataSource="orgs">
       <span slot="operation" slot-scope="record">
-        <a-button type="primary" size="small" @click="handleEdit(record)" ghost><a-icon type="edit"/> 编辑</a-button>
-        <a-button type="danger" size="small" @click="confirmDelete(record)" ghost style="margin-left: 8px"><a-icon type="delete"/> 删除</a-button>
+        <a-button type="primary" size="small" v-action:edit @click="handleEdit(record)" ghost><a-icon type="edit"/> 编辑</a-button>
+        <a-button
+          type="danger"
+          size="small"
+          v-action:delete
+          @click="confirmDelete(record)"
+          ghost
+          style="margin-left: 8px">
+          <a-icon type="delete"/> 删除</a-button>
       </span>
     </a-table>
     <add-org ref="AddOrg" @ok="handleOk"/>
