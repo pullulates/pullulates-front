@@ -21,6 +21,8 @@ const constantRouterComponents = {
   'Menu': () => import('@/views/menu/Menu'),
   'Org': () => import('@/views/org/Org'),
   'Dict': () => import('@/views/dict/Dict'),
+  // 工具管理
+  'Gen': () => import('@/views/gen/Gen'),
 
   // exception
   'Exception403': () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),

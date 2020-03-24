@@ -62,3 +62,9 @@ export const PULLULATES_DICT_URL = {
   Dict_DeleteType: PULLULATES_USER_BASE_URL + '/dicts/types/delete',
   Dict_DeleteData: PULLULATES_USER_BASE_URL + '/dicts/datas/delete'
 }
+
+export const PULLULATES_GEN_URL = {
+  Gen_List: PULLULATES_USER_BASE_URL + '/gens/list',
+  Un_Imported_Table_List: PULLULATES_USER_BASE_URL + '/gens/list/unimported',
+  Import_Tables: PULLULATES_USER_BASE_URL + '/gens/import'
+}
