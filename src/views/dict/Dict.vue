@@ -54,8 +54,21 @@
         </a-tag>
       </span>
       <a slot="operation" slot-scope="record">
-        <a href="javascript:;" v-action:edit @click="handleEditType(record)"><a-icon type="edit"/> 编辑  </a>
-        <a href="javascript:;" v-action:delete @click="confirmDeleteType(record)"><a-icon type="delete"/> 删除</a>
+        <a-button
+          type="primary"
+          size="small"
+          v-action:edit
+          @click="handleEditType(record)"
+          ghost>
+          <a-icon type="edit"/>编辑</a-button>
+        <a-button
+          v-action:delete
+          type="danger"
+          size="small"
+          @click="confirmDeleteType(record)"
+          style="margin-left: 8px"
+          ghost>
+          <a-icon type="delete"/>删除</a-button>
       </a>
       <a-table
         slot="expandedRowRender"
@@ -65,8 +78,21 @@
         :rowKey="innerRowKey"
       >
         <a slot="operation" slot-scope="record">
-          <a href="javascript:;" v-action:edit @click="handleEditData(record)"><a-icon type="edit"/> 编辑  </a>
-          <a href="javascript:;" v-action:delete @click="confirmDeleteData(record)"><a-icon type="delete"/> 删除</a>
+          <a-button
+            type="primary"
+            size="small"
+            v-action:edit
+            @click="handleEditData(record)"
+            ghost>
+            <a-icon type="edit"/>编辑</a-button>
+          <a-button
+            v-action:delete
+            type="danger"
+            size="small"
+            @click="confirmDeleteData(record)"
+            style="margin-left: 8px"
+            ghost>
+            <a-icon type="delete"/>删除</a-button>
         </a>
       </a-table>
     </a-table>
@@ -145,7 +171,7 @@ export default {
     confirmDeleteType (record) {
       const self = this
       this.$confirm({
-        title: '字典类别存在下级数据时，仅超级管理员有权限一次性删除，请确认是否继续当前的操作？',
+        title: '字典删除属于不可逆操作，请确认是否继续？',
         okText: '继续',
         okType: 'danger',
         cancelText: '放弃',
@@ -168,7 +194,7 @@ export default {
     confirmDeleteData (record) {
       const self = this
       this.$confirm({
-        title: '内置数据字典仅超级管理员有权限删除，请确认是否继续当前的操作？',
+        title: '字典删除属于不可逆操作，请确认是否继续？',
         okText: '继续',
         okType: 'danger',
         cancelText: '放弃',

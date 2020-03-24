@@ -107,15 +107,19 @@
         <a-switch checkedChildren="启用" unCheckedChildren="禁用" :checked="text === '1'" @click="confirmChangeStatus(record)" />
       </span>
       <span slot="action" slot-scope="text, record">
-        <a href="javascript:;" v-action:edit @click="handleEdit(record)"><a-icon type="edit"/> 编辑</a>
+        <a-button
+          type="primary"
+          size="small"
+          v-action:edit
+          @click="handleEdit(record)"
+          ghost>
+          <a-icon type="edit"/>编辑</a-button>
         <a-dropdown v-action:edit>
           <a-menu slot="overlay">
             <a-menu-item v-action:reset @click="openResetModal(record)"><a-icon type="reload" />重置密码</a-menu-item>
             <a-menu-item v-action:delete @click="confirmDelete(record)"><a-icon type="delete" />删除用户</a-menu-item>
           </a-menu>
-          <a>
-            更多 <a-icon type="down" />
-          </a>
+          <a-button type="primary" size="small" style="margin-left: 8px" ghost> 更多 <a-icon type="down" /> </a-button>
         </a-dropdown>
       </span>
     </s-table>
@@ -439,7 +443,6 @@ const columns = [
   {
     title: '操作',
     dataIndex: 'action',
-    width: '150px',
     align: 'center',
     scopedSlots: { customRender: 'action' }
   }

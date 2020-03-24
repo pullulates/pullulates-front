@@ -54,7 +54,7 @@
           v-action:edit
           @click="handleEdit(record)"
           ghost>
-          <a-icon type="edit"/> 编辑</a-button>
+          <a-icon type="edit"/>编辑</a-button>
         <a-button
           v-if="record.parentId != '1'"
           v-action:delete
@@ -63,7 +63,7 @@
           @click="confirmDelete(record)"
           style="margin-left: 8px"
           ghost>
-          <a-icon type="delete"/> 删除</a-button>
+          <a-icon type="delete"/>删除</a-button>
       </span>
     </a-table>
     <add ref="Add" @ok="handleOk"/>
