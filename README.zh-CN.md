@@ -44,38 +44,38 @@ git clone https://github.com/pullulates/pullulates-vue.git
 
 > 用户登录
 
-![用户登录](https://note.youdao.com/yws/api/personal/file/WEB8e7c0aa8a246336118d99499ed755ff1?method=getImage&version=32&cstk=xT3j_Fd2)
+![用户登录](src/assets/demo/login.png)
 
 > 系统首页
 
-![系统首页](https://note.youdao.com/yws/api/personal/file/WEB5901a6b848a95df6657562411a5decf6?method=getImage&version=34&cstk=xT3j_Fd2 "系统首页")
+![系统首页](src/assets/demo/index.png)
 
 > 用户列表
 
-![用户列表](https://note.youdao.com/yws/api/personal/file/WEB4939f1b6b23de83c338e2c7be41b3e8b?method=getImage&version=17&cstk=xT3j_Fd2 "用户列表")
+![用户列表](src/assets/demo/users.png)
 
 > 用户新增
 
-![用户新增](https://note.youdao.com/yws/api/personal/file/WEB4f75b11c934afd479aae46039606a13d?method=getImage&version=25&cstk=xT3j_Fd2 "用户新增")
+![用户新增](src/assets/demo/useradd.png)
 
 > 用户编辑
 
-![用户编辑](https://note.youdao.com/yws/api/personal/file/WEB9160c116d693fbdbb3a353014c2def2c?method=getImage&version=18&cstk=xT3j_Fd2 "用户编辑")
+![用户编辑](src/assets/demo/useredit.png)
 
 > 角色列表
 
-![角色列表](https://note.youdao.com/yws/api/personal/file/WEBc2ce0141ab82fbed6e4af9b007f56743?method=getImage&version=23&cstk=xT3j_Fd2 "角色列表")
+![角色列表](src/assets/demo/roles.png)
 
 > 菜单列表
 
-![菜单列表](https://note.youdao.com/yws/api/personal/file/WEB30ed21293d7cbaf273ee433f085d64c9?method=getImage&version=33&cstk=xT3j_Fd2 "菜单列表")
+![菜单列表](src/assets/demo/menus.png)
 
 > 数据字典
 
-![数据字典](https://note.youdao.com/yws/api/personal/file/WEBce0349c0d3a2b90e604038e5fff2a02c?method=getImage&version=20&cstk=xT3j_Fd2 "数据字典")
+![数据字典](src/assets/demo/dicts.png)
 
 > 组织机构
 
-![组织机构](https://note.youdao.com/yws/api/personal/file/WEBd30ace7c2555783aca37d333e1b36690?method=getImage&version=24&cstk=xT3j_Fd2 "组织机构")
+![组织机构](src/assets/demo/orgs.png)
 
 ### End
