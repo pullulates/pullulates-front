@@ -97,7 +97,7 @@ const vueConfig = {
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
       '/pullulates_user_api': {
-        target: 'http://129.211.62.37:7600/user',
+        target: 'http://localhost:7600/user',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
@@ -105,7 +105,7 @@ const vueConfig = {
         }
       },
       '/pullulates_service_api': {
-        target: 'http://129.211.62.37:7600/service',
+        target: 'http://localhost:7600/service',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

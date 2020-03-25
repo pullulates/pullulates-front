@@ -87,7 +87,7 @@ export default {
   created () {
     this.$notification.info({
       message: 'PULLULATES CLOUD',
-      description: `${timeFix()}！账户：admin，密码：admin`
+      description: `${timeFix()}, 欢迎回来`
     })
   },
   methods: {
