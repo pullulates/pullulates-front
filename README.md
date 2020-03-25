@@ -19,8 +19,8 @@
 4. 此部分代码已开放,代码传送门：[pullulates-vue](https://github.com/pullulates/pullulates-vue "pullulates-vue")
 
 ## 项目体验
-#### 1.体验账号：admin/admin visitor/visitor
-#### 2.演示地址：[PULLULATES CLOUD](http://www.pullulate.top "PULLULATES CLOUD")
+#### 1.体验账号：superman/superman
+#### 2.演示地址：[PULLULATES CLOUD](http://129.211.62.37 "PULLULATES CLOUD")
 
 ## 如何使用
 
