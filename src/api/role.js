@@ -1,4 +1,4 @@
-import { PULLULATES_ROLE_URL } from './url/pullulates.user.url'
+import { PULLULATES_ROLE_URL } from './url/pullulates.url'
 import { axios } from '@/utils/request'
 
 /** 获取角色分页集合 */

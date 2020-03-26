@@ -96,20 +96,12 @@ const vueConfig = {
     port: 8000,
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
-      '/pullulates_user_api': {
-        target: 'http://localhost:7600/user',
+      '/pullulates_api': {
+        target: 'http://localhost:8088',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
-          '^/pullulates_user_api': ''
-        }
-      },
-      '/pullulates_service_api': {
-        target: 'http://localhost:7600/service',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/pullulates_service_api': ''
+          '^/pullulates_api': ''
         }
       }
     }

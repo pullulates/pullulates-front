@@ -1,6 +1,5 @@
 import api from './index'
-import { PULLULATES_USER_URL } from './url/pullulates.user.url'
-import { PULLULATES_SERVICE_URL } from './url/pullulates.service.url'
+import { PULLULATES_USER_URL, PULLULATES_GEETEST_URL } from './url/pullulates.url'
 import { axios } from '@/utils/request'
 
 export function login (parameter) {
@@ -38,7 +37,7 @@ export function logout () {
 
 export function requestGeetest () {
   return axios({
-    url: PULLULATES_SERVICE_URL.GEETEST_INIT,
+    url: PULLULATES_GEETEST_URL.GEETEST_INIT,
     method: 'get'
   })
 }

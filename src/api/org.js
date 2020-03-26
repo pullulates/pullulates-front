@@ -1,4 +1,4 @@
-import { PULLULATES_ORG_URL } from './url/pullulates.user.url'
+import { PULLULATES_ORG_URL } from './url/pullulates.url'
 import { axios } from '@/utils/request'
 
 /** 获取组织机构列表的树 */

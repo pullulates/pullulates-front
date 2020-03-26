@@ -1,4 +1,4 @@
-import { PULLULATES_DICT_URL } from './url/pullulates.user.url'
+import { PULLULATES_DICT_URL } from './url/pullulates.url'
 import { axios } from '@/utils/request'
 
 /** 获取字典类型集合 */

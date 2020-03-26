@@ -1,4 +1,4 @@
-import { PULLULATES_USER_URL } from './url/pullulates.user.url'
+import { PULLULATES_USER_URL } from './url/pullulates.url'
 import { axios } from '@/utils/request'
 
 /** 获取用户集合 */
