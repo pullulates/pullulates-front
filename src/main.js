@@ -1,0 +1,30 @@
+// ie polyfill
+import '@babel/polyfill'
+
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store/'
+import { VueAxios } from './utils/request'
+
+import './mock'
+
+import bootstrap from './core/bootstrap'
+import './core/use'
+import './permission'
+import './utils/filter'
+
+import Captcha from './components/Captcha/index'
+Vue.use(Captcha)
+
+Vue.config.productionTip = false
+
+// mount axios Vue.$http and this.$http
+Vue.use(VueAxios)
+
+new Vue({
+  router,
+  store,
+  created: bootstrap,
+  render: h => h(App)
+}).$mount('#app')
