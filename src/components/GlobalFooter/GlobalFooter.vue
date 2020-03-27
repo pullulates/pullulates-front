@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <div class="copyright">
-      <a-icon type="copyright" /> 2019 <span>PULLULATES CLOUD</span>
+      <a-icon type="copyright" /> 2020 <span>PULLULATES</span>
     </div>
   </div>
 </template>

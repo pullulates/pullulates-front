@@ -5,11 +5,11 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">PULLULATES CLOUD</span>
+            <span class="title">PULLULATES</span>
           </a>
         </div>
         <div class="desc">
-          PULLULATES CLOUD，前端框架：<a target="_blank" href="https://pro.loacg.com/docs/getting-started">ant design vue</a>
+          PULLULATES 后台管理系统，前端框架：<a target="_blank" href="https://pro.loacg.com/docs/getting-started">ant design vue</a>
         </div>
       </div>
 
@@ -22,7 +22,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          <a-icon type="copyright" /> 2019 PULLULATES CLOUD
+          <a-icon type="copyright" /> 2020 PULLULATES
         </div>
       </div>
     </div>

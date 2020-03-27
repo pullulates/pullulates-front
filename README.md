@@ -1,36 +1,50 @@
-# PULLULATES CLOUD
+# PULLULATES后台管理系统
 
 ## 项目介绍
 
-**PULLULATES CLOUD是一款微服务系统，包含pullulates-server和pullulates-vue两个部分**
-**项目仅包含一般管理系统的最基础部分，包括用户管理、角色管理、菜单管理、数据字典、组织机构管理，您可以在此基础上任意地添加自定义的功能**
+**PULLULATES是一款纯脚手架的后台管理系统，包含pullulates-admin和pullulates-front两个部分**
+**项目仅包含一般管理系统的最基础部分，包括用户管理、角色管理、菜单管理、数据字典、组织机构管理、日志管理、定时任务管理、代码生成、缓存管理，您可以在此基础上任意地添加自定义的功能**
 
-> pullulates-server
+> pullulates-admin
 
-1. pullulates-server使用spring cloud开发，集成了eureka、sleuth、config、ribbon、hystrix、zuul五大核心组件；
-2. 项目使用Idea工具开发，包集成了spring seurity、jwt、redis、mybatis、mysql、pagehelper等时下流行的技术或框架；
-3. 此部分因代码在维护升级中，暂不开源...
+1. pullulates-admin使用spring boot开发，开发工具为Idea，为Maven单体应用
+2. 集成spring security、JWT、redis完成用户登录和鉴权
+3. ORM采用mybatis，分页技术使用pagehelper
+4. 集成极验第三方验证码，快速、美观、实用
+5. 集成velocity，快速生成CRUD代码
+6. JDK1.8、MySQL5.6
+7. ...
 
-> pullulates-vue
+> pullulates-front
 
-1. pullulates-vue是项目的前端部分，开发语言为vue；
-2. 使用 vs code 工具开发，管理工具使用yarn；
+1. pullulates-vue是pullulates后台管理系统的前端部分，开发语言为vue
+2. 使用 vs code 工具开发，管理工具使用yarn
 3. 前端框架使用 [Ant Design of Vue](https://www.antdv.com/docs/vue/introduce-cn/ "a")
 4. 此部分代码已开放,代码传送门：[pullulates-vue](https://github.com/pullulates/pullulates-vue "pullulates-vue")
 
+> pullulates 2.0 规划
+
+1. 添加内容管理功能，开发pullulates门户网站
+2. 添加文档管理功能，实现一般办公文档的在线上传、下载、预览
+3. 添加移动端内容管理功能，实现多端通用的安卓、IOSAPP和微信支付宝QQ小程序
+4. ...
+
 ## 项目体验
 #### 1.体验账号：superman/superman
-#### 2.演示地址：[PULLULATES CLOUD](http://129.211.62.37 "PULLULATES CLOUD")
+#### 2.演示地址：[PULLULATES](http://129.211.62.37 "PULLULATES")
+
+## 沟通交流
+#### 1. 微信群聊： 暂无
 
 ## 如何使用
 
-#### pullulates-vue
+#### pullulates-front
 
 > 下载代码
 
 您可以使用git直接clone代码，也可以在登录后下载打包后的源码
 ```java
-git clone https://github.com/pullulates/pullulates-vue.git
+git clone https://github.com/pullulates/pullulates-front.git
 ```
 
 > 环境要求
