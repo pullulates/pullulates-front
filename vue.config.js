@@ -79,22 +79,14 @@ const vueConfig = {
     loaderOptions: {
       less: {
         modifyVars: {
-          // less vars，customize ant design theme
-
-          // 'primary-color': '#F5222D',
-          // 'link-color': '#F5222D',
-          // 'border-radius-base': '4px'
         },
-        // do not remove this line
         javascriptEnabled: true
       }
     }
   },
 
   devServer: {
-    // development server port 8000
     port: 8000,
-    // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
       '/pullulates_api': {
         target: 'http://localhost:8088',
@@ -106,11 +98,8 @@ const vueConfig = {
       }
     }
   },
-
-  // disable source map in production
   productionSourceMap: false,
   lintOnSave: undefined,
-  // babel-loader no-ignore node_modules/*
   transpileDependencies: []
 }
 
