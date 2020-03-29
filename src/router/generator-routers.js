@@ -21,6 +21,8 @@ const constantRouterComponents = {
   'Menu': () => import('@/views/menu/Menu'),
   'Org': () => import('@/views/org/Org'),
   'Dict': () => import('@/views/dict/Dict'),
+  'LoginLog': () => import('@/views/log/login/LoginLog'),
+  'OperLog': () => import('@/views/log/oper/OperLog'),
   // 工具管理
   'Gen': () => import('@/views/gen/Gen'),
 

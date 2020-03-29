@@ -63,6 +63,11 @@ export const PULLULATES_DICT_URL = {
   Dict_DeleteData: PULLULATES_BASE_URL + '/dicts/datas/delete'
 }
 
+export const PULLULATES_LOG_URL = {
+  Login_Log_Page: PULLULATES_BASE_URL + '/logs/login/page',
+  Oper_Log_Page: PULLULATES_BASE_URL + '/logs/oper/page'
+}
+
 export const PULLULATES_GEN_URL = {
   Gen_List: PULLULATES_BASE_URL + '/gens/list',
   Un_Imported_Table_List: PULLULATES_BASE_URL + '/gens/list/unimported',
