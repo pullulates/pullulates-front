@@ -37,6 +37,7 @@
       :columns="columns"
       :data="loadData"
     >
+      <a slot="detail" slot-scope="text, record" href="javascript:;" @click="handleDetail(record)">{{ text }}</a>
       <span slot="businessType" slot-scope="businessType">
         <a-tag :color="getDictCss(operTypes, businessType)">
           {{ getDictOption(operTypes, businessType) }}
@@ -48,6 +49,7 @@
         </a-tag>
       </span>
     </s-table>
+    <oper-log-detail ref="OperLogDetail"></oper-log-detail>
   </a-card>
 </template>
 
@@ -55,11 +57,13 @@
 import { getOperLogPage } from '@/api/log'
 import { getDictDataListByType } from '@/api/dict'
 import { STable } from '@/components'
+import OperLogDetail from './module/Detail'
 
 export default {
   name: 'OperLog',
   components: {
-    STable
+    STable,
+    OperLogDetail
   },
   data () {
     return {
@@ -90,6 +94,9 @@ export default {
         return res
       })
     },
+    handleDetail (record) {
+      this.$refs.OperLogDetail.show(record, this.operTypes, this.exceptionStatus)
+    },
     getDictOption (datas, param) {
       const result = datas.filter(item => item.dictValue === param)
       return result.length > 0 ? result[0].dictName : '未知'
@@ -110,7 +117,8 @@ const columns = [
   {
     title: '日志标题',
     align: 'center',
-    dataIndex: 'title'
+    dataIndex: 'title',
+    scopedSlots: { customRender: 'detail' }
   },
   {
     title: '操作类型',

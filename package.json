@@ -28,6 +28,7 @@
     "vue": "^2.6.10",
     "vue-clipboard2": "^0.2.1",
     "vue-cropper": "0.4.9",
+    "vue-json-views": "^1.1.0",
     "vue-ls": "^3.2.1",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.1.2",
