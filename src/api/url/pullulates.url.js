@@ -74,6 +74,11 @@ export const PULLULATES_GEN_URL = {
   Import_Tables: PULLULATES_BASE_URL + '/gens/import'
 }
 
+export const PULLULATES_QUARTZ_URL = {
+  Job_Page: PULLULATES_BASE_URL + '/jobs/page',
+  Job_Save: PULLULATES_BASE_URL + '/jobs/save'
+}
+
 export const PULLULATES_GEETEST_URL = {
   GEETEST_INIT: PULLULATES_BASE_URL + '/captcha/geetest/init'
 }

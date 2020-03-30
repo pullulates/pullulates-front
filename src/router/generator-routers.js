@@ -25,6 +25,7 @@ const constantRouterComponents = {
   'OperLog': () => import('@/views/log/oper/OperLog'),
   // 工具管理
   'Gen': () => import('@/views/gen/Gen'),
+  'Job': () => import('@/views/job/Job'),
 
   // exception
   'Exception403': () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
