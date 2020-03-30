@@ -4,6 +4,7 @@
     title="用户详细信息"
     :width="960"
     :visible="visible"
+    :footer="null"
     @cancel="handleCancel"
   >
     <a-spin :spinning="spinning">

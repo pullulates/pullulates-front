@@ -4,6 +4,7 @@
     title="操作日志详细信息"
     :width="960"
     :visible="visible"
+    :footer="null"
     @cancel="handleCancel"
   >
     <a-spin :spinning="spinning">
@@ -26,13 +27,13 @@
       </detail-list>
       <detail-list title="请求参数" size="small" :col="1">
         <json-view
-          :data="JSON.parse(record.operParam)"
+          :data="operParam"
           :deep="1">
         </json-view>
       </detail-list>
       <detail-list title="返回信息" size="small" :col="1">
         <json-view
-          :data="JSON.parse(record.jsonResult)"
+          :data="jsonResult"
           :deep="1">
         </json-view>
       </detail-list>
@@ -62,7 +63,9 @@ export default {
       spinning: false,
       record: '',
       operTypes: [],
-      exceptionStatus: []
+      exceptionStatus: [],
+      operParam: '',
+      jsonResult: ''
     }
   },
   created () {
@@ -74,6 +77,8 @@ export default {
       this.record = record
       this.operTypes = operTypes
       this.exceptionStatus = exceptionStatus
+      this.operParam = JSON.parse(record.operParam)
+      this.jsonResult = JSON.parse(record.jsonResult)
       this.spinning = false
     },
     handleCancel () {

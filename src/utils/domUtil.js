@@ -16,4 +16,4 @@ export const setDocumentTitle = function (title) {
   }
 }
 
-export const domTitle = 'PULLULATES CLOUD'
+export const domTitle = 'PULLULATES'
