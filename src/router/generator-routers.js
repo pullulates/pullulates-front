@@ -21,8 +21,10 @@ const constantRouterComponents = {
   'Menu': () => import('@/views/menu/Menu'),
   'Org': () => import('@/views/org/Org'),
   'Dict': () => import('@/views/dict/Dict'),
+  // 系统监控
   'LoginLog': () => import('@/views/log/login/LoginLog'),
   'OperLog': () => import('@/views/log/oper/OperLog'),
+  'Druid': () => import('@/views/druid/Druid'),
   // 工具管理
   'Gen': () => import('@/views/gen/Gen'),
   'Job': () => import('@/views/job/Job'),
