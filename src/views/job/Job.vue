@@ -38,22 +38,37 @@
           {{ getDictOption(jobStatus, status) }}
         </a-tag>
       </span>
+      <span slot="operation" slot-scope="text, record">
+        <a-button type="primary" size="small" v-action:edit @click="handleEdit(record)" ghost><a-icon type="edit"/> 编辑</a-button>
+        <a-dropdown v-action:edit>
+          <a-menu slot="overlay">
+            <a-menu-item v-if="record.status === '2'" v-action:excute @click="confirmExcute(record)"><a-icon type="caret-right" />执行</a-menu-item>
+            <a-menu-item v-if="record.status === '1'" v-action:pause @click="confirmPause(record)"><a-icon type="pause" />暂停</a-menu-item>
+            <a-menu-item v-action:excute @click="confirmExcuteAtonce(record)"><a-icon type="forward" />执行一次</a-menu-item>
+            <a-menu-item v-action:delete @click="confirmDelete(record)"><a-icon type="delete" />删除</a-menu-item>
+          </a-menu>
+          <a-button type="primary" size="small" style="margin-left: 8px" ghost> 更多 <a-icon type="down" /> </a-button>
+        </a-dropdown>
+      </span>
     </s-table>
     <add-job ref="AddJob" @ok="handleOk"></add-job>
+    <edit-job ref="EditJob" @ok="handleOk"></edit-job>
   </a-card>
 </template>
 
 <script>
-import { getJobPage } from '@/api/job'
+import { getJobPage, excuteJob, excuteJobAtonece, deleteJob, pauseJob } from '@/api/job'
 import { getDictDataListByType } from '@/api/dict'
 import { STable } from '@/components'
 import AddJob from './module/Add'
+import EditJob from './module/Edit'
 
 export default {
   name: 'Job',
   components: {
     STable,
-    AddJob
+    AddJob,
+    EditJob
   },
   data () {
     return {
@@ -83,6 +98,103 @@ export default {
     handleAdd () {
       this.$refs.AddJob.show(this.jobStatus)
     },
+    handleEdit (record) {
+      this.$refs.EditJob.show(record, this.jobStatus)
+    },
+    confirmExcute (record) {
+      const self = this
+      this.$confirm({
+        title: '确认执行该任务吗?',
+        okText: '是的',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleExcute(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleExcute (record) {
+      this.loading = true
+      excuteJob({ jobId: record.jobId }).then(res => {
+        this.callback(res)
+      })
+    },
+    confirmExcuteAtonce (record) {
+      const self = this
+      this.$confirm({
+        title: '确认立即执行一次该任务吗?',
+        okText: '是的',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleExcuteAtonce(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleExcuteAtonce (record) {
+      this.loading = true
+      excuteJobAtonece({ jobId: record.jobId }).then(res => {
+        this.callback(res)
+      })
+    },
+    confirmPause (record) {
+      const self = this
+      this.$confirm({
+        title: '确认暂停该任务吗?',
+        okText: '是的',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handlePause(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handlePause (record) {
+      this.loading = true
+      pauseJob({ jobId: record.jobId }).then(res => {
+        this.callback(res)
+      })
+    },
+    confirmDelete (record) {
+      const self = this
+      this.$confirm({
+        title: '确认删除该任务吗?',
+        okText: '是的',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleDelete(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleDelete (record) {
+      this.loading = true
+      deleteJob({ jobId: record.jobId }).then(res => {
+        this.callback(res)
+      })
+    },
+    callback (res) {
+      if (res.code === 200) {
+        this.$message.success(res.msg)
+        this.$refs.table.refresh(true)
+      } else {
+        this.$message.warning(res.msg)
+      }
+      this.loading = false
+      this.destroyAll()
+    },
     getDictOption (datas, param) {
       const result = datas.filter(item => item.dictValue === param)
       return result.length > 0 ? result[0].dictName : '未知'
@@ -93,6 +205,9 @@ export default {
     },
     handleOk () {
       this.$refs.table.refresh(true)
+    },
+    destroyAll () {
+      this.$destroyAll()
     }
   }
 }
@@ -139,6 +254,12 @@ const columns = [
     dataIndex: 'createTime',
     align: 'center',
     sorter: true
+  },
+  {
+    title: '操作',
+    dataIndex: 'operation',
+    align: 'center',
+    scopedSlots: { customRender: 'operation' }
   }
 ]
 </script>

@@ -76,7 +76,12 @@ export const PULLULATES_GEN_URL = {
 
 export const PULLULATES_QUARTZ_URL = {
   Job_Page: PULLULATES_BASE_URL + '/jobs/page',
-  Job_Save: PULLULATES_BASE_URL + '/jobs/save'
+  Job_Save: PULLULATES_BASE_URL + '/jobs/save',
+  Job_Update: PULLULATES_BASE_URL + '/jobs/update',
+  Job_Pause: PULLULATES_BASE_URL + '/jobs/pause',
+  Job_Excute: PULLULATES_BASE_URL + '/jobs/excute',
+  Job_Excute_Atonce: PULLULATES_BASE_URL + '/jobs/excute/atonce',
+  Job_Delete: PULLULATES_BASE_URL + '/jobs/delete'
 }
 
 export const PULLULATES_GEETEST_URL = {

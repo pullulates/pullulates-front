@@ -78,7 +78,7 @@ export default {
       this.operTypes = operTypes
       this.exceptionStatus = exceptionStatus
       this.operParam = JSON.parse(record.operParam)
-      this.jsonResult = record.jsonResult ? [] : JSON.parse(record.jsonResult)
+      this.jsonResult = record.jsonResult !== 'null' ? JSON.parse(record.jsonResult) : []
       this.spinning = false
     },
     handleCancel () {
