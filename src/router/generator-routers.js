@@ -16,18 +16,19 @@ const constantRouterComponents = {
   // 'Workplace': () => import('@/views/dashboard/Workplace'),
   'Analysis': () => import('@/views/dashboard/Analysis'),
   // 系统管理
-  'User': () => import('@/views/user/User'),
-  'Role': () => import('@/views/role/Role'),
-  'Menu': () => import('@/views/menu/Menu'),
-  'Org': () => import('@/views/org/Org'),
-  'Dict': () => import('@/views/dict/Dict'),
+  'User': () => import('@/views/admin/user/User'),
+  'Role': () => import('@/views/admin/role/Role'),
+  'Menu': () => import('@/views/admin/menu/Menu'),
+  'Org': () => import('@/views/admin/org/Org'),
+  'Dict': () => import('@/views/admin/dict/Dict'),
   // 系统监控
-  'LoginLog': () => import('@/views/log/login/LoginLog'),
-  'OperLog': () => import('@/views/log/oper/OperLog'),
-  'Druid': () => import('@/views/druid/Druid'),
+  'LoginLog': () => import('@/views/monitor/log/login/LoginLog'),
+  'OperLog': () => import('@/views/monitor/log/oper/OperLog'),
+  'Druid': () => import('@/views/monitor/druid/Druid'),
+  'OnlineUser': () => import('@/views/monitor/user/OnlineUser'),
   // 工具管理
-  'Gen': () => import('@/views/gen/Gen'),
-  'Job': () => import('@/views/job/Job'),
+  'Gen': () => import('@/views/tool/gen/Gen'),
+  'Job': () => import('@/views/tool/job/Job'),
 
   // exception
   'Exception403': () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),

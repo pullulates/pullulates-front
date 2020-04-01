@@ -12,7 +12,8 @@ export const PULLULATES_USER_URL = {
   Batch_Change_User_Status: PULLULATES_BASE_URL + '/users/batch-update/status',
   Reset_Password: PULLULATES_BASE_URL + '/users/update/reset-password',
   Delete_User: PULLULATES_BASE_URL + '/users/delete',
-  Batch_Delete_User: PULLULATES_BASE_URL + '/users/batch-delete'
+  Batch_Delete_User: PULLULATES_BASE_URL + '/users/batch-delete',
+  Online_User: PULLULATES_BASE_URL + '/users/online'
 }
 
 export const PULLULATES_ROLE_URL = {

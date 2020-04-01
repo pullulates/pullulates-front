@@ -10,6 +10,15 @@ export function getUserList (parameter) {
   })
 }
 
+/** 获取在线用户集合 */
+export function getOnlineUserList (parameter) {
+  return axios({
+    url: PULLULATES_USER_URL.Online_User,
+    method: 'get',
+    data: parameter
+  })
+}
+
 /** 保存新的用户 */
 export function saveUser (parameter) {
   return axios({
