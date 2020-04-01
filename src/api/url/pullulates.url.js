@@ -72,7 +72,8 @@ export const PULLULATES_LOG_URL = {
 export const PULLULATES_GEN_URL = {
   Gen_List: PULLULATES_BASE_URL + '/gens/list',
   Un_Imported_Table_List: PULLULATES_BASE_URL + '/gens/list/unimported',
-  Import_Tables: PULLULATES_BASE_URL + '/gens/import'
+  Import_Tables: PULLULATES_BASE_URL + '/gens/import',
+  Preview_Codes: PULLULATES_BASE_URL + '/gens/preview'
 }
 
 export const PULLULATES_QUARTZ_URL = {

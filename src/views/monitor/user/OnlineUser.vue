@@ -10,7 +10,7 @@
     >
       <span slot="sex" slot-scope="sex">
         <a-tag :color="getDictCss(sexs, sex)">
-          {{ getDictOption(sexs, result) }}
+          {{ getDictOption(sexs, sex) }}
         </a-tag>
       </span>
     </s-table>

@@ -27,3 +27,12 @@ export function importTables (parameter) {
     data: parameter
   })
 }
+
+/** 预览代码 */
+export function previewCodes (parameter) {
+  return axios({
+    url: PULLULATES_GEN_URL.Preview_Codes,
+    method: 'get',
+    data: parameter
+  })
+}

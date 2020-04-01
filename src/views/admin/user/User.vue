@@ -324,7 +324,7 @@ export default {
       this.$confirm({
         title: '确认批量删除已选用户吗?',
         onOk () {
-          self.handleBatchDelete(status)
+          self.handleBatchDelete()
         },
         onCancel () {
           self.destroyAll()

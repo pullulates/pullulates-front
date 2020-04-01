@@ -33,18 +33,20 @@
         <a-button
           type="primary"
           size="small"
-          v-action:edit
-          @click="handleEdit(record)"
+          v-action:preview
+          @click="handlePreview(record)"
           ghost>
-          <a-icon type="edit"/>编辑</a-button>
+          <a-icon type="eye"/>预览</a-button>
       </span>
     </s-table>
     <import-table-list ref="ImportTableList" @cancle="handleCancle" @ok="handleOk"/>
+    <preview-code ref="PreviewCode" />
   </a-card>
 </template>
 
 <script>
 import ImportTableList from './module/ImportTables'
+import PreviewCode from './module/Preview'
 import { getGensList } from '@/api/gen'
 import { STable } from '@/components'
 
@@ -52,7 +54,8 @@ export default {
   name: 'GenList',
   components: {
     STable,
-    ImportTableList
+    ImportTableList,
+    PreviewCode
   },
   data () {
     return {
@@ -76,7 +79,8 @@ export default {
         return res
       })
     },
-    handleEdit (record) {
+    handlePreview (record) {
+      this.$refs.PreviewCode.show(record.tableId)
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
@@ -106,10 +110,6 @@ const columns = [
   {
     title: 'Domain',
     dataIndex: 'className'
-  },
-  {
-    title: '模板类型',
-    dataIndex: 'tplCategory'
   },
   {
     title: '包名',
