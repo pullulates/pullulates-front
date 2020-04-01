@@ -11,6 +11,11 @@ const service = axios.create({
   timeout: 6000
 })
 
+export const noFilterResAxios = axios.create({
+  baseURL: process.env.VUE_APP_API_BASE_URL,
+  timeout: 6000
+})
+
 const err = (error) => {
   if (error.response) {
     const data = error.response.data
@@ -63,6 +68,22 @@ const err = (error) => {
 }
 
 service.interceptors.request.use(config => {
+  const token = Vue.ls.get(ACCESS_TOKEN)
+  if (token) {
+    config.headers['PULLULATES-TOKEN'] = token
+  }
+  if (config.method === 'get' || config.method === 'delete') {
+    config.params = config.data
+    config.paramsSerializer = function (params) {
+      return Qs.stringify(params, { arrayFormat: 'repeat' })
+    }
+  } else if (config.method === 'post' || config.method === 'put') {
+    config.data = Qs.stringify(config.data)
+  }
+  return config
+}, err)
+
+noFilterResAxios.interceptors.request.use(config => {
   const token = Vue.ls.get(ACCESS_TOKEN)
   if (token) {
     config.headers['PULLULATES-TOKEN'] = token

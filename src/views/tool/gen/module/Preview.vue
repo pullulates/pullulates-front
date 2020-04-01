@@ -1,11 +1,11 @@
 <template>
   <a-modal
     :visible="visible"
-    :width="1000"
-    bodyStyle="height: 700px;overflow-y:scroll;"
+    :width="1200"
+    :bodyStyle="bodyStyle"
     :footer="null"
-    destroyOnClose="true"
-    @ok="handleOk"
+    :destroyOnClose="true"
+    @cancel="handleCancel"
   >
     <a-tabs @change="callback" v-if="codes" tabPosition="left">
       <a-tab-pane :tab="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))" v-for="(value, key) in codes" :key="key"><pre>{{ value }}</pre></a-tab-pane>
@@ -19,7 +19,11 @@ export default {
   data () {
     return {
       visible: false,
-      codes: null
+      codes: null,
+      bodyStyle: {
+        'height': '700px',
+        'overflow-y': 'scroll'
+      }
     }
   },
   methods: {
@@ -29,12 +33,10 @@ export default {
       })
       this.visible = true
     },
-    handleOk (e) {
-      console.log(e)
+    handleCancel () {
       this.visible = false
     },
-    callback (key) {
-      console.log(key)
+    callback () {
     }
   }
 }

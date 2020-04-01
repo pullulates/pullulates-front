@@ -1,5 +1,5 @@
 import { PULLULATES_GEN_URL } from './url/pullulates.url'
-import { axios } from '@/utils/request'
+import { axios, noFilterResAxios } from '@/utils/request'
 
 /** 获取已导入表集合 */
 export function getGensList (parameter) {
@@ -33,6 +33,42 @@ export function previewCodes (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Preview_Codes,
     method: 'get',
+    data: parameter
+  })
+}
+
+/** 批量删除已导入的表 */
+export function deleteTable (parameter) {
+  return axios({
+    url: PULLULATES_GEN_URL.Delete_Table,
+    method: 'delete',
+    data: parameter
+  })
+}
+
+/** 批量删除已导入的表 */
+export function batchDeleteTable (parameter) {
+  return axios({
+    url: PULLULATES_GEN_URL.Batch_Delete_Table,
+    method: 'get',
+    data: parameter
+  })
+}
+
+/** 下载代码 */
+export function download (parameter) {
+  return noFilterResAxios({
+    url: PULLULATES_GEN_URL.Download,
+    method: 'post',
+    data: parameter
+  })
+}
+
+/** 批量下载代码 */
+export function batchDownload (parameter) {
+  return noFilterResAxios({
+    url: PULLULATES_GEN_URL.Batch_Download,
+    method: 'post',
     data: parameter
   })
 }

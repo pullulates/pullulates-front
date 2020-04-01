@@ -18,7 +18,24 @@
       </a-form>
     </div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus" v-action:import @click="$refs.ImportTableList.show()">导入</a-button>
+      <a-button v-action:import type="primary" icon="plus" @click="$refs.ImportTableList.show()">导入</a-button>
+      <a-button
+        v-action:download
+        icon="download"
+        v-if="selectedRowKeys.length > 0"
+        :loading="waiting"
+        @click="confirmBatchDownload()">
+        下载
+      </a-button>
+      <a-button
+        v-action:delete
+        type="danger"
+        icon="delete"
+        v-if="selectedRowKeys.length > 0"
+        :loading="waiting"
+        @click="confirmBatchDelete()">
+        删除
+      </a-button>
     </div>
     <s-table
       ref="table"
@@ -36,10 +53,34 @@
           v-action:preview
           @click="handlePreview(record)"
           ghost>
-          <a-icon type="eye"/>预览</a-button>
+          <a-icon type="eye"/>
+          预览
+        </a-button>
+        <a-button
+          type="primary"
+          size="small"
+          v-action:download
+          @click="confirmDownload(record)"
+          style="margin-left: 8px"
+          :loading="waiting"
+          ghost>
+          <a-icon type="download"/>
+          下载
+        </a-button>
+        <a-button
+          type="danger"
+          size="small"
+          v-action:delete
+          @click="confirmDelete(record)"
+          style="margin-left: 8px"
+          :loading="waiting"
+          ghost>
+          <a-icon type="delete"/>
+          删除
+        </a-button>
       </span>
     </s-table>
-    <import-table-list ref="ImportTableList" @cancle="handleCancle" @ok="handleOk"/>
+    <import-table-list ref="ImportTableList" @cancle="handleRefresh" @ok="handleRefresh"/>
     <preview-code ref="PreviewCode" />
   </a-card>
 </template>
@@ -47,8 +88,9 @@
 <script>
 import ImportTableList from './module/ImportTables'
 import PreviewCode from './module/Preview'
-import { getGensList } from '@/api/gen'
+import { getGensList, batchDeleteTable, deleteTable, download, batchDownload } from '@/api/gen'
 import { STable } from '@/components'
+import { resolveBlob, mimeMap } from '@/utils/download'
 
 export default {
   name: 'GenList',
@@ -61,6 +103,7 @@ export default {
     return {
       description: '使用场景：代码生成可自动生成某个业务功能的基本CRUD代码，大量减少重复劳动，提升开发效率。',
       loading: true,
+      waiting: false,
       queryParam: {
       },
       columns,
@@ -71,8 +114,6 @@ export default {
       }
     }
   },
-  created () {
-  },
   methods: {
     getGens (parameter) {
       return getGensList(Object.assign(parameter, this.queryParam)).then(res => {
@@ -82,14 +123,111 @@ export default {
     handlePreview (record) {
       this.$refs.PreviewCode.show(record.tableId)
     },
+    confirmDelete (record) {
+      const self = this
+      this.$confirm({
+        title: '确认继续删除已导入的表吗？',
+        okText: '继续',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleDelete(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleDelete (record) {
+      this.waiting = true
+      deleteTable({ tableId: record.tableId }).then(res => {
+        this.callback(res)
+        this.waiting = false
+      })
+    },
+    confirmDownload (record) {
+      const self = this
+      this.$confirm({
+        title: '确认下载该表的代码吗？',
+        okText: '继续',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleDownload(record)
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleDownload (record) {
+      this.waiting = true
+      download({ tableName: record.tableName }).then(res => {
+        resolveBlob(res, mimeMap.zip)
+        this.waiting = false
+      })
+    },
+    confirmBatchDelete () {
+      const self = this
+      this.$confirm({
+        title: '确认继续删除已导入的表吗？',
+        okText: '继续',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleBatchDelete()
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleBatchDelete () {
+      this.waiting = true
+      batchDeleteTable({ tableIds: this.selectedRowKeys }).then(res => {
+        this.callback(res)
+        this.waiting = false
+      })
+    },
+    confirmBatchDownload () {
+      const self = this
+      this.$confirm({
+        title: '确认下载已选表的代码吗？',
+        okText: '继续',
+        okType: 'danger',
+        cancelText: '放弃',
+        onOk () {
+          self.handleBatchDownload()
+        },
+        onCancel () {
+          self.destroyAll()
+        }
+      })
+    },
+    handleBatchDownload () {
+      this.waiting = true
+      var tableNames = []
+      this.selectedRows.forEach(row => tableNames.push(row.tableName))
+      batchDownload({ tableNames: tableNames.join(',') }).then(res => {
+        resolveBlob(res, mimeMap.zip)
+        this.waiting = false
+      })
+    },
+    callback (res) {
+      if (res.code === 200) {
+        this.$message.success(res.msg)
+        this.selectedRowKeys = []
+        this.handleRefresh()
+      } else {
+        this.$message.warning(res.msg)
+      }
+      this.destroyAll()
+    },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    handleOk () {
-      this.$refs.table.refresh(true)
-    },
-    handleCancle () {
+    handleRefresh () {
       this.$refs.table.refresh(true)
     },
     destroyAll () {

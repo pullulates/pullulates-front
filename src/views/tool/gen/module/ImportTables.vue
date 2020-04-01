@@ -3,7 +3,7 @@
     title="导入表"
     :width="1000"
     :visible="visible"
-    @ok="handleCancle"
+    :footer="null"
     @cancel="handleCancle"
   >
     <div class="table-page-search-wrapper">
@@ -18,6 +18,7 @@
             <span class="table-page-search-submitButtons">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+              <a-button type="primary" v-if="selectedRowKeys.length > 0" :loading="loading" style="margin-left: 8px" @click="handleBatchImport()">批量导入</a-button>
             </span>
           </a-col>
         </a-row>
@@ -37,6 +38,7 @@
           type="primary"
           size="small"
           v-action:edit
+          :loading="loading"
           @click="handleImport(record)"
           ghost>
           <a-icon type="download"/>导入</a-button>
@@ -83,6 +85,7 @@ export default {
       })
     },
     handleImport (record) {
+      this.loading = true
       const tableNames = [record.tableName].join(',')
       importTables({ tableNames: tableNames }).then(res => {
         if (res.code === 200) {
@@ -91,6 +94,21 @@ export default {
         } else {
           this.$message.warning(res.msg)
         }
+        this.loading = false
+      })
+    },
+    handleBatchImport () {
+      this.loading = true
+      var tableNames = []
+      this.selectedRows.forEach(row => tableNames.push(row.tableName))
+      importTables({ tableNames: tableNames.join(',') }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.msg)
+          this.$refs.table.refresh(true)
+        } else {
+          this.$message.warning(res.msg)
+        }
+        this.loading = false
       })
     },
     onSelectChange (selectedRowKeys, selectedRows) {

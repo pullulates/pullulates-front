@@ -73,7 +73,11 @@ export const PULLULATES_GEN_URL = {
   Gen_List: PULLULATES_BASE_URL + '/gens/list',
   Un_Imported_Table_List: PULLULATES_BASE_URL + '/gens/list/unimported',
   Import_Tables: PULLULATES_BASE_URL + '/gens/import',
-  Preview_Codes: PULLULATES_BASE_URL + '/gens/preview'
+  Preview_Codes: PULLULATES_BASE_URL + '/gens/preview',
+  Batch_Delete_Table: PULLULATES_BASE_URL + '/gens/delete/batch',
+  Delete_Table: PULLULATES_BASE_URL + '/gens/delete',
+  Download: PULLULATES_BASE_URL + '/gens/download',
+  Batch_Download: PULLULATES_BASE_URL + '/gens/download/batch'
 }
 
 export const PULLULATES_QUARTZ_URL = {
