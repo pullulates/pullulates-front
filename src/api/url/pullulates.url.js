@@ -74,6 +74,7 @@ export const PULLULATES_GEN_URL = {
   Un_Imported_Table_List: PULLULATES_BASE_URL + '/gens/list/unimported',
   Import_Tables: PULLULATES_BASE_URL + '/gens/import',
   Preview_Codes: PULLULATES_BASE_URL + '/gens/preview',
+  Update_Table: PULLULATES_BASE_URL + '/gens/update',
   Batch_Delete_Table: PULLULATES_BASE_URL + '/gens/delete/batch',
   Delete_Table: PULLULATES_BASE_URL + '/gens/delete',
   Download: PULLULATES_BASE_URL + '/gens/download',

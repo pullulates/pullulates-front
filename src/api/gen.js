@@ -28,6 +28,15 @@ export function importTables (parameter) {
   })
 }
 
+/** 修改生成信息 */
+export function updateTable (parameter) {
+  return axios({
+    url: PULLULATES_GEN_URL.Update_Table,
+    method: 'put',
+    data: parameter
+  })
+}
+
 /** 预览代码 */
 export function previewCodes (parameter) {
   return axios({
@@ -59,8 +68,9 @@ export function batchDeleteTable (parameter) {
 export function download (parameter) {
   return noFilterResAxios({
     url: PULLULATES_GEN_URL.Download,
-    method: 'post',
-    data: parameter
+    method: 'get',
+    data: parameter,
+    responseType: 'blob'
   })
 }
 
@@ -68,7 +78,8 @@ export function download (parameter) {
 export function batchDownload (parameter) {
   return noFilterResAxios({
     url: PULLULATES_GEN_URL.Batch_Download,
-    method: 'post',
-    data: parameter
+    method: 'get',
+    data: parameter,
+    responseType: 'blob'
   })
 }

@@ -60,6 +60,17 @@
           type="primary"
           size="small"
           v-action:download
+          @click="$refs.EditTable.show(record)"
+          style="margin-left: 8px"
+          :loading="waiting"
+          ghost>
+          <a-icon type="edit"/>
+          编辑
+        </a-button>
+        <a-button
+          type="primary"
+          size="small"
+          v-action:download
           @click="confirmDownload(record)"
           style="margin-left: 8px"
           :loading="waiting"
@@ -82,12 +93,14 @@
     </s-table>
     <import-table-list ref="ImportTableList" @cancle="handleRefresh" @ok="handleRefresh"/>
     <preview-code ref="PreviewCode" />
+    <edit-table ref="EditTable" />
   </a-card>
 </template>
 
 <script>
 import ImportTableList from './module/ImportTables'
 import PreviewCode from './module/Preview'
+import EditTable from './module/Edit'
 import { getGensList, batchDeleteTable, deleteTable, download, batchDownload } from '@/api/gen'
 import { STable } from '@/components'
 import { resolveBlob, mimeMap } from '@/utils/download'
@@ -97,6 +110,7 @@ export default {
   components: {
     STable,
     ImportTableList,
+    EditTable,
     PreviewCode
   },
   data () {
@@ -165,6 +179,9 @@ export default {
       download({ tableName: record.tableName }).then(res => {
         resolveBlob(res, mimeMap.zip)
         this.waiting = false
+      }).catch(err => {
+        this.$message.warning('系统异常，错误信息：' + err)
+        this.waiting = false
       })
     },
     confirmBatchDelete () {
@@ -210,6 +227,9 @@ export default {
       this.selectedRows.forEach(row => tableNames.push(row.tableName))
       batchDownload({ tableNames: tableNames.join(',') }).then(res => {
         resolveBlob(res, mimeMap.zip)
+        this.waiting = false
+      }).catch(err => {
+        this.$message.warning('系统异常，错误信息：' + err)
         this.waiting = false
       })
     },
