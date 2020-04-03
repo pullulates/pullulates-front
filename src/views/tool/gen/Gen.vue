@@ -93,7 +93,7 @@
     </s-table>
     <import-table-list ref="ImportTableList" @cancle="handleRefresh" @ok="handleRefresh"/>
     <preview-code ref="PreviewCode" />
-    <edit-table ref="EditTable" />
+    <edit-table ref="EditTable" @ok="handleRefresh"/>
   </a-card>
 </template>
 

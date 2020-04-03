@@ -33,7 +33,9 @@ export function updateTable (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Update_Table,
     method: 'put',
-    data: parameter
+    data: parameter,
+    contentType: 'application/json; charset=utf-8',
+    dataType: 'json'
   })
 }
 
@@ -81,5 +83,14 @@ export function batchDownload (parameter) {
     method: 'get',
     data: parameter,
     responseType: 'blob'
+  })
+}
+
+/** 查询表的字段集合 */
+export function getColumnList (parameter) {
+  return axios({
+    url: PULLULATES_GEN_URL.Column_List,
+    method: 'get',
+    data: parameter
   })
 }

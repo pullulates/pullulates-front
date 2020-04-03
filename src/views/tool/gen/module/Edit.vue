@@ -1,9 +1,11 @@
 <template>
   <a-modal
     title="编辑生成信息"
-    :width="1200"
+    width="80%"
     :visible="visible"
+    :bodyStyle="bodyStyle"
     :confirmLoading="confirmLoading"
+    :destroyOnClose="true"
     @ok="handleSubmit"
     @cancel="handleCancel"
   >
@@ -123,7 +125,76 @@
         </div>
       </a-tab-pane>
       <a-tab-pane tab="字段信息" key="2" forceRender>
-          
+        <a-table
+          :columns="columns"
+          :dataSource="datas"
+          :pagination="false"
+          rowKey="columnId"
+        >
+          <template slot="javaField" slot-scope="text, record">
+            <a-input
+              key="javaField"
+              :value="text"
+              @change="e => handleChange(e.target.value, record.columnId, 'javaField')"
+            />
+          </template>
+          <template slot="javaType" slot-scope="text, record">
+            <a-select :value="text" style="width:120%" @change="e => handleChange(e, record.columnId, 'javaType')">
+              <a-select-option value="Long">Long</a-select-option>
+              <a-select-option value="String">String</a-select-option>
+              <a-select-option value="Ingeter">Ingeter</a-select-option>
+              <a-select-option value="Double">Double</a-select-option>
+              <a-select-option value="BigDecimal">BigDecimal</a-select-option>
+              <a-select-option value="Date">Date</a-select-option>
+            </a-select>
+          </template>
+          <template slot="columnComment" slot-scope="text, record">
+            <a-input
+              key="columnComment"
+              :value="text"
+              @change="e => handleChange(e.target.value, record.columnId, 'columnComment')"
+            />
+          </template>
+          <template v-for="(col, i) in ['isInsert','isEdit','isList','isQuery','isRequired']" :slot="col" slot-scope="text, record">
+            <a-checkbox :key="col" :defaultChecked="text === '1'" @change="e => handleChange(e.target.checked?'1':'2', record.columnId, col)"></a-checkbox>
+          </template>
+          <template slot="queryType" slot-scope="text, record">
+            <a-select :value="text" style="width: 120%" @change="e => handleChange(e, record.columnId, 'queryType')">
+              <a-select-option value="EQ">=</a-select-option>
+              <a-select-option value="NE">!=</a-select-option>
+              <a-select-option value="GT">&gt;</a-select-option>
+              <a-select-option value="GTE">&gt;=</a-select-option>
+              <a-select-option value="LT">&gt;</a-select-option>
+              <a-select-option value="LTE">&gt;=</a-select-option>
+              <a-select-option value="LIKE">LIKE</a-select-option>
+              <a-select-option value="BETWEEN">BETWEEN</a-select-option>
+            </a-select>
+          </template>
+          <template slot="htmlType" slot-scope="text, record">
+            <a-select :value="text" style="width: 100%" @change="e => handleChange(e, record.columnId, 'htmlType')">
+              <a-select-option value="input">文本框</a-select-option>
+              <a-select-option value="textarea">文本域</a-select-option>
+              <a-select-option value="select">下拉框</a-select-option>
+              <a-select-option value="radio">单选框</a-select-option>
+              <a-select-option value="checkbox">复选框</a-select-option>
+              <a-select-option value="datetime">日期控件</a-select-option>
+            </a-select>
+          </template>
+          <template slot="dictType" slot-scope="text, record">
+            <a-select
+              showSearch
+              optionFilterProp="children"
+              :filterOption="filterOption"
+              style="width: 100px"
+              :value="text"
+              @change="e => handleChange(e, record.columnId, 'dictType')"
+            >
+              <a-select-option v-for="item in dictTypeOptions" :value="item.dictType" :key="item.dictType">
+                {{ item.dictName }}
+              </a-select-option>
+            </a-select>
+          </template>
+        </a-table>
       </a-tab-pane>
     </a-tabs>
   </a-modal>
@@ -131,7 +202,9 @@
 
 <script>
 import pick from 'lodash.pick'
-import { updateTable } from '@/api/gen'
+import { updateTable, getColumnList } from '@/api/gen'
+import { getDictTypeList } from '@/api/dict'
+
 export default {
   name: 'EditTable',
   data () {
@@ -147,8 +220,18 @@ export default {
         xs: { span: 24 },
         sm: { span: 12 }
       },
-      mdl: {}
+      bodyStyle: {
+        'height': '700px',
+        'overflow-y': 'scroll'
+      },
+      mdl: {},
+      datas: [],
+      columns,
+      dictTypeOptions: []
     }
+  },
+  created () {
+    this.getDictTypes()
   },
   methods: {
     show (record) {
@@ -156,6 +239,9 @@ export default {
       this.visible = !this.visible
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'tableId', 'tableName', 'tableComment', 'className', 'packageName', 'moduleName', 'businessName', 'functionName', 'functionAuthor', 'pkColumn'))
+      })
+      getColumnList({ tableId: this.mdl.tableId }).then(res => {
+        this.datas = res.data
       })
     },
     handleCancel () {
@@ -167,7 +253,9 @@ export default {
       const { form: { validateFields } } = this
       validateFields((errors, values) => {
         if (!errors) {
-          updateTable(values).then(res => {
+          const genTable = Object.assign({}, values)
+          genTable.columns = this.datas
+          updateTable(genTable).then(res => {
             if (res.code === 200) {
               this.$message.success(res.msg)
               this.$emit('ok', values)
@@ -183,10 +271,107 @@ export default {
         }
       })
     },
+    handleChange (value, columnId, key) {
+      const newDatas = [...this.datas]
+      const row = newDatas.filter(item => columnId === item.columnId)[0]
+      if (row) {
+        row[key] = value
+        this.datas = newDatas
+      }
+    },
+    getDictTypes () {
+      getDictTypeList().then(res => {
+        this.dictTypeOptions = res.data
+      })
+    },
+    filterOption (input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      )
+    },
     callback (key) {
     }
   }
 }
+
+const columns = [
+  {
+    title: '字段名称',
+    dataIndex: 'columnName',
+    key: 'columnName'
+  },
+  {
+    title: '变量名称',
+    dataIndex: 'javaField',
+    key: 'javaField',
+    scopedSlots: { customRender: 'javaField' }
+  },
+  {
+    title: '字段类型',
+    dataIndex: 'columnType',
+    scopedSlots: { customRender: 'columnType' }
+  },
+  {
+    title: '变量类型',
+    dataIndex: 'javaType',
+    key: 'javaType',
+    scopedSlots: { customRender: 'javaType' }
+  },
+  {
+    title: '变量注释',
+    dataIndex: 'columnComment',
+    key: 'columnComment',
+    scopedSlots: { customRender: 'columnComment' }
+  },
+  {
+    title: '添加',
+    dataIndex: 'isInsert',
+    key: 'isInsert',
+    scopedSlots: { customRender: 'isInsert' }
+  },
+  {
+    title: '编辑',
+    dataIndex: 'isEdit',
+    key: 'isEdit',
+    scopedSlots: { customRender: 'isEdit' }
+  },
+  {
+    title: '列表',
+    dataIndex: 'isList',
+    key: 'isList',
+    scopedSlots: { customRender: 'isList' }
+  },
+  {
+    title: '查询',
+    dataIndex: 'isQuery',
+    key: 'isQuery',
+    scopedSlots: { customRender: 'isQuery' }
+  },
+  {
+    title: '查询方式',
+    dataIndex: 'queryType',
+    key: 'queryType',
+    scopedSlots: { customRender: 'queryType' }
+  },
+  {
+    title: '必填',
+    dataIndex: 'isRequired',
+    key: 'isRequired',
+    scopedSlots: { customRender: 'isRequired' }
+  },
+  {
+    title: '显示类型',
+    dataIndex: 'htmlType',
+    key: 'htmlType',
+    scopedSlots: { customRender: 'htmlType' }
+  },
+  {
+    title: '字典类型',
+    dataIndex: 'dictType',
+    key: 'dictType',
+    scopedSlots: { customRender: 'dictType' }
+  }
+]
 </script>
 
 <style lang="less" scoped>

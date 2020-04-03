@@ -78,7 +78,8 @@ export const PULLULATES_GEN_URL = {
   Batch_Delete_Table: PULLULATES_BASE_URL + '/gens/delete/batch',
   Delete_Table: PULLULATES_BASE_URL + '/gens/delete',
   Download: PULLULATES_BASE_URL + '/gens/download',
-  Batch_Download: PULLULATES_BASE_URL + '/gens/download/batch'
+  Batch_Download: PULLULATES_BASE_URL + '/gens/download/batch',
+  Column_List: PULLULATES_BASE_URL + '/gens/column/list'
 }
 
 export const PULLULATES_QUARTZ_URL = {
