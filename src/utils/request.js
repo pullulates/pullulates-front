@@ -6,6 +6,8 @@ import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import Qs from 'qs'
 
+axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+
 const service = axios.create({
   baseURL: process.env.VUE_APP_API_BASE_URL,
   timeout: 6000
@@ -27,15 +29,20 @@ const err = (error) => {
       })
     }
     if (error.response.status === 401) {
-      notification.error({
-        message: '提示',
-        description: '权限不足，请先登录'
-      })
       if (token) {
+        notification.error({
+          message: '警告',
+          description: '你尚未登录或登录信息已经失效，准备为您跳转至登录页面，请稍等...'
+        })
         store.dispatch('Logout').then(() => {
           setTimeout(() => {
             window.location.reload()
           }, 1500)
+        })
+      } else {
+        notification.error({
+          message: '警告',
+          description: '未拥有该权限，请联系帅气的管理员'
         })
       }
     }
@@ -71,14 +78,6 @@ service.interceptors.request.use(config => {
   const token = Vue.ls.get(ACCESS_TOKEN)
   if (token) {
     config.headers['PULLULATES-TOKEN'] = token
-  }
-  if (config.method === 'get' || config.method === 'delete') {
-    config.params = config.data
-    config.paramsSerializer = function (params) {
-      return Qs.stringify(params, { arrayFormat: 'repeat' })
-    }
-  } else if (config.method === 'post' || config.method === 'put') {
-    config.data = Qs.stringify(config.data)
   }
   return config
 }, err)

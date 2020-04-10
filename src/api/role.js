@@ -6,7 +6,7 @@ export function getRolePage (parameter) {
   return axios({
     url: PULLULATES_ROLE_URL.Role_Page,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -15,7 +15,7 @@ export function getRoleList (parameter) {
   return axios({
     url: PULLULATES_ROLE_URL.Role_List,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -33,7 +33,7 @@ export function getSuggestNo (parameter) {
   return axios({
     url: PULLULATES_ROLE_URL.Role_Suggest_No,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -51,7 +51,7 @@ export function deleteRole (parameter) {
   return axios({
     url: PULLULATES_ROLE_URL.Delete_Role,
     method: 'delete',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -60,7 +60,7 @@ export function getDataScope (parameter) {
   return axios({
     url: PULLULATES_ROLE_URL.Datascope,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 

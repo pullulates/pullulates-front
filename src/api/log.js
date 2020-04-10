@@ -6,7 +6,7 @@ export function getLoginLogPage (parameter) {
   return axios({
     url: PULLULATES_LOG_URL.Login_Log_Page,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -15,6 +15,6 @@ export function getOperLogPage (parameter) {
   return axios({
     url: PULLULATES_LOG_URL.Oper_Log_Page,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }

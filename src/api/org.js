@@ -6,7 +6,7 @@ export function getOrgListTree (parameter) {
   return axios({
     url: PULLULATES_ORG_URL.Org_List_Tree,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -23,7 +23,7 @@ export function getSuggestSortNo (parameter) {
   return axios({
     url: PULLULATES_ORG_URL.Suggest_Sort_No,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -50,6 +50,6 @@ export function deleteOrg (parameter) {
   return axios({
     url: PULLULATES_ORG_URL.Org_Delete,
     method: 'delete',
-    data: parameter
+    params: parameter
   })
 }

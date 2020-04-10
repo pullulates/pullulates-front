@@ -220,7 +220,7 @@ export default {
           return
         }
         fieldsValue.orgId = this.orgId
-        fieldsValue.roleKeys = this.checkedList.join(',')
+        fieldsValue.roleKeys = this.checkedList
         updateUser(fieldsValue).then(res => {
           if (res.code === 200) {
             this.$message.success(res.msg)
@@ -257,7 +257,7 @@ export default {
     getMenuIds (parameter) {
       if (parameter.length > 0) {
         this.changeSpinning()
-        getMenuIdsByRoleKeys({ roleKeys: parameter }).then(res => {
+        getMenuIdsByRoleKeys({ roleKeys: parameter.join(',') }).then(res => {
           this.checkedMenuKeys = res.data
           this.changeSpinning()
         })

@@ -17,7 +17,7 @@ export function resolveBlob (res, mimeType) {
   var fileName = result[1]
   fileName = fileName.replace(/"/g, '')
   aLink.href = URL.createObjectURL(blob)
-  aLink.setAttribute('download', fileName) // 设置下载文件名称
+  aLink.setAttribute('download', fileName)
   document.body.appendChild(aLink)
   aLink.click()
   document.body.appendChild(aLink)

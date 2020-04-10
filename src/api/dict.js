@@ -6,7 +6,7 @@ export function getDictTypeList (parameter) {
   return axios({
     url: PULLULATES_DICT_URL.Dict_Type_List,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -15,7 +15,7 @@ export function getDictDataList (parameter) {
   return axios({
     url: PULLULATES_DICT_URL.Dict_Data_List,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -24,7 +24,7 @@ export function getDictDataListByType (parameter) {
   return axios({
     url: PULLULATES_DICT_URL.Dict_Data_List_By_Type,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -33,7 +33,7 @@ export function getDictDataInfo (parameter) {
   return axios({
     url: PULLULATES_DICT_URL.Dict_Data_Info,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -69,7 +69,7 @@ export function deleteType (parameter) {
   return axios({
     url: PULLULATES_DICT_URL.Dict_DeleteType,
     method: 'delete',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -87,7 +87,7 @@ export function deleteData (parameter) {
   return axios({
     url: PULLULATES_DICT_URL.Dict_DeleteData,
     method: 'delete',
-    data: parameter
+    params: parameter
   })
 }
 

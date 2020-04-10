@@ -6,7 +6,7 @@ export function getGensList (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Gen_List,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -15,7 +15,7 @@ export function getUnImportedTableList (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Un_Imported_Table_List,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -33,9 +33,7 @@ export function updateTable (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Update_Table,
     method: 'put',
-    data: parameter,
-    contentType: 'application/json; charset=utf-8',
-    dataType: 'json'
+    data: parameter
   })
 }
 
@@ -44,7 +42,7 @@ export function previewCodes (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Preview_Codes,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -53,7 +51,7 @@ export function deleteTable (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Delete_Table,
     method: 'delete',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -62,7 +60,7 @@ export function batchDeleteTable (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Batch_Delete_Table,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -71,7 +69,7 @@ export function download (parameter) {
   return noFilterResAxios({
     url: PULLULATES_GEN_URL.Download,
     method: 'get',
-    data: parameter,
+    params: parameter,
     responseType: 'blob'
   })
 }
@@ -81,7 +79,7 @@ export function batchDownload (parameter) {
   return noFilterResAxios({
     url: PULLULATES_GEN_URL.Batch_Download,
     method: 'get',
-    data: parameter,
+    params: parameter,
     responseType: 'blob'
   })
 }
@@ -91,6 +89,6 @@ export function getColumnList (parameter) {
   return axios({
     url: PULLULATES_GEN_URL.Column_List,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }

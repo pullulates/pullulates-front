@@ -272,7 +272,7 @@ export default {
     onChange (checkedList) {
       this.indeterminate = !!this.checkedList.length && this.checkedList.length < this.plainOptions.length
       this.checkAll = this.checkedList.length === this.plainOptions.length
-      this.form.setFieldsValue({ 'roleKeys': this.checkedList.join(',') })
+      this.form.setFieldsValue({ 'roleKeys': this.checkedList })
       this.getMenuIds(this.checkedList)
     },
     onCheckAllChange (e) {
@@ -281,7 +281,7 @@ export default {
         indeterminate: false,
         checkAll: e.target.checked
       })
-      this.form.setFieldsValue({ 'roleKeys': this.checkedList.join(',') })
+      this.form.setFieldsValue({ 'roleKeys': this.checkedList })
       this.getMenuIds(this.checkedList)
     },
     onMenuExpand (expandedMenuKeys) {
@@ -290,7 +290,7 @@ export default {
     getMenuIds (parameter) {
       if (parameter.length > 0) {
         this.changeSpinning()
-        getMenuIdsByRoleKeys({ roleKeys: parameter }).then(res => {
+        getMenuIdsByRoleKeys({ roleKeys: parameter.join(',') }).then(res => {
           this.checkedMenuKeys = res.data
           this.changeSpinning()
         })

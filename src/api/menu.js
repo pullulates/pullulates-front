@@ -22,7 +22,7 @@ export function getMenuIdsByRoleId (parameter) {
   return axios({
     url: PULLULATES_MENU_URL.Role_MenuIds_By_RoleId,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -31,7 +31,7 @@ export function getMenuIdsByRoleKeys (parameter) {
   return axios({
     url: PULLULATES_MENU_URL.Role_MenuIds_By_RoleKeys,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -48,7 +48,7 @@ export function getMenuListTree (parameter) {
   return axios({
     url: PULLULATES_MENU_URL.Menu_List_Tree,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -75,6 +75,6 @@ export function deleteMenu (parameter) {
   return axios({
     url: PULLULATES_MENU_URL.Menu_Delete,
     method: 'delete',
-    data: parameter
+    params: parameter
   })
 }

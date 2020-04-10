@@ -144,7 +144,7 @@ export default {
       })
     },
     handleAdd () {
-      allocateIn({ roleId: this.roleId, allocateUserIds: this.selectedRowKeys.join(',') }).then(res => {
+      allocateIn({ roleId: this.roleId, userIds: this.selectedRowKeys }).then(res => {
         if (res.code === 200) {
           this.$message.success(res.msg)
           this.$refs.table.refresh(true)
@@ -154,7 +154,7 @@ export default {
       })
     },
     handleDelete () {
-      allocateOut({ roleId: this.roleId, allocateUserIds: this.selectedRowKeys.join(',') }).then(res => {
+      allocateOut({ roleId: this.roleId, userIds: this.selectedRowKeys }).then(res => {
         if (res.code === 200) {
           this.$message.success(res.msg)
           this.$refs.table.refresh(true)

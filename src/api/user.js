@@ -5,7 +5,7 @@ import { axios } from '@/utils/request'
 export function getUserList (parameter) {
   return axios({
     url: PULLULATES_USER_URL.User_List,
-    method: 'get',
+    method: 'post',
     data: parameter
   })
 }
@@ -15,7 +15,7 @@ export function getOnlineUserList (parameter) {
   return axios({
     url: PULLULATES_USER_URL.Online_User,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -42,7 +42,7 @@ export function getUserInfo (parameter) {
   return axios({
     url: PULLULATES_USER_URL.User_Info,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -59,7 +59,7 @@ export function changeUserStatus (parameter) {
 export function batchChangeUserStatus (parameter) {
   return axios({
     url: PULLULATES_USER_URL.Batch_Change_User_Status,
-    method: 'get',
+    method: 'put',
     data: parameter
   })
 }
@@ -78,7 +78,7 @@ export function deleteUser (parameter) {
   return axios({
     url: PULLULATES_USER_URL.Delete_User,
     method: 'delete',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -86,7 +86,7 @@ export function deleteUser (parameter) {
 export function batchDeleteUser (parameter) {
   return axios({
     url: PULLULATES_USER_URL.Batch_Delete_User,
-    method: 'get',
-    data: parameter
+    method: 'delete',
+    params: parameter
   })
 }

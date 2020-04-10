@@ -118,7 +118,6 @@ export default {
   },
   data () {
     return {
-      description: '使用场景：数据字典维护了系统内所有可配置项字段，您可以在这里查看数据字典，但建议您不要修改或删除它们，这可能导致访问异常。',
       data: [],
       columns,
       rowKey: 'dictType',

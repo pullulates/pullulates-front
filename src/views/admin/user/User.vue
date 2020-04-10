@@ -52,15 +52,6 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="12">
-              <a-form-item label="创建时间">
-                <a-range-picker
-                  :ranges="{ '今天': [moment(), moment()], '这个月': [moment(), moment().endOf('month')] }"
-                  showTime
-                  format="YYYY-MM-DD HH:mm:ss"
-                />
-              </a-form-item>
-            </a-col>
           </template>
           <a-col :md="24" :sm="24">
             <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' }">
@@ -160,7 +151,6 @@ import { getOrgTree } from '@/api/org'
 import { getRoleList } from '@/api/role'
 import { getDictDataListByType } from '@/api/dict'
 import { STable } from '@/components'
-import moment from 'moment'
 import Add from './module/Add'
 import Detail from './module/Detail'
 import Edit from './module/Edit'
@@ -175,7 +165,6 @@ export default {
   },
   data () {
     return {
-      description: '使用场景：此功能用于管理本系统的使用用户，具体操作包含新增、修改、启用禁用、删除、重置密码。',
       loading: true,
       advanced: false,
       queryParam: {
@@ -332,7 +321,7 @@ export default {
       })
     },
     handleBatchDelete () {
-      batchDeleteUser({ userIds: this.selectedRowKeys }).then(res => {
+      batchDeleteUser({ userIds: this.selectedRowKeys.join(',') }).then(res => {
         this.callback(res)
       })
     },
@@ -343,7 +332,6 @@ export default {
     toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    moment,
     handleSave () {
       this.$refs.table.refresh(true)
     },

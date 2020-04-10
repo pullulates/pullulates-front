@@ -6,7 +6,7 @@ export function getJobPage (parameter) {
   return axios({
     url: PULLULATES_QUARTZ_URL.Job_Page,
     method: 'get',
-    data: parameter
+    params: parameter
   })
 }
 
@@ -60,6 +60,6 @@ export function deleteJob (parameter) {
   return axios({
     url: PULLULATES_QUARTZ_URL.Job_Delete,
     method: 'delete',
-    data: parameter
+    params: parameter
   })
 }

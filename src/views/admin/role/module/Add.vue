@@ -4,6 +4,7 @@
     :width="800"
     :visible="visible"
     :confirmLoading="confirmLoading"
+    :destroyOnClose="true"
     @cancel="handleCancel"
   >
     <a-form :form="form">
@@ -193,8 +194,8 @@ export default {
             this.confirmLoading = false
             return false
           }
-          values.menuIds = this.menuCheckedKeys.join(',')
-          values.orgIds = this.orgCheckedKeys.join(',')
+          values.menuIds = this.menuCheckedKeys
+          values.orgIds = this.orgCheckedKeys
           saveRole(values).then(res => {
             if (res.code === 200) {
               this.$message.success(res.msg)
