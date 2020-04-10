@@ -4,15 +4,15 @@ export const PULLULATES_USER_URL = {
   Login: PULLULATES_BASE_URL + '/login',
   Logout: PULLULATES_BASE_URL + '/logout',
   My_User_Info: PULLULATES_BASE_URL + '/users/get/my',
-  User_List: PULLULATES_BASE_URL + '/users/list',
+  User_List: PULLULATES_BASE_URL + '/users/page',
   User_Save: PULLULATES_BASE_URL + '/users/save',
   User_Update: PULLULATES_BASE_URL + '/users/update',
   User_Info: PULLULATES_BASE_URL + '/users/get',
   Change_User_Status: PULLULATES_BASE_URL + '/users/update/status',
-  Batch_Change_User_Status: PULLULATES_BASE_URL + '/users/batch-update/status',
-  Reset_Password: PULLULATES_BASE_URL + '/users/update/reset-password',
+  Batch_Change_User_Status: PULLULATES_BASE_URL + '/users/update/status/batch',
+  Reset_Password: PULLULATES_BASE_URL + '/users/update/password/reset',
   Delete_User: PULLULATES_BASE_URL + '/users/delete',
-  Batch_Delete_User: PULLULATES_BASE_URL + '/users/batch-delete',
+  Batch_Delete_User: PULLULATES_BASE_URL + '/users/delete/batch',
   Online_User: PULLULATES_BASE_URL + '/users/online'
 }
 
@@ -20,7 +20,7 @@ export const PULLULATES_ROLE_URL = {
   Role_Page: PULLULATES_BASE_URL + '/roles/page',
   Role_List: PULLULATES_BASE_URL + '/roles/list',
   Role_Save: PULLULATES_BASE_URL + '/roles/save',
-  Role_Suggest_No: PULLULATES_BASE_URL + '/roles/suggest-sortno',
+  Role_Suggest_No: PULLULATES_BASE_URL + '/roles/sortno/suggest',
   Change_Role_Status: PULLULATES_BASE_URL + '/roles/update/status',
   Delete_Role: PULLULATES_BASE_URL + '/roles/delete',
   Datascope: PULLULATES_BASE_URL + '/roles/datascope',
@@ -44,7 +44,7 @@ export const PULLULATES_MENU_URL = {
 export const PULLULATES_ORG_URL = {
   Org_List_Tree: PULLULATES_BASE_URL + '/orgs/list/tree',
   Org_Tree: PULLULATES_BASE_URL + '/orgs/tree',
-  Suggest_Sort_No: PULLULATES_BASE_URL + '/orgs/suggest-sortno',
+  Suggest_Sort_No: PULLULATES_BASE_URL + '/orgs/sortno/suggest',
   Org_Save: PULLULATES_BASE_URL + '/orgs/save',
   Org_Update: PULLULATES_BASE_URL + '/orgs/update',
   Org_Delete: PULLULATES_BASE_URL + '/orgs/delete'
@@ -59,7 +59,7 @@ export const PULLULATES_DICT_URL = {
   Dict_Save_Data: PULLULATES_BASE_URL + '/dicts/datas/save',
   Dict_Update_Type: PULLULATES_BASE_URL + '/dicts/types/update',
   Dict_Update_Data: PULLULATES_BASE_URL + '/dicts/datas/update',
-  Dict_Type_Suggest_Sortno: PULLULATES_BASE_URL + '/dicts/types/suggest-sortno',
+  Dict_Type_Suggest_Sortno: PULLULATES_BASE_URL + '/dicts/types/sortno/suggest',
   Dict_DeleteType: PULLULATES_BASE_URL + '/dicts/types/delete',
   Dict_DeleteData: PULLULATES_BASE_URL + '/dicts/datas/delete'
 }
