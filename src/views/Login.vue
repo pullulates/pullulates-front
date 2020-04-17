@@ -12,7 +12,7 @@
           type="text"
           placeholder="账户"
           v-decorator="[
-            'username',
+            'userName',
             {rules: [{ required: true, message: '请输入帐户名' }], validateTrigger: 'change'}
           ]"
         >
@@ -105,7 +105,7 @@ export default {
         Login
       } = this
       state.loginBtn = true
-      const validateFieldsKey = ['username', 'password']
+      const validateFieldsKey = ['userName', 'password']
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
           const loginParams = { ...values }
