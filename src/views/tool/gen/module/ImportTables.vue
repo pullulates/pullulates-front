@@ -86,8 +86,8 @@ export default {
     },
     handleImport (record) {
       this.loading = true
-      const tableNames = [record.tableName].join(',')
-      importTables({ tableNames: tableNames }).then(res => {
+      const tableNames = record.tableName
+      importTables(tableNames).then(res => {
         if (res.code === 200) {
           this.$message.success(res.msg)
           this.$refs.table.refresh(true)
@@ -101,7 +101,7 @@ export default {
       this.loading = true
       var tableNames = []
       this.selectedRows.forEach(row => tableNames.push(row.tableName))
-      importTables({ tableNames: tableNames.join(',') }).then(res => {
+      importTables(tableNames.join()).then(res => {
         if (res.code === 200) {
           this.$message.success(res.msg)
           this.$refs.table.refresh(true)

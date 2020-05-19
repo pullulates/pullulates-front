@@ -201,7 +201,7 @@ export default {
     },
     handleBatchDelete () {
       this.waiting = true
-      batchDeleteTable({ tableIds: this.selectedRowKeys }).then(res => {
+      batchDeleteTable({ tableIds: this.selectedRowKeys.join() }).then(res => {
         this.callback(res)
         this.waiting = false
       })
@@ -225,7 +225,7 @@ export default {
       this.waiting = true
       var tableNames = []
       this.selectedRows.forEach(row => tableNames.push(row.tableName))
-      batchDownload({ tableNames: tableNames.join(',') }).then(res => {
+      batchDownload({ tableNames: tableNames.join() }).then(res => {
         resolveBlob(res, mimeMap.zip)
         this.waiting = false
       }).catch(err => {

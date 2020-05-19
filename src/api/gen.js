@@ -22,9 +22,8 @@ export function getUnImportedTableList (parameter) {
 /** 导入表 */
 export function importTables (parameter) {
   return axios({
-    url: PULLULATES_GEN_URL.Import_Tables,
-    method: 'post',
-    data: parameter
+    url: PULLULATES_GEN_URL.Import_Tables + '/' + parameter,
+    method: 'post'
   })
 }
 
